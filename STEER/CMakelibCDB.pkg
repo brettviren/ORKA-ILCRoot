@@ -1,0 +1,34 @@
+# -*- mode: CMake -*-
+
+set ( SRCS  
+    CDB/IlcCDBEntry.cxx 
+    CDB/IlcCDBId.cxx 
+    CDB/IlcCDBMetaData.cxx 
+    CDB/IlcCDBPath.cxx 
+    CDB/IlcCDBRunRange.cxx 
+    CDB/IlcCDBManager.cxx 
+    CDB/IlcCDBStorage.cxx 
+    CDB/IlcCDBLocal.cxx 
+    CDB/IlcCDBDump.cxx 
+    CDB/IlcCDBGrid.cxx 
+    CDB/IlcDCSValue.cxx 
+    CDB/IlcDCSSensor.cxx 
+    CDB/IlcDCSSensorArray.cxx 
+    CDB/IlcDCSGenDB.cxx 
+    CDB/IlcSplineFit.cxx 
+    CDB/IlcPreprocessor.cxx 
+    CDB/IlcShuttleInterface.cxx 
+    CDB/IlcGRPDCS.cxx 
+    CDB/IlcCDBHandler.cxx 
+    CDB/IlcBaseCalibViewer.cxx 
+    CDB/IlcBaseCalibViewerGUI.cxx 
+    CDB/IlcCalibViewerGUItime.cxx
+    )
+
+string( REPLACE ".cxx" ".h" HDRS "${SRCS}")
+
+set ( DHDR  CDBLinkDef.h)
+
+set ( EXPORT ${HDRS})
+
+set ( EINCLUDE  STEER/STEERBase)

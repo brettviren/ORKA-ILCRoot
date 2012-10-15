@@ -1,0 +1,102 @@
+# -*- mode: CMake -*-
+
+#--------------------------------------------------------------------------------#
+# Package File for EVGEN                                                         #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS  
+  IlcGenHIJINGpara.cxx 
+  IlcGenBox.cxx 
+  IlcGenFixed.cxx 
+  IlcGenCocktail.cxx 
+  IlcGenCocktailAfterBurner.cxx 
+  IlcGenPairFlat.cxx
+  IlcGenLib.cxx 
+  IlcGenMUONlib.cxx 
+  IlcGenHMPIDlib.cxx 
+  IlcGenParam.cxx 
+  IlcDimuCombinator.cxx 
+  IlcGenHalo.cxx 
+  IlcGenHaloProtvino.cxx 
+  IlcGenExtFile.cxx 
+  IlcGenScan.cxx 
+  IlcGenPHOSlib.cxx 
+  IlcGenDoubleScan.cxx 
+  IlcGenCocktailEntry.cxx 
+  IlcGenGSIlib.cxx 
+  IlcGenEMlib.cxx 
+  IlcGenPMDlib.cxx 
+  IlcGenMC.cxx 
+  IlcGenReader.cxx 
+  IlcGenReaderCwn.cxx 
+  IlcGenReaderTreeK.cxx 
+  IlcGenReaderEcalHijing.cxx 
+  IlcGenReaderEcalJets.cxx 
+  IlcGenHIJINGparaBa.cxx 
+  IlcGeVSimParticle.cxx 
+  IlcGenGeVSim.cxx 
+  IlcGenThetaSlice.cxx 
+  IlcGenSTRANGElib.cxx 
+  IlcGenBeamGas.cxx 
+  IlcGenAfterBurnerFlow.cxx 
+  IlcGenSlowNucleons.cxx 
+  IlcSlowNucleonModel.cxx 
+  IlcSlowNucleonModelExp.cxx 
+  IlcGenMUONCocktail.cxx 
+  IlcGenMUONCocktailpp.cxx 
+  IlcGenEMCocktail.cxx 
+  IlcGenHBTosl.cxx 
+  IlcGenReaderEMD.cxx 
+  IlcDecayerPolarized.cxx 
+  IlcGenCorrHF.cxx 
+  IlcGenCosmicsParam.cxx 
+  IlcGenKrypton.cxx 
+  IlcGenThermalPhotons.cxx 
+  IlcGenPromptPhotons.cxx 
+  IlcGenPileup.cxx 
+  IlcGenFunction.cxx 
+  IlcGenTHnSparse.cxx 
+  IlcOmegaDalitz.cxx 
+  IlcGenDeuteron.cxx 
+  IlcGenReaderSL.cxx 
+  IlcGenMUONLMR.cxx
+  IlcGenLcLib.cxx
+  IlcGenITSULib.cxx
+  )
+
+string ( REPLACE ".cxx" ".h" HDRS "${SRCS}" )
+
+set ( DHDR EVGENLinkDef.h)
+
+set ( EXPORT 
+  IlcDecayer.h 
+  IlcGenMC.h 
+  IlcGenCocktailAfterBurner.h 
+  IlcGenCocktail.h 
+  IlcOmegaDalitz.h
+  )
+
+set ( EINCLUDE FASTSIM THijing PYTHIA6 LHAPDF STEER/STEER STEER/ESD STEER/STEERBase)

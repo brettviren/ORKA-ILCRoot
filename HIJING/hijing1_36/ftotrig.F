@@ -1,0 +1,10 @@
+* $Id: ftotrig.F 1074 2000-05-17 15:13:04Z fca $
+C
+C
+C
+	FUNCTION FTOTRIG(X)
+#include "hiparnt.inc"
+	OMG=OMG0(X)*HINT1(60)/HIPR1(31)/2.0
+	FTOTRIG=1.0-EXP(-2.0*OMG)
+	RETURN
+	END

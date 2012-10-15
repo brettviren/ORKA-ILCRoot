@@ -1,0 +1,374 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+               "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>Installation</TITLE>
+
+<link rev="made" href="mailto:webmaster@ilcsoft.cern.ch">
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/Core/Swiss" type="text/css">
+<STYLE type="text/css">
+
+BODY	{	
+	background:	#FFFFFF;
+	}	
+
+COL, COLGROUP, TABLE, TBODY, TD, TR	{	
+	color:	black;
+	text-decoration:	none;
+	border-color:	black;
+	border-style:	none;
+	background:	#FFFFFF;
+	}			
+
+TABLE.wide {
+	cellspacing: 100%;
+	background: #FF0000
+	}
+
+</STYLE>
+</HEAD>
+
+<BODY>
+<TABLE>
+<TR>
+<TD><img src="picts/MadHatter.gif" alt="ILC Off-line Project Logo">
+<TD><img src="picts/installation_name.gif" alt="Installation">
+<TD><img src="picts/IlcLogo.gif" alt="ILC Logo">
+</TR>
+</TABLE>
+
+<H2><A NAME="#Content">Content</A></H2>
+<UL>
+<LI><A HREF="#Prequisites">Prerequisites</A>
+<LI><A HREF="#Installation">Installation</A>
+<LI><A HREF="#Code">Code development and user environment</A>
+</UL>
+
+<HR>
+
+<h2><A HREF="#Content" NAME="Prerequisites">Prerequisites</A></h2>
+
+<h3>Environment</h3>
+
+<p> The code is actively maintained on Linux and HP (both CC and aCC
+compilers). It also runs on Compaq OSF1 and SunOS. We welcome feedback from
+the installation on other systems and we will be happy to consider 
+modifications and corrections necessary to make the installation possible.
+
+<p> The disk space required for a full installation of IlcRoot is 360MB for
+the system itself and 120MB for the ROOT system.
+
+<h3>gmake</h3>
+
+<p> The installation is performed via the <kbd>
+<a href="http://www.gnu.ai.mit.edu/manual/make-3.77/make.html">
+gmake</a></kbd> program. <kbd>gmake</kbd> is the 
+<a href="http://www.gnu.ai.mit.edu">GNU</a> version of make, it is free and,
+if missing on your machine, it can be loaded from the GNU Internet site 
+<a href="ftp://ftp.gnu.ai.mit.edu/pub/gnu/make">
+ftp://ftp.gnu.ai.mit.edu/pub/gnu/make</a>. <kbd>gmake</kbd> is compatible
+with the standard UNIX <kbd>make</kbd> and on the CERN ion WGS
+<kbd>make</kbd> is aliased to <kbd>gmake</kbd>. The only files you need for 
+<kbd>gmake</kbd> are the executable <kbd>gmake</kbd>
+and the script <kbd>autoconf</kbd>, therefore you can copy such files from
+any site in a directory in your path.
+
+<h3>ROOT</h3>
+
+<p> <em>ROOT</em> is available for many platforms, therefore in most cases
+no <em>ROOT</em> installation is required. To install ROOT on your machine,
+connect to the <a href="http://root.cern.ch">web site</a> and follow the
+link <em>downloads</em>. Usually you should get the latest release, unless
+announced differently by the news of the Off-line Project.
+
+<p> All you need to do is download the compressed tar file, that usually is
+called <var>root_v...tar.gz</var>uncompress and untar it (we supposed you
+downloaded the tar file in your <var>$HOME</var>):
+
+<p><kbd>
+$ gunzip root_v...tar.gz
+<br>$ cd <i>directory</i> # name of the directory where you want ROOT to sit
+<br>$ tar xvf ~/root_v...tar
+</kbd>
+
+<p> When tar ends, you will have the full root directory tree, with already
+installed libraries for your platform. 
+
+<p> The following shell variables should be defined in the login scripts:
+
+<p><table align=centre borders=no>
+<tr><th align=left>variable</th><th align=left>value</th></tr>
+<tr><td width=50%>ROOTSYS	       </td><td> <i>directory</i>/root
+<tr><td colspan=2><i><center>on all systems but HP-UX</center></i></td></tr>
+<tr><td>LD_LIBRARY_PATH</td>
+<td>$LD_LIBRARY_PATH\:$ROOTSYS/lib</td></tr>
+<tr><td colspan=2><i><center>on HP-UX</center></i></td></tr>
+<tr><td>SHLIB_PATH</td>
+<td>$SHLIB_PATH\:$ROOTSYS/lib</td></tr>
+<tr><td>PATH</td>
+<td> $PATH\:$ROOTSYS/bin </td></tr>
+</table>
+
+
+<h2><A HREF="#Content" NAME="Installation">Installation</A></h2>
+
+<ol> 
+<p><li> Install <a href="http://root.cern.ch">ROOT</a> and define the
+necessary variables correctly.
+
+<p><li> Decide where the code will reside (from here on <i>directory</i>).
+
+<p><li>Define the following global variables in the login script
+
+<p><table align=centre borders=no>
+<tr><th align=left>variable</th><th align=left>value</th></tr>
+<tr><td width=30%>ILC	       </td><td> <i>directory</i>
+<tr><td>ILC_LEVEL		</td><td> pro </td></tr>
+<tr><td>ILC_ROOT		</td><td> $ILC/$ILC_LEVEL </td></tr>
+<tr><td>ILC_TARGET		</td><td> `uname` 
+(i.e. result of the Unix <b>uname</b> command)</td></tr>
+<tr><td colspan=2><i><center>on all systems but HP-UX</center></i></td></tr>
+<tr><td>LD_LIBRARY_PATH</td>
+<td>$ILC_ROOT/lib/tgt_${ILC_TARGET}\:$LD_LIBRARY_PATH</td></tr>
+<tr><td colspan=2><i><center>on HP-UX</center></i></td></tr>
+<tr><td>SHLIB_PATH</td>
+<td>$ILC_ROOT/lib/tgt_${ILC_TARGET}\:$SHLIB_PATH</td></tr>
+<tr><td>PATH</td>
+<td> $PATH\:$ILC_ROOT/bin/tgt_${ILC_TARGET} </td></tr>
+</table>
+
+<p>At this point you should logout, login again and check that the symbols
+are set correctly.
+
+<p><li> Retrieve the IlcRoot code. This code is available under 3 main
+    versions (old, pro and new). Check <a href="../releases.html"> the
+    Releases page </a> to select the appropriate version and get
+    the corresponding CVS Tag.
+    There are two ways to retrieve the code: the
+    preferred way consists in retrieving a tar file on the ftp server and the
+    slow and network consuming way is checking out the whole cvs tree using
+    cvs. Cvsup may be available soon as an alternative.
+    
+<ul> 
+<p><li> <em>From a tar file</em>. Tar files
+    for the different releases including an up-to-date file remade
+    every night are available on the 
+    <a href="http://IlcSoft.cern.ch/offline/download/offline/">
+    Web server</a>. The tar files include the
+    "CVS" subdirectories for the anonymous cvs user (login "cvs"). So after
+    getting the full tar file, it is possible to incrementally update
+    the code using cvs.
+
+    <p> The tar file(s) can to be unpacked into the ILC directory
+    via the command: 
+    
+    <p><pre>$ gtar xvfz V3.XX.tar.gz</pre>
+    
+    <p> A script <a href="ftp://ilcsoft.cern.ch/pub/misc/">changeCVSRoot</a>
+    is available to convert a CVS tree under user "cvs" to another
+    user. For example, <pre> ChangeCVSRoot asmith </pre>
+    
+<p><li> <em>From cvs remote cvs server</em>.  The setup for the access
+    to the remote cvs server is described in the
+    <A HREF="/offline/development.html#Code">Code Development section</A>.
+    The code can be downloaded via the following commands:
+    
+<p><pre>
+$ cd $ILC
+$ setenv CVSROOT :pserver:cvs@ilcsoft.cern.ch:/soft/cvsroot
+$ cvs co -r Release-3-XX -d pro IlcRoot
+</pre>
+
+<p><li> <em> Update </em> In both cases running a cvs update command
+    will update the latest changes to the code in the selected branch
+    (here branch "Release-3-XX"). So, for a full update, including
+    the automatic creation a new subdirectories, the commands are:
+<p><pre>
+$ cd $ILC/pro
+$ setenv CVSROOT :pserver:cvs@ilcsoft.cern.ch:/soft/cvsroot
+$ cvs update -d
+</pre>
+
+</ul>
+
+<p><li>install the CERN library part
+
+<p><pre>
+$ cd $ILC_ROOT
+$ gmake cernlibs
+</pre>
+
+<p><li>Install the ILC specific software
+
+<p><pre>
+$ cd $ILC_ROOT
+$ gmake
+</pre>
+
+<p><li>Copy the file $ILC_ROOT/.rootrc to your home directory
+
+<p><li>For users with c-like shells, update your search path:
+
+<p>
+<pre>
+$ rehash
+</pre>
+
+<p>This usually has to be done only once, after having defined the new PATH.
+
+<p><li>Change to your home directory and run the code
+
+<p>
+<pre>
+$ cd
+$ ilcroot
+
+<output from ilcroot>
+
+root [1] .x menu.C
+</pre>
+</ol>
+
+<h2><A HREF="#Content" NAME="Code">Code development and user environment</A></h2>
+
+<p>If the ILC environment is set up correctly, the
+<var>$ILC_ROOT/lib/tgt_$ILC_TARGET</var> directory is in the shared
+libraries load path, and the <var>$ILC_ROOT/bin/tgt_$ILC_TARGET</var>
+directory is in the PATH variable. This means that the command
+<kbd>ilcroot</kbd> will in fact correspond to the file
+<var>$ILC_ROOT/bin/tgt_$ILC_TARGET/ilcroot</var>.
+
+<p>This is convenient for the normal user, but as soon as the user wants to
+modify one or more directories, this arrangement becomes inefficient
+because if a local copy of one of the shared libraries is remade, the
+linker will always find the official unmodified one that sits in the above
+directory before the local one in the load library path. Moreover, and
+unless the full path is specified, the local version of the <b>ilcroot</b>
+executable will be ignored and the official version executed.
+
+<p>Therefore in order to develop one or more packages locally
+(let's say the TPC) and make modifications, the following steps should be
+performed. The remote cvs server use and setup is explained in the <a
+href="../development.html">code development</a> section.  
+
+<p><table id="wide" cellspacing=10%>
+ <tr align=center>
+  <th colspan=2>
+    <hr><br>
+    <font size=+1>Preparation of the environment</font>
+    <br><hr>
+ <tr align=left>
+  <th width=30%>$ mkdir IlcRoot
+  <td width=50%>create the working directory
+ <tr align=left>
+  <th>$ cd IlcRoot
+  <td>set default to it
+ <tr align=left>
+  <th>$ mkdir pro
+  <td>create pro subdirectory
+ <tr align=left>
+  <th>$ cd pro
+  <td>set default to it
+ <tr align=left>
+  <th>$ ln -s $ILC_ROOT/* ./
+  <td>link all files here
+ <tr align=left>
+  <th>$ rm lib 
+  <td>remove link for library, we need a local file here to containing the new
+      TPC library
+ <tr align=left>
+  <th>$ rm bin
+  <td>remove bin, we need a local copy of the <var>ilcroot</var>
+      executable
+ <tr align=left>
+  <th>$ mkdir bin
+  <td>make a local bin directory 
+ <tr align=left>
+  <th>$ rm CVS
+  <td>remove the link to the CVS directory, we need a local one
+      to check-out files
+ <tr align=left>
+  <th>$ rm TPC
+  <td>remove link for TPC subdirectory, we need the real files here
+ <tr align=left>
+  <th>$ rm ILCROOT
+  <td>remove link to ILCROOT subdirectory, may be this is not really necessary
+      on all systems, but we do it just to be on the safe side
+ <tr align=left>
+  <th>$ cvs co -r Release-3-XX TPC
+  <td>get from the cvs server the release version of the TPC files to be
+      modified
+ <tr align=left>
+  <th>$ cvs co -r Release-3-XX ILCROOT
+  <td>get from the server the release version of the ILCROOT files to recreate
+      the executable
+ <tr align=left>
+  <th>$ mkdir -p lib/tgt_$ILC_TARGET
+  <td>create library directory
+ <tr align=left>
+  <th>$ cd lib/tgt_$ILC_TARGET
+  <td>set default to the lib directory
+ <tr align=left>
+  <th>$ ln -s $ILC_ROOT/lib/tgt_$ILC_TARGET/* ./
+  <td>link all libraries here
+ <tr align=left>
+  <th>$ rm libTPC.sl (on HP)
+  <br>$ rm libTPC.so (on the other systems)
+  <td>remove link to TPC library, we need a real one
+ <tr align=left>
+  <th>$ changeRoot $HOME/IlcRoot
+  <td>change the IlcRoot root to $HOME/IlcRoot via the <em>changeRoot</em> command
+ <tr align=left>
+  <th>$ rehash
+  <td>make sure that the new PATH is taken into account by the shell
+ <tr align=center>
+  <th colspan=2>
+    <hr><br>
+    <font size=+1>Normal development cycle</font>
+    <br><hr>
+ <tr align=left>
+  <th>$ cd $ILC_ROOT/TPC
+  <td>(1) set default to TPC directory
+ <tr align=left>
+  <th>$ make macroclean
+  <td>clean up all objects
+ <tr align=left>
+  <th>$ emacs IlcTPCv1.cxx
+  <td>(2) edit all the files...
+ <tr align=left>
+  <th>$ make
+  <td>(3) recreate ../lib/libTPC.sl
+ <tr align=left>
+  <th>$ cd ../ILCROOT
+  <td>set default to ILCROOT directory
+ <tr align=left>
+  <th>$ make macroclean
+  <td>clean up object files
+ <tr align=left>
+  <th>$ make
+  <td>make new executable
+ <tr align=left>
+  <th>$ cd <em>directory</em>
+  <td>(4) set default elsewhere
+ <tr align=left>
+  <th>$ ilcroot
+  <td>(5) run ilcroot
+ <tr align=center>
+  <th colspan=2>
+    <hr>
+</table>
+
+<p>Steps 1-5 are the normal development cycle after the first pass through the 
+procedure.
+
+<hr>
+<address>
+          <script language="JavaScript">
+             document.write("Last modified "+ document.lastModified +" . ")
+             // end of script -->
+          </script>
+Please report problems to
+<a href="mailto:webmaster@ilcsoft.cern.ch"> webmaster@ilcsoft.cern.ch</a>
+</address>
+</BODY>
+</HTML>

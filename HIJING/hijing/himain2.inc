@@ -1,0 +1,6 @@
+* $Id: himain2.inc 11585 2005-04-29 01:47:59Z alibrary $
+        REAL PATT
+	COMMON/HIMAIN2/KATT(200000,4),PATT(200000,4), VATT(200000,4)
+#ifndef BLANKET_SAVE
+	SAVE  /HIMAIN2/
+#endif

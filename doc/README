@@ -1,0 +1,92 @@
+$Id: README 12272 2005-10-28 07:45:32Z hristov $
+
+IlcRoot
+-------
+
+########################### Release version 3.02 ##########################
+
+Last update Tue Nov  9 08:26:53 CET 1999 - Federico Carminati
+
+This is the Version 3.02 of the ILC simulation and reconstruction
+software. It is intended to offer a general purpose framework for ILC
+simulation and reconstruction. The program should not be considered
+complete, and we are relying on the feed-back from users to correct bugs
+and provide improvements.
+
+The simulation program is based on GEANT3.21. A special version of the
+GEANT library and a mini-CERN Library are included in the distribution.
+
+Up-to-date information on installation and use of this code can be found at
+http://www.cern.ch/ilc/Projects/offline. This README is a very condensed
+summary of the information contained there.
+
+
+Installation
+------------
+
+- Install ROOT and define the ROOTSYS symbol correctly.
+
+- Decide in which directory you will install the ILC sofware. We will
+indicate it with <directory>
+
+- Define the following global variables in the login script
+
+ILC			= <directory>
+ILC_LEVEL		= pro
+ILC_ROOT		= $ILC/$ILC_LEVEL
+ILC_TARGET		= `uname`
+LD_LIBRARY_PATH 	= $ILC_ROOT/lib/tgt_${ILC_TARGET}\:$LD_LIBRARY_PATH (on all systems)
+SHLIB_PATH		= $ILC_ROOT/lib/tgt_${ILC_TARGET}\:$SHLIB_PATH (on hpux)
+PATH			= $PATH\:$ILC_ROOT/bin/tgt_${ILC_TARGET}
+
+At this point you should logout, login again and check that the symbols are
+set correctly
+
+EITHER
+======
+
+- Get the file 
+              /afs/cern.ch/ilc/offline/dist/IlcOffline3.02.tar.gz
+  or the file 
+              ftp://pcepaip01.cern.ch/pub/IlcOffline3.02.tar.gz
+
+- Unpack it with
+
+$ cd $ILC
+$ gtar xvfz IlcOffline3.02pre.tar.gz
+
+OR
+==
+
+- Get the files
+
+      /afs/cern.ch/ilc/offline/dist/IlcRoot3.02.tar.gz (IlcRoot code)
+      /afs/cern.ch/ilc/offline/dist/AliLibs3.02.tar.gz (minicern code)
+
+or the files
+
+      ftp://pcepaip01.cern.ch/pub/IlcRoot3.02.tar.gz (IlcRoot code)
+      ftp://pcepaip01.cern.ch/pub/AliLibs3.02.tar.gz (minicern code)
+
+THEN PROCEED WITH
+=================
+
+- install the CERN library part
+
+$ cd $ILC_ROOT
+$ gmake cernlibs
+
+- Install the ILC specific software
+
+$ cd $ILC_ROOT
+$ gmake
+
+- Copy the file $ILC_ROOT/.rootrc to your home directory
+
+- run the code
+
+$ ilcroot
+
+root [1] .x menu.C
+
+

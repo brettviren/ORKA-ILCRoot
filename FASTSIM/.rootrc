@@ -1,0 +1,8 @@
+
+Unix.*.Root.MacroPath:      .:$(ILC_ROOT)/macros:$(ILC_ROOT)
+Unix.*.Root.IncludePath:      .:$(ILC_ROOT)/include:$(ILC_ROOT)/FASTSIM
+
+Root.Html.OutputDir: $(ILC_ROOT)/html/roothtml/MUON
+Root.Html.SourceDir: ./
+Root.Html.Author:  Rene Brun
+Root.Html.Root:  http://root.cern.ch/root/html

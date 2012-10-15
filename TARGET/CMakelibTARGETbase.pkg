@@ -1,0 +1,96 @@
+# -*- mode: CMake -*-
+#--------------------------------------------------------------------------------#
+# Package File for ITSbase                                                       #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS 
+    IlcTARGETParam.cxx
+    IlcTARGETgeom.cxx
+    IlcTARGETgeomMatrix.cxx
+    IlcTARGETgeomSPD.cxx
+    IlcTARGETgeomSDD.cxx
+    IlcTARGETgeomSSD.cxx
+    IlcTARGETLoader.cxx
+    IlcTARGETRecPoint.cxx
+    IlcTARGETclusterV2.cxx
+    IlcTARGETdigit.cxx
+    IlcTARGETdigitSPD.cxx
+    IlcTARGETdigitSDD.cxx
+    IlcTARGETTransientDigit.cxx
+    IlcTARGETdigitSSD.cxx
+    IlcTARGETMap.cxx
+    IlcTARGETMapA1.cxx
+    IlcTARGETMapA2.cxx
+    IlcTARGETpList.cxx
+    IlcTARGETpListItem.cxx
+    IlcTARGETsegmentation.cxx
+    IlcTARGETsegmentation2.cxx
+    IlcTARGETsegmentationSPD.cxx
+    IlcTARGETsegmentationSPD2.cxx
+    IlcTARGETsegmentationSDD.cxx
+    IlcTARGETsegmentationSSD.cxx
+    IlcTARGETresponse.cxx
+    IlcTARGETCalibration.cxx
+    IlcTARGETresponseSPD.cxx
+    IlcTARGETresponseSDD.cxx
+    IlcTARGETresponseSSD.cxx
+    IlcTARGETCalibrationSPD.cxx
+    IlcTARGETCalibrationSDD.cxx
+    IlcTARGETCalibrationSSD.cxx
+    IlcTARGETDDLRawData.cxx
+    IlcTARGETRawStream.cxx
+    IlcTARGETRawStreamSDDv2.cxx
+    IlcTARGETRawStreamSDDv3.cxx
+    IlcTARGETRawStreamSSD.cxx
+    IlcTARGETRawStreamSDD.cxx
+    IlcTARGETRawStreamSPD.cxx
+    IlcTARGETEventHeader.cxx
+    IlcTARGETRawStreamSSDv1.cxx
+    IlcTARGETRawData.cxx
+    IlcTARGETBadChannelsAuxSPD.cxx
+    IlcTARGETBadChannelsSPD.cxx
+    IlcTARGETChannelSPD.cxx
+    IlcTARGETPreprocessorSPD.cxx
+    )
+
+string ( REPLACE ".cxx" ".h" HDRS "${SRCS}" )
+
+set ( DHDR TARGETbaseLinkDef.h)
+
+set ( EINCLUDE TPC RAW )
+
+install ( DIRECTORY .
+          DESTINATION TARGET
+          FILES_MATCHING PATTERN "*.root"
+                         PATTERN "*.dat"
+                         PATTERN "doc" EXCLUDE
+                         PATTERN "macros" EXCLUDE
+                         PATTERN "tgt_*" EXCLUDE)
+
+#
+# EOF
+#
+

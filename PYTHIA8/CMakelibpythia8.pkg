@@ -1,0 +1,90 @@
+# -*- mode: CMake -*-
+#--------------------------------------------------------------------------------#
+# Package File for pythia8                                                       #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS  
+    pythia8145/src/Analysis.cxx 
+    pythia8145/src/Basics.cxx 
+    pythia8145/src/BeamParticle.cxx 
+    pythia8145/src/BeamRemnants.cxx 
+    pythia8145/src/BeamShape.cxx 
+    pythia8145/src/BoseEinstein.cxx 
+    pythia8145/src/Event.cxx 
+    pythia8145/src/FragmentationFlavZpT.cxx 
+    pythia8145/src/FragmentationSystems.cxx 
+    pythia8145/src/HadronLevel.cxx 
+    pythia8145/src/Info.cxx 
+    pythia8145/src/LesHouches.cxx 
+    pythia8145/src/MiniStringFragmentation.cxx 
+    pythia8145/src/MultipleInteractions.cxx 
+    pythia8145/src/ParticleData.cxx 
+    pythia8145/src/ParticleDecays.cxx 
+    pythia8145/src/PartonDistributions.cxx 
+    pythia8145/src/PartonLevel.cxx 
+    pythia8145/src/PartonSystems.cxx 
+    pythia8145/src/PhaseSpace.cxx 
+    pythia8145/src/ProcessContainer.cxx 
+    pythia8145/src/ProcessLevel.cxx 
+    pythia8145/src/Pythia.cxx 
+    pythia8145/src/PythiaStdlib.cxx 
+    pythia8145/src/ResonanceDecays.cxx 
+    pythia8145/src/ResonanceWidths.cxx 
+    pythia8145/src/Settings.cxx 
+    pythia8145/src/SigmaCompositeness.cxx 
+    pythia8145/src/SigmaEW.cxx 
+    pythia8145/src/SigmaExtraDim.cxx 
+    pythia8145/src/SigmaGeneric.cxx 
+    pythia8145/src/SigmaHiggs.cxx 
+    pythia8145/src/SigmaLeftRightSym.cxx 
+    pythia8145/src/SigmaLeptoquark.cxx 
+    pythia8145/src/SigmaNewGaugeBosons.cxx 
+    pythia8145/src/SigmaOnia.cxx 
+    pythia8145/src/SigmaProcess.cxx 
+    pythia8145/src/SigmaQCD.cxx 
+    pythia8145/src/SigmaSUSY.cxx 
+    pythia8145/src/SigmaTotal.cxx 
+    pythia8145/src/SpaceShower.cxx 
+    pythia8145/src/StandardModel.cxx 
+    pythia8145/src/StringFragmentation.cxx 
+    pythia8145/src/SusyCouplings.cxx 
+    pythia8145/src/SusyLesHouches.cxx 
+    pythia8145/src/TimeShower.cxx 
+    pythia8145/src/UserHooks.cxx 
+    pythia8145/src/SusyResonanceWidths.cxx 
+    )
+
+set (EINCLUDE PYTHIA8/pythia8145/include)
+
+if( ILC_TARGET STREQUAL "macosxicc")
+	
+	string (REGEX REPLACE "-O[^ ]*" "" "$(FFLAGS}")
+
+endif( ILC_TARGET STREQUAL "macosxicc")
+
+string(REPLACE "-Weffc++" "" PACKCXXFLAGS ${CXXFLAGS})
+
+string(REPLACE "-Weffc++" "" PACKDCXXFLAGS ${CXXFLAGSNO})

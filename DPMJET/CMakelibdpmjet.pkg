@@ -1,0 +1,54 @@
+#--------------------------------------------------------------------------------#
+# Package File for dpmjet                                                        #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS IlcDpmJetRndm.cxx)
+
+string ( REPLACE ".cxx" ".h" HDRS "${SRCS}" )
+
+set ( DHDR dpmjetLinkDef.h)
+
+set ( FSRCS  dpmjet3.0-5.f phojet1.12-35c3.f user3.0-5.f openfile.f)
+
+if( ILC_TARGET MATCHES "macosx")
+		
+		set ( CSRCS ${CSRCS}  ../PYTHIA6/pythia6_common_address.c)
+
+    set ( FSRCS ${FSRCS}  ../PYTHIA6/pythia6_common_block_address.F ../PYTHIA6/tpythia6_called_from_cc.F ../PYTHIA6/pythia6214.f ../PYTHIA6/pydummy.f ../PYTHIA6/pdf_ilc.F)
+
+endif(ILC_TARGET MATCHES "macosx")
+
+if( F77 STREQUAL "g95")
+	
+	string (REGEX REPLACE "-O[^ ]*" "" PACKFFLAGS ${FFLAGS})
+
+endif( F77 STREQUAL "g95")
+
+if( ILC_TARGET STREQUAL "win32gcc")
+	
+		set ( PACKSOFLAGS  ${SOFLAGS} -L${ILC_ROOT}/lib/tgt_${ILC_TARGET} -lmicrocern)
+
+endif( ILC_TARGET STREQUAL "win32gcc")

@@ -1,0 +1,6 @@
+* $Id: hiparnt.inc 11585 2005-04-29 01:47:59Z alibrary $
+      REAL HIPR1, HINT1
+      COMMON/HIPARNT/HIPR1(100),IHPR2(50),HINT1(100),IHNT2(50)
+#ifndef BLANKET_SAVE
+      SAVE  /HIPARNT/
+#endif

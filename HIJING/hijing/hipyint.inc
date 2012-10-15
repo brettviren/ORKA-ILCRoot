@@ -1,0 +1,6 @@
+* $Id: hipyint.inc 11585 2005-04-29 01:47:59Z alibrary $
+        REAL ATCO, ATXS
+        COMMON/HIPYINT/MINT4,MINT5,ATCO(200,20),ATXS(0:200)
+#ifndef BLANKET_SAVE
+	SAVE  /HIPYINT/
+#endif

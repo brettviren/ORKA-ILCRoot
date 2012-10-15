@@ -1,0 +1,6 @@
+* $Id: pypars_hijing.inc 11585 2005-04-29 01:47:59Z alibrary $
+      REAL PARP, PARI
+      COMMON/PYPARS_HIJING/MSTP(200),PARP(200),MSTI(200),PARI(200) 
+#ifndef BLANKET_SAVE
+      SAVE /PYPARS_HIJING/ 
+#endif

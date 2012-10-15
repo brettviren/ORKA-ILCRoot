@@ -1,0 +1,6 @@
+* $Id: bveg2_hijing.inc 11585 2005-04-29 01:47:59Z alibrary $
+      DOUBLE PRECISION XI, SI, SI2, SWGT, SCHI
+      COMMON/BVEG2_HIJING/XI(50,10),SI,SI2,SWGT,SCHI,NDO,IT
+#ifndef BLANKET_SAVE
+      SAVE  /BVEG2_HIJING/
+#endif

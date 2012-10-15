@@ -1,0 +1,5 @@
+* $Id: pyint4_hijing.inc 1074 2000-05-17 15:13:04Z fca $
+      REAL WIDP, WIDE, WIDS
+      COMMON/PYINT4_HIJING/WIDP(21:40,0:40),WIDE(21:40,0:40),WIDS(21:40
+     $     ,3) 
+      SAVE /PYINT4_HIJING/ 

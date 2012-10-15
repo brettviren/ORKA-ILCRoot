@@ -1,0 +1,127 @@
+# -*- mode: CMake -*-
+
+set ( SRCS  
+    STEER/IlcRunLoader.cxx 
+    STEER/IlcLoader.cxx 
+    STEER/IlcDataLoader.cxx 
+    STEER/IlcObjectLoader.cxx 
+    STEER/IlcBaseLoader.cxx 
+    STEER/IlcTreeLoader.cxx 
+    STEER/IlcDetector.cxx 
+    STEER/IlcDigit.cxx 
+    STEER/IlcHit.cxx 
+    STEER/IlcRun.cxx 
+    STEER/IlcGenerator.cxx 
+    STEER/IlcVertexGenerator.cxx 
+    STEER/IlcLego.cxx	
+    STEER/IlcModule.cxx 
+    STEER/IlcDigitNew.cxx 
+    STEER/IlcGeometry.cxx 
+    STEER/IlcRecPoint.cxx 
+    STEER/IlcHitMap.cxx 
+    STEER/IlcLegoGenerator.cxx 
+    STEER/IlcLegoGeneratorXYZ.cxx 
+    STEER/IlcLegoGeneratorPhiZ.cxx 
+    STEER/IlcLegoGeneratorEta.cxx 
+    STEER/IlcLegoGeneratorEtaR.cxx 
+    STEER/IlcRndm.cxx 
+    STEER/IlcDebugVolume.cxx 
+    STEER/IlcConfig.cxx 
+    STEER/IlcDigitizationInput.cxx 
+    STEER/IlcDigitizer.cxx 
+    STEER/IlcStream.cxx 
+    STEER/IlcMergeCombi.cxx 
+    STEER/IlcGausCorr.cxx 
+    STEER/IlcVertexer.cxx 
+    STEER/IlcMC.cxx 
+    STEER/IlcSimulation.cxx 
+    STEER/IlcReconstruction.cxx 
+    STEER/IlcRecoInputHandler.cxx 
+    STEER/IlcVertexGenFile.cxx 
+    STEER/IlcReconstructor.cxx 
+    STEER/IlcGeomManager.cxx 
+    STEER/IlcAlignObj.cxx 
+    STEER/IlcAlignObjParams.cxx 
+    STEER/IlcAlignObjMatrix.cxx 
+    STEER/IlcMisAligner.cxx 
+    STEER/IlcTriggerDetector.cxx 
+    STEER/IlcCentralTrigger.cxx 
+    STEER/IlcRieman.cxx 
+    STEER/IlcTrackFitter.cxx 
+    STEER/IlcTrackFitterRieman.cxx 
+    STEER/IlcTrackFitterKalman.cxx 
+    STEER/IlcTrackFitterStraight.cxx 
+    STEER/IlcTrackResiduals.cxx 
+    STEER/IlcTrackResidualsChi2.cxx 
+    STEER/IlcTrackResidualsFast.cxx 
+    STEER/IlcTrackResidualsLinear.cxx 
+    STEER/IlcAlignmentTracks.cxx 
+    STEER/IlcCTPRawStream.cxx 
+    STEER/IlcSignalProcesor.cxx 
+    STEER/IlcTracker.cxx 
+    STEER/IlcCluster.cxx 
+    STEER/IlcCluster3D.cxx 
+    STEER/IlcTrackleter.cxx 
+    STEER/IlcHelix.cxx 
+    STEER/IlcV0.cxx 
+    STEER/IlcKink.cxx 
+    STEER/IlcSelectorRL.cxx 
+    STEER/IlcSurveyObj.cxx 
+    STEER/IlcSurveyPoint.cxx 
+    STEER/IlcSurveyToAlignObjs.cxx 
+    STEER/IlcFstream.cxx 
+    STEER/IlcCTPRawData.cxx 
+    STEER/IlcQADataMaker.cxx 
+    STEER/IlcGlobalQADataMaker.cxx 
+    STEER/IlcQADataMakerSim.cxx 
+    STEER/IlcQADataMakerRec.cxx 
+    STEER/IlcCorrQADataMakerRec.cxx 
+    STEER/IlcQAManager.cxx 
+    STEER/IlcQAChecker.cxx 
+    STEER/IlcCorrQAChecker.cxx 
+    STEER/IlcGlobalQAChecker.cxx 
+    STEER/IlcQACheckerBase.cxx 
+    STEER/IlcQAThresholds.cxx 
+    STEER/IlcMillepede.cxx 
+    STEER/IlcPlaneEff.cxx 
+    STEER/IlcTriggerRunScalers.cxx 
+    STEER/IlcGRPPreprocessor.cxx 
+    STEER/IlcGRPRecoParam.cxx 
+    STEER/IlcRelAlignerKalman.cxx 
+    STEER/IlcESDTagCreator.cxx 
+    STEER/IlcGRPObject.cxx 
+    STEER/IlcQAv1.cxx 
+    STEER/IlcRunInfo.cxx 
+    STEER/IlcEventInfo.cxx 
+    STEER/IlcRecoParam.cxx 
+    STEER/IlcDetectorRecoParam.cxx 
+    STEER/IlcMillePedeRecord.cxx 
+    STEER/IlcMillePede2.cxx 
+    STEER/IlcMatrixSq.cxx 
+    STEER/IlcVectorSparse.cxx 
+    STEER/IlcMatrixSparse.cxx 
+    STEER/IlcSymMatrix.cxx 
+    STEER/IlcSymBDMatrix.cxx 
+    STEER/IlcRectMatrix.cxx 
+    STEER/IlcMinResSolve.cxx 
+    STEER/IlcParamSolver.cxx 
+    STEER/IlcGRPManager.cxx 
+    STEER/IlcDCSArray.cxx 	 
+    STEER/IlcLHCReader.cxx 	 
+    STEER/IlcLHCDipValT.cxx 	 
+    STEER/IlcLHCData.cxx
+    STEER/IlcCTPTimeParams.cxx 
+    STEER/IlcCTPInputTimeParams.cxx 
+    STEER/IlcLHCClockPhase.cxx 
+    STEER/IlcLTUConfig.cxx
+    STEER/IlcTriggerUtils.cxx
+    )
+
+string(REPLACE ".cxx" ".h" HDRS  "${SRCS}")
+
+set ( DHDR  STEERLinkDef.h)
+
+set ( EINCLUDE  RAW HLT/sim TPC STEER/CDB STEER/ESD STEER/STEERBase ANALYSIS)
+
+set ( EXPORT ${HDRS} STEER/IlcConst.h STEER/IlcCallf77.h STEER/IlcRawDataHeaderSim.h STEER/IlcGeomManager.h )
+

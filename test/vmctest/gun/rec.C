@@ -1,0 +1,24 @@
+// $Id: rec.C 48253 2011-03-09 17:42:20Z ivana $
+//
+// Macro for running reconstruction in test/vmctest/gun.
+// From test/gun. 
+
+void rec() {
+  IlcReconstruction reco;
+
+  reco.SetWriteESDfriend();
+  reco.SetWriteAlignmentData();
+
+  reco.SetDefaultStorage("local://$ILC_ROOT/OCDB");
+  reco.SetSpecificStorage("GRP/GRP/Data",
+			  Form("local://%s",gSystem->pwd()));
+  reco.SetRunPlaneEff(kTRUE);
+
+  reco.SetFractionFriends(1.);
+
+  TStopwatch timer;
+  timer.Start();
+  reco.Run();
+  timer.Stop();
+  timer.Print();
+}

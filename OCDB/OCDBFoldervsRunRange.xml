@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE OCDBFoldervsRunRange [
+<!ELEMENT OCDBFoldervsRunRange (Folder*)>
+<!ELEMENT Folder EMPTY>
+<!ATTLIST Folder StartRunRange CDATA #REQUIRED>
+<!ATTLIST Folder EndRunRange CDATA #REQUIRED>
+<!ATTLIST Folder OCDBFolder CDATA #REQUIRED>
+]>
+<OCDBFoldervsRunRange>
+<Folder StartRunRange="0" EndRunRange="10000"  OCDBFolder="local://$ILC_ROOT/OCDB">
+</Folder>
+<Folder StartRunRange="15446" EndRunRange="29184"  OCDBFolder="alien://folder=/ilc/data/2008/LHC08a/OCDB">
+</Folder>
+<Folder StartRunRange="29185" EndRunRange="42390"  OCDBFolder="alien://folder=/ilc/data/2008/LHC08b/OCDB">
+</Folder>
+<Folder StartRunRange="42391" EndRunRange="57680"  OCDBFolder="alien://folder=/ilc/data/2008/LHC08c/OCDB">
+</Folder>
+<Folder StartRunRange="57681" EndRunRange="64787"  OCDBFolder="alien://folder=/ilc/data/2008/LHC08d/OCDB">
+</Folder>
+<Folder StartRunRange="64788" EndRunRange="105523"  OCDBFolder="alien://folder=/ilc/data/2009/OCDB">
+</Folder>
+<Folder StartRunRange="105524" EndRunRange="139674"  OCDBFolder="alien://folder=/ilc/data/2010/OCDB">
+</Folder>
+<Folder StartRunRange="139675" EndRunRange="170718"  OCDBFolder="alien://folder=/ilc/data/2011/OCDB">
+</Folder>
+<Folder StartRunRange="170719" EndRunRange="999999999"  OCDBFolder="alien://folder=/ilc/data/2012/OCDB">
+</Folder>
+</OCDBFoldervsRunRange>

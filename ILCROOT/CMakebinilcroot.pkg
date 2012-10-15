@@ -1,0 +1,82 @@
+# -*- mode: CMake -*- 
+#--------------------------------------------------------------------------------#
+# Package File for ilcroot                                                       #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS ilcroot.cxx)
+set ( CSRCS fpu.c)
+
+set ( ELIBSDIR )
+
+set(MFT_UPGRADE $ENV{MFT_UPGRADE})
+  
+if(MFT_UPGRADE)
+set ( ELIBS  TARGETbase TARGETsim TARGETrec DCHbase DCHsim DCHrec DCHfast PVBARUtils PVBARbase PVBARsim PVBARrec PVECbase PVECsim RSTACKbase RSTACKsim STRUCT FASTSIM microcern STEER STAT CDB AOD STEERBase ESD ANALYSIS RAWDatasim RAWDatarec RAWDatabase)
+else(MFT_UPGRADE)
+set ( ELIBS  TARGETbase TARGETsim TARGETrec DCHbase DCHsim DCHrec DCHfast PVBARUtils PVBARbase PVBARsim PVBARrec PVECbase PVECsim RSTACKbase RSTACKsim STRUCT FASTSIM microcern STEER STAT CDB AOD STEERBase ESD ANALYSIS RAWDatasim RAWDatarec RAWDatabase)
+endif(MFT_UPGRADE)
+
+if(PYTHIA6)
+  list(APPEND ELIBS EVGEN)
+endif(PYTHIA6)
+
+if( ILC_TARGET STREQUAL "macosx")
+		
+#  string(REGEX REPLACE "(microcern|lhapdf|herwig)" "" ELIBS "${ELIBS}") 
+  string(REGEX REPLACE "(microcern|herwig)" "" ELIBS "${ELIBS}") 
+  
+  ILC_Format(PACKLDFLAGS "-Wl,-u,_G__cpp_setupG__" "" "${LDFLAGS};${ELIBSCPP}")
+  string ( REPLACE "%" "-Wl,-u,_G__cpp_setupG__%" PACKLDFLAGS "${LDFLAGS} ${ELIBSCPP}" )
+		
+	set ( ELIBSDIR ${ELIBSDIR} ${FINK_ROOT}/lib)
+
+endif( ILC_TARGET STREQUAL "macosx")
+
+if(MFT_UPGRADE)
+  set (ARPACKS TARGETbase TARGETsim TARGETrec DCHbase DCHsim DCHrec DCHfast PVBARUtils PVBARbase PVBARsim PVBARrec PVECbase PVECsim RSTACKbase RSTACKsim STRUCT STEER CDB ESD STEERBase RAWDatabase RAWDatasim RAWDatarec MDC)
+else(MFT_UPGRADE)
+  set (ARPACKS TARGETbase TARGETsim TARGETrec DCHbase DCHsim DCHrec DCHfast PVBARUtils PVBARbase PVBARsim PVBARrec PVECbase PVECsim RSTACKbase RSTACKsim STRUCT STEER CDB ESD STEERBase RAWDatabase RAWDatasim RAWDatarec MDC)
+endif(MFT_UPGRADE)
+
+set(GFILES)
+foreach (pkg ${ARPACKS})
+#  foreach(mod ${MODDIRS})
+#    string(REGEX MATCH "${mod}" DIR ${pkg})
+#    if(DIR)
+#      list(APPEND GFILES "${CMAKE_BINARY_DIR}/${DIR}/CMakeFiles/${pkg}_a.dir/G__${pkg}.cxx.o" )
+#      set_source_files_properties("G${pkg}" PROPERTIES GENERATED TRUE )
+#      set_source_files_properties("G__${pkg}.cxx" PROPERTIES GENERATED TRUE)
+      list(APPEND AFILES "${pkg}_a")
+
+#    endif(DIR)
+#  endforeach(mod) 
+endforeach(pkg)
+set (ARLIBS ${AFILES})
+list(APPEND SRCS ${GFILES})
+# set ( SHLIBS  ${BINLIBDIRS} EVGEN -lEGPythia6 Pythia6 -lpythia6 IlcPythia6 lhapdf THijing hijing THerwig herwig TPHIC FASTSIM microcern)
+set ( SHLIBS  ${BINLIBDIRS} EVGEN -lEGPythia6 Pythia6 -lpythia6 IlcPythia6 THijing hijing THerwig herwig TPHIC FASTSIM microcern)
+
+set ( EINCLUDE STEER/STEER )

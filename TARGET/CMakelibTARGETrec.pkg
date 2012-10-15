@@ -1,0 +1,104 @@
+# -*- mode: CMake -*-
+#--------------------------------------------------------------------------------#
+# Package File for ITSbase                                                       #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS 
+    IlcTARGETDetTypeRec.cxx
+    IlcTARGETRawCluster.cxx
+    IlcTARGETClusterFinder.cxx
+    IlcTARGETClusterFinderSPD.cxx
+    IlcTARGETClusterFinderSDD.cxx
+    IlcTARGETClusterFinderSSD.cxx
+    IlcTARGETClusterFinderV2.cxx
+    IlcTARGETClusterFinderV2SDD.cxx
+    IlcTARGETClusterFinderV2SPD.cxx
+    IlcTARGETClusterFinderV2SSD.cxx
+    IlcTARGETclustererV2.cxx
+    IlcTARGETclusterSSD.cxx
+    IlcTARGETpackageSSD.cxx
+    IlcTARGETIOTrack.cxx
+    IlcTARGETRad.cxx
+    IlcTARGETtrackV2.cxx
+    IlcTARGETtrackerV2.cxx
+    IlcTARGETtrackMI.cxx
+    IlcTARGETtrackerMI.cxx
+    IlcTARGETVertexer.cxx
+    IlcTARGETVertexerIons.cxx
+    IlcTARGETVertexerPPZ.cxx
+    IlcTARGETVertexer3D.cxx
+    IlcTARGETVertexerZ.cxx
+    IlcTARGETVertexerFast.cxx
+    IlcTARGETPid.cxx
+    IlcTARGETtrackV2Pid.cxx
+    IlcTARGETreconstruction.cxx
+    IlcTARGETFindClustersV2.cxx
+    IlcTARGETRiemannFit.cxx
+    IlcTARGETclusterTable.cxx
+    IlcTARGETtrackSA.cxx
+    IlcTARGETtrackerSA.cxx
+    IlcTARGETNeuralPoint.cxx
+    IlcTARGETNeuralTrack.cxx
+    IlcTARGETNeuralTracker.cxx
+    IlcTARGETtrackerANN.cxx
+    IlcTARGETpidESD.cxx
+    IlcTARGETpidESD1.cxx
+    IlcTARGETpidESD2.cxx
+    IlcTARGETPident.cxx
+    IlcTARGETSteerPid.cxx
+    IlcTARGETPidParItem.cxx
+    IlcTARGETRawClusterSPD.cxx
+    IlcTARGETRawClusterSDD.cxx
+    IlcTARGETRawClusterSSD.cxx
+    IlcTARGETReconstructor.cxx
+    IlcTARGETBeamTestDig.cxx
+    IlcTARGETBeamTestDigSDD.cxx
+    IlcTARGETBeamTestDigSPD.cxx
+    IlcTARGETBeamTestDigSSD.cxx
+    IlcTARGETBeamTestDigitizer.cxx
+    IlcTARGETMultReconstructor.cxx
+    )
+
+string ( REPLACE ".cxx" ".h" HDRS "${SRCS}" )
+
+set ( DHDR TARGETrecLinkDef.h)
+
+set ( EINCLUDE TPC RAW STEER/ESD )
+
+set ( EXPORT IlcTARGETtrackV2.h IlcTARGETVertexer.h IlcTARGETrecoV2.h)
+
+install ( DIRECTORY .
+          DESTINATION TARGET
+          FILES_MATCHING PATTERN "*.root"
+                         PATTERN "*.dat"
+                         PATTERN "doc" EXCLUDE
+                         PATTERN "macros" EXCLUDE
+                         PATTERN "tgt_*" EXCLUDE)
+
+#
+# EOF
+#
+

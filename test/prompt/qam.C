@@ -1,0 +1,6 @@
+{
+   // libMONITOR is not loaded by default...
+   gSystem->Load("libMONITOR.so");
+   // Popup the GUI...
+   new IlcQAHistViewer(gClient->GetRoot(), 800, 400, kFALSE);
+}

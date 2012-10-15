@@ -1,0 +1,90 @@
+# -*- mode: CMake -*-
+
+set ( SRCS  
+    STEERBase/IlcVParticle.cxx 
+    STEERBase/IlcVTrack.cxx 
+    STEERBase/IlcEventplane.cxx 
+    STEERBase/IlcVCluster.cxx 
+    STEERBase/IlcVCaloCells.cxx 
+    STEERBase/IlcVVertex.cxx 
+    STEERBase/IlcVEvent.cxx 
+    STEERBase/IlcMixedEvent.cxx 
+    STEERBase/IlcVHeader.cxx 
+    STEERBase/IlcVEventHandler.cxx 
+    STEERBase/IlcVEventPool.cxx 
+    STEERBase/IlcVCuts.cxx 
+    STEERBase/IlcVVZERO.cxx 
+    STEERBase/IlcVZDC.cxx 
+    STEERBase/IlcCentrality.cxx 
+    STEERBase/IlcPID.cxx 
+    STEERBase/IlcLog.cxx 
+    STEERBase/IlcRunTag.cxx 
+    STEERBase/IlcLHCTag.cxx 
+    STEERBase/IlcDetectorTag.cxx 
+    STEERBase/IlcEventTag.cxx 
+    STEERBase/IlcFileTag.cxx 
+    STEERBase/IlcEventTagCuts.cxx 
+    STEERBase/IlcRunTagCuts.cxx 
+    STEERBase/IlcLHCTagCuts.cxx 
+    STEERBase/IlcDetectorTagCuts.cxx 
+    STEERBase/IlcTagCreator.cxx 
+    STEERBase/IlcHeader.cxx 
+    STEERBase/IlcGenEventHeader.cxx 
+    STEERBase/IlcDetectorEventHeader.cxx 
+    STEERBase/IlcGenPythiaEventHeader.cxx 
+    STEERBase/IlcGenCocktailEventHeader.cxx 
+    STEERBase/IlcGenGeVSimEventHeader.cxx 
+    STEERBase/IlcGenHijingEventHeader.cxx 
+    STEERBase/IlcCollisionGeometry.cxx 
+    STEERBase/IlcGenDPMjetEventHeader.cxx 
+    STEERBase/IlcGenHerwigEventHeader.cxx 
+    STEERBase/IlcGenEposEventHeader.cxx 
+    STEERBase/IlcStack.cxx 
+    STEERBase/IlcMCEventHandler.cxx 
+    STEERBase/IlcInputEventHandler.cxx 
+    STEERBase/IlcTrackReference.cxx 
+    STEERBase/IlcSysInfo.cxx 
+    STEERBase/IlcMCEvent.cxx 
+    STEERBase/IlcMCParticle.cxx 
+    STEERBase/IlcMCVertex.cxx 
+    STEERBase/IlcMagF.cxx 
+    STEERBase/IlcMagWrapCheb.cxx 
+    STEERBase/IlcCheb3D.cxx 
+    STEERBase/IlcCheb3DCalc.cxx 
+    STEERBase/IlcNeutralTrackParam.cxx 
+    STEERBase/IlcCodeTimer.cxx 
+    STEERBase/IlcPDG.cxx 
+    STEERBase/IlcTimeStamp.cxx 
+    STEERBase/IlcTriggerScalers.cxx 
+    STEERBase/IlcTriggerScalersRecord.cxx 
+    STEERBase/IlcExternalTrackParam.cxx 
+    STEERBase/IlcQA.cxx 
+    STEERBase/IlcITSPidParams.cxx 
+    STEERBase/IlcTRDPIDReference.cxx 
+    STEERBase/IlcTRDPIDParams.cxx 
+    STEERBase/IlcTRDPIDResponseObject.cxx
+    STEERBase/IlcTRDTKDInterpolator.cxx
+    STEERBase/IlcPIDResponse.cxx 
+    STEERBase/IlcITSPIDResponse.cxx 
+    STEERBase/IlcTPCPIDResponse.cxx 
+    STEERBase/IlcTOFPIDResponse.cxx 
+    STEERBase/IlcTOFPIDParams.cxx 
+    STEERBase/IlcTRDPIDResponse.cxx 
+    STEERBase/IlcEMCALPIDResponse.cxx 
+    STEERBase/IlcPIDCombined.cxx
+    STEERBase/IlcDAQ.cxx 
+    STEERBase/IlcRefArray.cxx
+    STEERBase/IlcOADBContainer.cxx	
+    STEERBase/IlcMathBase.cxx 
+    STEERBase/TTreeStream.cxx 
+    STEERBase/IlcVMFT.cxx
+    STEERBase/IlcTPCdEdxInfo.cxx
+    STEERBase/IlcCounterCollection.cxx
+    STEERBase/IlcTOFHeader.cxx
+  )
+
+string(REPLACE ".cxx" ".h" HDRS  "${SRCS}")
+
+set ( DHDR  STEERBaseLinkDef.h)
+
+set ( EXPORT ${HDRS})

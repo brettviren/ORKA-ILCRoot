@@ -1,0 +1,80 @@
+##### MACROS #####
+
+ROOTH         = TH1.h
+
+SRCS          = IlcRawEventHeader.cxx IlcRawEquipmentHeader.cxx \
+		IlcRawData.cxx IlcRawEquipment.cxx IlcRawEvent.cxx \
+		IlcStats.cxx IlcRawDB.cxx \
+		IlcRawRFIODB.cxx IlcRawCastorDB.cxx IlcRawRootdDB.cxx \
+		IlcRawNullDB.cxx IlcTagDB.cxx IlcTagNullDB.cxx \
+		IlcMDC.cxx
+
+HDRS          = $(SRCS:.cxx=.h) LinkDef.h
+
+DICT          = IlcRawDict.cxx
+DICTH         = $(DICT:.cxx=.h)
+DICTO         = $(DICT:.cxx=.o)
+
+MAIN          = ilcmdc_main.cxx
+MAINO         = $(MAIN:.cxx=.o)
+
+OBJS          = $(SRCS:.cxx=.o) $(DICTO)
+
+ALLDICT       = $(DICT) $(DICTH)
+ALLSRCS       = $(SRCS) $(HDRS) $(MAIN)
+ALLOBJS       = $(OBJS) $(MAINO)
+
+ILCMDC        = ilcmdc
+
+
+
+##### RULES #####
+
+.SUFFIXES: .cxx
+.PHONY: all rdm smi evb hlt debug
+
+.cxx.o:
+	$(CXX) $(OPT) $(CXXFLAGS) -c $<
+
+
+##### TARGETS #####
+
+all:            $(ILCMDC)
+
+rdm:            $(ILCMDC)
+
+smi:            $(ILCMDC)
+
+evb:            $(ILCMDC)
+
+hlt:            $(ILCMDC)
+
+
+$(ILCMDC):      $(MAINO) $(DICT) $(OBJS)
+		$(LD) $(LDFLAGS) $(MAINO) $(OBJS) \
+		$(LIBS) -o $(ILCMDC)
+		@if [ `id -u -n` = "ilcmdc" ]; then \
+		   chmod 6755 ilcmdc; \
+		fi
+
+$(DICT):        $(HDRS)
+		@echo "Generating dictionary ..."
+		rootcint -f $(DICT) -c $(CXXFLAGS) $(ROOTH) $(HDRS)
+
+$(DICTO):       $(DICT)
+		$(CXX) $(NOOPT) $(CXXFLAGS) -c $(DICT)
+
+depend:
+		rmkdepend -fMake-depend -- $(CXXFLAGS) -- $(SRCS) $(MAIN) \
+		> /dev/null 2>&1
+
+dist:
+		rm -f ilcmdc.tar.gz ; \
+		tar cvf ilcmdc.tar AA* $(ALLSRCS) .rootrc *.C Make* ; \
+		gzip ilcmdc.tar
+
+clean:
+		@rm -f $(ALLOBJS) $(ALLDICT)
+
+distclean:      clean
+		@rm -f $(ILCMDC)

@@ -1,0 +1,18 @@
+*
+* $Id: abend.F 7870 2003-07-14 13:35:23Z hristov $
+*
+#include "kerngen/pilot.h"
+#if defined(CERNLIB_QMSUN)
+#include "sungs/abend.F"
+#elif defined(CERNLIB_QMVAX)
+#include "vaxgs/abend.F"
+#else
+      SUBROUTINE ABEND
+C
+C CERN PROGLIB# Z035    ABEND           .VERSION KERNFOR  4.31  911111
+C ORIG.  8/02/88  JZ
+C
+
+      STOP  7
+      END
+#endif

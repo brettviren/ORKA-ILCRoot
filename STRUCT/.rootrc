@@ -1,0 +1,7 @@
+
+Unix.*.Root.MacroPath:      .:$(ILC_ROOT)/macros:$(ILC_ROOT)
+
+Root.Html.OutputDir: $(ILC_ROOT)/html/roothtml/STRUCT
+Root.Html.SourceDir: ./
+Root.Html.Author:  Rene Brun
+Root.Html.Root:  http://root.cern.ch/root/html

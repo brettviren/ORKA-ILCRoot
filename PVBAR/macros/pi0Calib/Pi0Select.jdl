@@ -1,0 +1,57 @@
+# this is the startup process for root
+Executable="pi0Select.sh";
+Jobtag={"comment:pi0 calibration"};
+
+# we split per storage element
+Split="se";
+
+# we want each job to read 10 input files
+SplitMaxInputFileNumber="10";
+
+# we need IlcRoot and the API service configuration package.
+# Analysis don't produce histo file with v4-16-Rev-07!!
+Packages={"VO_ILC@APISCONFIG::V2.4","VO_ILC@IlcRoot::v4-16-Rev-05"};
+TTL = "18 hours";
+#Price = 10;
+User = "polishch";
+
+#ROOT will read this collection file to know, which files to analyze
+InputDataList="minbias_LHC09a4_81040_81050.xml";
+
+#ROOT requires the collection file in the xml-single format
+InputDataListFormat="xml-single";
+
+# this is our collection file containing the files to be analyzed
+InputDataCollection="LF:/ilc/cern.ch/user/p/polishch/xml/minbias_LHC09a4_81040_81050.xml,nodownload";
+
+InputFile= {"LF:/ilc/cern.ch/user/p/polishch/pi0Calib/AnaPi0Select.C",
+            "LF:/ilc/cern.ch/user/p/polishch/pi0Calib/IlcAnalysisTaskPi0CalibSelection.cxx",
+            "LF:/ilc/cern.ch/user/p/polishch/pi0Calib/IlcAnalysisTaskPi0CalibSelection.h",
+            "LF:/ilc/cern.ch/user/p/polishch/pi0Calib/.rootrc",
+	    "LF:/ilc/cern.ch/user/p/polishch/pi0Calib/PVBAR.tgz"};
+            
+InputBox=  {"/ilc/cern.ch/user/p/polishch/pi0Calib/AnaPi0Select.C",
+            "/ilc/cern.ch/user/p/polishch/pi0Calib/IlcAnalysisTaskPi0CalibSelection.cxx",
+            "/ilc/cern.ch/user/p/polishch/pi0Calib/IlcAnalysisTaskPi0CalibSelection.h",
+	    "/ilc/cern.ch/user/p/polishch/pi0Calib/.rootrc",
+	    "/ilc/cern.ch/user/p/polishch/pi0Calib/PVBAR.tgz"};
+
+# Output archive	    
+OutputArchive={"log_archive.zip:stdout,stderr@ILC::NIHAM::FILE",
+		"root_archive.zip:*.root@ILC::NIHAM::FILE"};
+
+# Output directory
+OutputDir="/ilc/cern.ch/user/p/polishch/pi0Calib/output/#alien_counter#";
+
+# Output files
+OutputFile={"histos.root"};
+
+# Merge the output
+Merge={"histos.root:/ilc/cern.ch/user/p/polishch/pi0Jet/mergerootfile.jdl:histos_merged.root"};
+MergeOutputDir={"/ilc/cern.ch/user/p/polishch/pi0Calib/output"};
+
+# Validation
+Validationcommand ="/ilc/cern.ch/user/p/polishch/bin/validate.sh";
+
+# email
+Email="Boris.Polishchuk@cern.ch";

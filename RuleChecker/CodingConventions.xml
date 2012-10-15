@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ConventionConfigurations>
+   <ILCConfig>
+      <ILCCodingRules check = "true">
+	<Rules category = "NamingRules" check = "true">
+		<Rule check = "true">
+			<Name>RN3</Name>
+			<Description>@ No special characters in names are allowed (_,#,$,&amp;,@,-,%).</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN4</Name>
+			<Description>@ Header file names are derived from the 
+@ class name and have the suffix ".h" (Classname.h).</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN5</Name>
+			<Description>@ Implementation file names are derived from 
+@ the class name and have the suffix ".cxx" (Classname.cxx).</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN6</Name>
+			<Description>@ Class name starts with the prefix "Ilc".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN8</Name>
+			<Description>@ Class names follow the general rule RN3.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN9</Name>
+			<Description>@ Member function names start with a capital.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN10</Name>
+			<Description>@ Member function names follow the general rule RN3.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN11</Name>
+			<Description>@ Data member names start with a prefix "f".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN12</Name>
+			<Description>@ Data member names follow the general rule RN3.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN13</Name>
+			<Description>@ Local variables names start with a lower case letter.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN14</Name>
+			<Description>@ Local variable names follow the general rule RN3.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN15</Name>
+			<Description>@ Global non-constant, objects names start with a 
+@ prefix "gIlc". Global constant objects names start 
+@ with a prefix "k".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN16</Name>
+			<Description>@ Global variables names follow the general rule RN3.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN17</Name>
+			<Description>@ Constants, including names in enumeration 
+@ types and constant statics start with a prefix "k".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN18</Name>
+			<Description>@ Constant names follow the general rule RN3.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN19</Name>
+			<Description>@ Static data members names start with a prefix "fg", 
+@ constant data members names start with a prefix "fk", 
+@ static constant data members start with a prefix "fgk".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN20</Name>
+			<Description>@ Special data member names follow the general rule RN3.</Description>
+		</Rule>
+	</Rules>
+	<Rules category = "CodingRules" check = "true">
+		<Rule check = "true">
+			<Name>RC3</Name>
+			<Description>@ Header files begin and end with multiple-inclusion 
+@ protection, as follows:
+@         #ifndef CLASSNAME_H 
+@         #define CLASSNAME_H
+@          ....
+@         #endif
+@ where CLASSNAME is constructed from the name of 
+@ class by converting all letters to capitals.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC4</Name>
+			<Description>@ Header files should hold the definition of a single 
+@ class. It is possible to define more classes in one 
+@ header file only if these classes are embedded.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC5</Name>
+			<Description>@ Implementation files should hold all the member 
+@ function definitions for a single class (or embedded 
+@ classes) as defined in the corresponding header file.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC6</Name>
+			<Description>@ All declarations are declared with friend first 
+@ (if there are any), then public, protected and private.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC7</Name>
+			<Description>@ Usage of global variables should be avoided: they 
+@ should be encapsulated in a class. However global 
+@ variables pointing to the main object of a package can occur 
+@ (e.g. gIlc in IlcRoot package).</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC8</Name>
+			<Description>@ The usage of friend classes should be avoided apart 
+@ from I/O overloading where it is needed.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC9</Name>
+			<Description>@ All classes containing at least on virtual function 
+@ MUST have a virtual destractor.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC10</Name>
+			<Description>@ A class that has a member datum with a type which is 
+@ a built-in pointer should have a copy constructor and 
+@ an assignment operator.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC11</Name>
+			<Description>@ Make const all member functions that are not supposed 
+@ to change member data.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC12</Name>
+			<Description>@ Dummy argument names in member function declarations 
+@ should be always provided, apart from arguments that are not used.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC14</Name>
+			<Description>@ All class data members should be declared as 
+@ "private" or "protected".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC15</Name>
+			<Description>@ Structures can be used only for accessing FORTRAN 
+@ common blocks, functions from external libraries, or internally 
+@ within a class. They can have only data members and eventually a 
+@ default constructor, member functions are not allowed. Classes 
+@ should be used instead in all other cases.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC16</Name>
+			<Description>@ Using the following words or phrases 
+@ is not allowed in output statements.
+@	Segmentation violation
+@	Segmentation fault
+@	Bus error
+@	Abort
+@	Floating point exception
+@	Killed
+@	Busy flag cleared</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC17</Name>
+			<Description>@ Floating point numbers must not be compared 
+@ with the "==" or "!=" operators , but with
+@ an appropriate function that calculates 
+@ how close the two values are to each other.
+@ If the two numbers are "close enough", 
+@ then we call them equal. This rule does 
+@ not apply to the variables just after 
+@ initialization whose value is not 
+@ affected by rounding errors.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC18</Name>
+			<Description>@ Data members of a class must not be redefined 
+@ in derived classes.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC19</Name>
+			<Description>@ In parameters of a method, objects that are 
+@ passed by pointer or by reference and that are not 
+@ modified should be declared const.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC20</Name>
+			<Description>@ The constructors used in Root I/O should not 
+@ allocate memory to data members. These constructors 
+@ are either the constructors which have TRootIOCtor* 
+@ as parameter type, or the default constructors. The 
+@ rule does not apply to classes excluded from Root 
+@ I/0 with ClassDef(ClassName,0).</Description>
+		</Rule>
+		<Rule check = "false">
+			<Name>RC21</Name>
+			<Description>@ The constant static data members of the basic 
+@ types should be initialized in the header file 
+@ and static data members in the implementation file.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC22</Name>
+			<Description>@ The static data members of the object types 
+@ should be avoided. A static access function 
+@ returning a reference to the local static 
+@ variable should be used instead.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC23</Name>
+			<Description>@ In the destructor, its not necessary to check 
+@ if a data member pointer is zero before 
+@ deleting it and/or to set it to zero.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RC24</Name>
+			<Description>@ When using math routines, use Root::TMath:: versions.</Description>
+		</Rule>
+	</Rules>
+	<Rules category = "Guidelines" check = "true">
+		<Rule check = "true">
+			<Name>GC1</Name>
+			<Description>@ To be careful especially with using exceptions, 
+@ and templates</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>GC2</Name>
+			<Description>@ When only referring to pointers or references to 
+@ types defined in the header file its often not necessary to 
+@ include that file. It may be sufficient to use forward declaration.</Description>
+		</Rule>
+	</Rules>
+	<Rules category = "StyleRules" check = "true">
+		<Rule check = "true">
+			<Name>RS1</Name>
+			<Description>@ Each class contains a description of the class 
+@ functionality placed at the beginning of the class header 
+@ file and an extensive description at the beginning of the 
+@class implementation file.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS2</Name>
+			<Description>@ All data members of a class are described by a short 
+@comment following the data member declaration on the same line.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS3</Name>
+			<Description>@ Member functions comments in implementation files should 
+@ be put on the new line after the first "{".</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS4</Name>
+			<Description>@ Header files should not have method body inside the class 
+@ definitions in case they do not fit on one or two lines or when the 
+@ inline function has unused arguments. The bodies of "inline" functions 
+@ should go to the end of the header file after the class definition.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS5</Name>
+			<Description>@ There is no need to use the keyword "inline" when defining 
+@ the body of a function in the class definition.</Description>
+		</Rule>
+	</Rules>
+      </ILCCodingRules>
+      <ForbiddenStrings>
+	<String>Segmentation violation</String>
+	<String>Segmentation fault</String>
+	<String>Bus error</String>
+	<String>Abort</String>
+	<String>Floating point exception</String>
+	<String>Segmentation fault</String>
+	<String>Killed</String>
+	<String>Busy flag cleared</String>
+      </ForbiddenStrings>
+   </ILCConfig>
+   <ROOTConfig>
+      <ROOTCodingRules check = "true">
+	<Rules category = "NamingRules" check = "true">
+		<Rule check = "true">
+			<Name>RN2</Name>
+			<Description>@ No special characters in names are allowed (_,#,$,&amp;,@,-,%).</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN3</Name>
+			<Description>@ Types begin with a capital letter and end with '_t'.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN4</Name>
+			<Description>@ Base classes begin with 'T'.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN6</Name>
+			<Description>@ Enumeration types begin with 'E'.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN7</Name>
+			<Description>@ Avoid raw C types, we check for the non-portable (memory-wise) types
+@ 'long', 'unsigned long', 'long double', 'bool', 'long long' and 
+@ 'unsigned long long'.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN9</Name>
+			<Description>@ Attributes begin with 'f' and function begin with a capital letter.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN10</Name>
+			<Description>@ Global static variables begin with 'g'.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN11</Name>
+			<Description>@ Static data members begin with 'fg'.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN12</Name>
+			<Description>@ Local variables and parameters begin with a lowercase word.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RN13</Name>
+			<Description>@ Constants begin with 'k', including names of enumeration, 
+@ constants and constant statics.</Description>
+		</Rule>
+	</Rules>
+	<Rules category = "StyleRules" check = "true">
+		<Rule check = "true">
+			<Name>RS1</Name>
+			<Description>@ &lt;TAB&gt; used for indentation.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS2</Name>
+			<Description>@ &lt;SPACE&gt; of 3 should be used for indentation.</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS3</Name>
+			<Description>@ Comments should be written after ClassDef(...,#).</Description>
+		</Rule>
+		<Rule check = "true">
+			<Name>RS4</Name>
+			<Description>@ Member functions' comments should be put on the new line after the first &quot;{&quot;.</Description>
+		</Rule>
+	</Rules>
+      </ROOTCodingRules>
+   </ROOTConfig>
+</ConventionConfigurations>
