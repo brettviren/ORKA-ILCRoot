@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Setting IlcROOT to $1"
+export ILC=$1
+shift 1
+
+export ILC_LEVEL=v4-03-03
+export ILC_ROOT=$ILC/$ILC_LEVEL
+TARGET=`uname`
+export ILC_TARGET=`perl -e "print lc($TARGET)"`
+
+export  PATH=$ILC_ROOT/bin/tgt_$ILC_TARGET:/bin:/usr/bin:$HOME/bin:$ALIEN_ROOT/ilc/local/bin:/usr/local/bin:$PATH
+export LD_LIBRARY_PATH=$ILC_ROOT/lib/tgt_$ILC_TARGET/:$LD_LIBRARY_PATH
+
+$*
