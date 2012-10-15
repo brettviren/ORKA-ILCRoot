@@ -1,0 +1,79 @@
+# -*- mode: CMake -*-
+
+set ( SRCS  
+    ESD/IlcESDEvent.cxx 
+    ESD/IlcESDInputHandler.cxx 
+    ESD/IlcESDInputHandlerRP.cxx 
+    ESD/IlcESDfriend.cxx 
+    ESD/IlcESD.cxx 
+    ESD/IlcESDtrack.cxx 
+    ESD/IlcESDfriendTrack.cxx 
+    ESD/IlcESDMuonTrack.cxx 
+    ESD/IlcESDPmdTrack.cxx 
+    ESD/IlcESDTrdTrack.cxx 
+    ESD/IlcESDTrdTracklet.cxx 
+    ESD/IlcESDTrdTrigger.cxx 
+    ESD/IlcESDHLTtrack.cxx 
+    ESD/IlcESDv0.cxx 
+    ESD/IlcESDcascade.cxx 
+    ESD/IlcVertex.cxx 
+    ESD/IlcESDVertex.cxx 
+    ESD/IlcESDpid.cxx 
+    ESD/IlcESDkink.cxx 
+    ESD/IlcESDCaloCluster.cxx 
+    ESD/IlcESDMuonCluster.cxx 
+    ESD/IlcESDMuonPad.cxx 
+    ESD/IlcKFParticleBase.cxx 
+    ESD/IlcKFParticle.cxx 
+    ESD/IlcKFVertex.cxx 
+    ESD/IlcKalmanTrack.cxx 
+    ESD/IlcVertexerTracks.cxx 
+    ESD/IlcStrLine.cxx 
+    ESD/IlcESDV0Params.cxx 
+    ESD/IlcTrackPointArray.cxx 
+    ESD/IlcESDFMD.cxx 
+    ESD/IlcFMDMap.cxx 
+    ESD/IlcFMDFloatMap.cxx 
+    ESD/IlcESDMultITS.cxx 
+    ESD/IlcESDVZERO.cxx 
+    ESD/IlcMultiplicity.cxx 
+    ESD/IlcSelector.cxx 
+    ESD/IlcESDRun.cxx 
+    ESD/IlcESDHeader.cxx 
+    ESD/IlcESDHLTDecision.cxx 
+    ESD/IlcESDZDC.cxx 
+    ESD/IlcESDTZERO.cxx 
+    ESD/IlcESDTZEROfriend.cxx 
+    ESD/IlcESDCaloTrigger.cxx 
+    ESD/IlcRawDataErrorLog.cxx 
+    ESD/IlcMeanVertex.cxx 
+    ESD/IlcESDCaloCells.cxx 
+    ESD/IlcESDACORDE.cxx 
+    ESD/IlcESDVZEROfriend.cxx 
+    ESD/IlcESDHandler.cxx 
+    ESD/IlcTrackerBase.cxx  
+    ESD/IlcESDUtils.cxx
+    ESD/IlcTriggerIR.cxx 
+    ESD/IlcTriggerScalersESD.cxx 
+    ESD/IlcTriggerScalersRecordESD.cxx 
+    ESD/IlcTriggerCluster.cxx 
+    ESD/IlcTriggerDescriptor.cxx 
+    ESD/IlcTriggerInput.cxx 
+    ESD/IlcTriggerInteraction.cxx 
+    ESD/IlcTriggerPFProtection.cxx 
+    ESD/IlcTriggerBCMask.cxx 
+    ESD/IlcTriggerClass.cxx 
+    ESD/IlcTriggerConfiguration.cxx 
+    ESD/IlcExpression.cxx
+    ESD/IlcESDCosmicTrack.cxx
+    ESD/IlcV0vertexer.cxx 
+    ESD/IlcCascadeVertexer.cxx 
+    )
+
+string( REPLACE ".cxx" ".h" HDRS "${SRCS}")
+
+set ( EINCLUDE  RAW STEER/STEERBase)
+
+set ( DHDR  ESDLinkDef.h)
+
+set ( EXPORT ${HDRS})

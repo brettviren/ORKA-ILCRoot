@@ -1,0 +1,4 @@
+* $Id: pyint6_hijing.inc 1074 2000-05-17 15:13:04Z fca $
+      COMMON/PYINT6_HIJING/PROC(0:200) 
+      CHARACTER PROC*28 
+      SAVE /PYINT6_HIJING/ 

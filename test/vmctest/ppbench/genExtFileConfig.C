@@ -1,0 +1,108 @@
+// $Id: genExtFileConfig.C 39165 2010-02-25 16:12:24Z ivana $
+//
+// IlcRoot Configuration for running ilcroot with Monte Carlo.
+// genExtFileConfig() includes the common setting for all MCs
+// which has to be called after MC is instantiated.
+// Called from MC specific configs (g3Config.C, g4Config.C).
+//
+// Extracted from G3 specific Config.C 
+// by I. Hrivnacova, IPN Orsay
+
+// Functions
+Float_t EtaToTheta(Float_t arg);
+IlcGenerator* GeneratorFactory();
+
+void genExtFileConfig(const TString& srun)
+{
+  cout << "Running genExtFileConfig.C ... " << endl;
+
+  //=======================================================================
+  // Steering parameters for ILC simulation
+  //=======================================================================
+
+  gMC->SetProcess("DCAY",1);
+  gMC->SetProcess("PAIR",1);
+  gMC->SetProcess("COMP",1);
+  gMC->SetProcess("PHOT",1);
+  gMC->SetProcess("PFIS",0);
+  gMC->SetProcess("DRAY",0);
+  gMC->SetProcess("ANNI",1);
+  gMC->SetProcess("BREM",1);
+  gMC->SetProcess("MUNU",1);
+  gMC->SetProcess("CKOV",1);
+  gMC->SetProcess("HADR",1);
+  gMC->SetProcess("LOSS",2);
+  gMC->SetProcess("MULS",1);
+  //gMC->SetProcess("RAYL",1);
+
+  Float_t cut = 1.e-3;        // 1MeV cut by default
+  Float_t tofmax = 1.e10;
+
+  gMC->SetCut("CUTGAM", cut);
+  gMC->SetCut("CUTELE", cut);
+  gMC->SetCut("CUTNEU", cut);
+  gMC->SetCut("CUTHAD", cut);
+  gMC->SetCut("CUTMUO", cut);
+  gMC->SetCut("BCUTE",  cut); 
+  gMC->SetCut("BCUTM",  cut); 
+  gMC->SetCut("DCUTE",  cut); 
+  gMC->SetCut("DCUTM",  cut); 
+  gMC->SetCut("PPCUTM", cut);
+  gMC->SetCut("TOFMAX", tofmax); 
+
+  //=======================================================================
+  // External decayer
+  //=======================================================================
+
+  // Set External decayer
+  IlcDecayer *decayer = new IlcDecayerPythia();
+
+  switch (srun) {
+  case kD0PbPb5500:
+    decayer->SetForceDecay(kHadronicD);
+    break;
+  case kCharmSemiElPbPb5500:
+    decayer->SetForceDecay(kSemiElectronic);
+    break;
+  case kBeautySemiElPbPb5500:
+    decayer->SetForceDecay(kSemiElectronic);
+    break;
+  default:
+    decayer->SetForceDecay(kAll);
+    break;
+  }
+  decayer->Init();
+  gMC->SetExternalDecayer(decayer);
+  
+  //=======================================================================
+  // Event generator
+  //=======================================================================
+
+  // External generator configuration
+  IlcGenerator* gener = GeneratorFactory();
+  gener->SetOrigin(0, 0, 0);    // vertex position
+  //gener->SetSigma(0, 0, 5.3);   // Sigma in (X,Y,Z) (cm) on IP position
+  //gener->SetCutVertexZ(1.);     // Truncate at 1 sigma
+  //gener->SetVertexSmear(kPerEvent); 
+  gener->SetTrackingFlag(1);
+  gener->Init();
+    
+  cout << "Running genExtFileConfig.C finished ... " << endl;
+}
+
+Float_t EtaToTheta(Float_t arg){
+  return (180./TMath::Pi())*2.*atan(exp(-arg));
+}
+
+IlcGenerator* GeneratorFactory() {
+
+  IlcGenExtFile *gener = new IlcGenExtFile(-1);
+  IlcGenReaderTreeK * reader = new IlcGenReaderTreeK();
+
+  reader->SetFileName("gilc.root");
+  reader->AddDir("$ILC_ROOT/test/vmctest/ppbench/gen");
+  gener->SetReader(reader);
+     
+  return gener; 
+}
+

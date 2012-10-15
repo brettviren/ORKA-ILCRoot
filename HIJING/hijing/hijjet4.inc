@@ -1,0 +1,6 @@
+* $Id: hijjet4.inc 11585 2005-04-29 01:47:59Z alibrary $
+	REAL PDR
+	COMMON/HIJJET4/NDR,IADR(900,2),KFDR(900),PDR(900,5)
+#ifndef BLANKET_SAVE
+	SAVE  /HIJJET4/
+#endif

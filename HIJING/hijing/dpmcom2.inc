@@ -1,0 +1,6 @@
+* $Id: dpmcom2.inc 11585 2005-04-29 01:47:59Z alibrary $
+      REAL PDPM1,PDPM2
+      COMMON/DPMCOM2/NDPM,KDPM(20,2),PDPM1(20,5),PDPM2(20,5)
+#ifndef BLANKET_SAVE
+      SAVE  /DPMCOM2/
+#endif

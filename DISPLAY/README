@@ -1,0 +1,22 @@
+1) Extract files and move the DISPLAY directory to $ILC_ROOT
+
+2) Move the .ilcdisplayrc to $ILC_ROOT
+
+3) Move the macro display2.C to $ILC_ROOT/macros/
+
+4) In the IlcRoot Makefile ($ILC_ROOT/Makefile), add DISPLAY at the end of the
+ILCROOTMODULES
+
+5) In the include path, add the following lines:
+
+	CXXFLAGS += -I$(HLT)/src
+	CXXFLAGS += -I$(ILC_ROOT)/TPC
+	CXXFLAGS += -I$(ILC_ROOT)/CONTAINERS
+	
+	CINTFLAGS += -I$(HLT)/src
+	CINTFLAGS += -I$(ILC_ROOT)/TPC
+	CINTFLAGS += -I$(ILC_ROOT)/CONTAINERS
+
+	DEPINC += -I$(HLT)/src
+	DEPINC += -I$(ILC_ROOT)/TPC
+	DEPINC += -I$(ILC_ROOT)/CONTAINERS

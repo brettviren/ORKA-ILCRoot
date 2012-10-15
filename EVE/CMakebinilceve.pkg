@@ -1,0 +1,82 @@
+# -*- mode: CMake -*- 
+#-----------------------------------------------------------------------#
+# Package File for ilceve                                                        #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#-----------------------------------------------------------------------#
+
+set ( SRCS  ilceve_main/ilceve_main.cxx)
+set ( CSRCS )
+
+set ( EINCLUDE )
+set ( ELIBSDIR )
+
+set ( ELIBS  EveBase DCHfast DCHsim DCHrec DCHbase TARGETbase TARGETsim TARGETrec PVBARUtils PVBARbase PVBARsim PVBARrec PVECbase PVECsim RSTACKbase RSTACKsim STRUCT STEER CDB AOD ESD STEERBase ANALYSISilc ANALYSIS THijing hijing THbtp TEPEMGEN FASTSIM microcern RAWDatasim RAWDatarec RAWDatabase XMLParser STAT OADB)
+
+if(PYTHIA6)
+  list (APPEND ELIBS EVGEN)
+endif(PYTHIA6)
+
+set ( PACKBLIBS  ${ROOTCLIBS} ${ROOTPLIBS} -lTreePlayer -lGeomPainter -lGed -lRGL -lEve ${SYSLIBS} )
+
+if( ILC_TARGET STREQUAL "macosx")
+			
+	set ( ELIBS ${ELIBS} GL)
+	set ( ELIBSDIR ${ELIBSDIR} /usr/X11R6/lib/)
+	
+  set ( ELIBSCPP ${ELIBS})
+	list(REMOVE_ITEM ELIBSCPP microcern lhapdf herwig)
+
+  ILC_Format(PACKLDFLAGS "-Wl,-u,_G__cpp_setupG__" "" ${LDFLAGS})
+
+	if( MACOSX_MINOR STREQUAL "5")
+						
+		set ( PACKLDFLAGS "${PACKLDFLAGS} -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib")
+
+  endif( MACOSX_MINOR STREQUAL "5")
+	
+  set ( ELIBS ${ELIBS} GLU)
+	set ( ELIBSDIR ${ELIBSDIR} ${FINK_ROOT}/lib)
+	
+endif( ILC_TARGET STREQUAL "macosx")
+
+install (DIRECTORY macros 
+	 DESTINATION EVE/ 
+	 PATTERN ".svn" EXCLUDE 
+	 PATTERN "*.d" EXCLUDE 
+	 PATTERN "*_C.so" EXCLUDE)
+
+	 
+install (DIRECTORY ilc-macros 
+	 DESTINATION EVE/ 
+	 PATTERN ".svn" EXCLUDE 
+	 PATTERN "*.d" EXCLUDE 
+	 PATTERN "*_C.so" EXCLUDE)
+
+install (DIRECTORY ilc-data 
+	 DESTINATION EVE/ 
+	 PATTERN ".svn" EXCLUDE 
+	 PATTERN "*.d" EXCLUDE 
+	 PATTERN "*_C.so" EXCLUDE)
+

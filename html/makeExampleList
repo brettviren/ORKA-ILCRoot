@@ -1,0 +1,18 @@
+#!/bin/sh
+ head=EXAMPLE_Index_head.html
+ file=roothtml/EXAMPLE_Index.html
+ tail=EXAMPLE_Index_tail.html
+ def="Example Macro"
+#
+ cp $head $file
+ for i in roothtml/examples/*.html ; do
+     title=`grep "// Title:" $i | sed -e 's/.*\/\/ Title: *//' | sed -e 's/ *$//'`
+     name=`basename $i`
+     ref=`basename $i .html`
+     string1="<li><a name=\"$ref\" href=\"examples/$name\">$ref</a>"
+     string2="<a name=\"Title:$ref\">${title:-$def}</a>"
+#     echo $ref
+     dots=`echo $ref | awk '{for(i=0;i<35-length($0);i++)printf "."}' `
+     echo $string1 " $dots " $string2 >> $file
+ done
+ cat $tail >> $file

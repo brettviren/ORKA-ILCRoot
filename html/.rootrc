@@ -1,0 +1,27 @@
+# Path used by dynamic loader to find shared libraries and macros
+# Paths are different for Unix and Windows. The example shows the defaults
+# for all ROOT applications for either Unix or Windows.
+Unix.*.Root.DynamicPath:    .:$(ROOTSYS)/lib
+Unix.*.Root.MacroPath:      .:$(ROOTSYS)/macros:$(ILC_ROOT)/macros
+WinNT.*.Root.DynamicPath:   ./;$(ROOTSYS);$(ROOTSYS)/bin;$(PATH)
+WinNT.*.Root.MacroPath:     ./;$(ROOTSYS)/macros
+
+
+# THtml specific settings.
+Root.Html.OutputDir:         roothtml
+Unix.*.Root.Html.SourceDir:  ./:../
+#WinNT.*.Root.Html.SourceDir: ./
+Root.Html.Author:           //--- Author:
+#Root.Html.Copyright:        * Copyright
+Root.Html.LastUpdate:       //- Modified:
+#Root.Html.Description:      //____________________
+Root.Html.Root:             http://root.cern.ch/root/html
+#Root.Html.SearchEngine:     ../Search.phtml
+
+# Rint (interactive ROOT executable) specific alias, logon and logoff macros
+Rint.Load:               rootalias.C
+Rint.Logon:              rootlogon.C
+Rint.Logoff:             rootlogoff.C
+Rint.History:            $(HOME)/.root_hist
+
+

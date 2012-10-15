@@ -1,0 +1,6 @@
+* $Id: hijhb.inc 11585 2005-04-29 01:47:59Z alibrary $
+	REAL RR, XX
+	COMMON/HIJHB/RR(10,201),XX(10,201)
+#ifndef BLANKET_SAVE
+	SAVE  /HIJHB/
+#endif

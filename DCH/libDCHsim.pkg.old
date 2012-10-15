@@ -1,0 +1,10 @@
+SRCS= IlcDCHhit.cxx \
+      IlcDCHhitCluCou.cxx \
+      IlcDCH.cxx \
+      IlcDCHv1.cxx
+
+HDRS= $(SRCS:.cxx=.h)                
+
+DHDR= DCHsimLinkDef.h
+
+EINCLUDE= RAW

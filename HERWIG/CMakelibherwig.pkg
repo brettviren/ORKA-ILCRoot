@@ -1,0 +1,42 @@
+#--------------------------------------------------------------------------------#
+# Package File for herwig                                                        #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS IlcHerwigRndm.cxx)
+
+string ( REPLACE ".cxx" ".h" HDRS "${SRCS}" )
+
+set ( DHDR herwigLinkDef.h)
+
+set ( CSRCS  main.c herwig6_address.c)
+
+set ( FSRCS  herwig6_called_from_cc.f herwig6_common_block_address.f herwig6510.f hwlhin.f str.f jimmy/cernmisc/jmabend.F jimmy/cernmisc/jmdbs4.F jimmy/cernmisc/jmdbsir3.F jimmy/cernmisc/jmdbska.F jimmy/cernmisc/jmlnoc.F jimmy/cernmisc/jmmlpt.F jimmy/cernmisc/jmmlst.F jimmy/cernmisc/jmucpy.F jimmy/divon4/addbnd.F jimmy/divon4/bfgs.F jimmy/divon4/bndopt.F jimmy/divon4/bndtst.F jimmy/divon4/bounds.F jimmy/divon4/bucmve.F jimmy/divon4/bufopt.F jimmy/divon4/delbnd.F jimmy/divon4/delete.F jimmy/divon4/delslv.F jimmy/divon4/divon.F jimmy/divon4/dvcopy.F jimmy/divon4/dvdot.F jimmy/divon4/dvnbkd.F jimmy/divon4/exmbuc.F jimmy/divon4/feasmv.F jimmy/divon4/feqn.F jimmy/divon4/fun.F jimmy/divon4/genpnt.F jimmy/divon4/grdcmp.F jimmy/divon4/intgrl.F jimmy/divon4/ldlsol.F jimmy/divon4/locsch.F jimmy/divon4/modchl.F jimmy/divon4/mulchk.F jimmy/divon4/mxstep.F jimmy/divon4/newptq.F jimmy/divon4/nmdchl.F jimmy/divon4/nocut.F jimmy/divon4/nodaud.F jimmy/divon4/orthvc.F jimmy/divon4/partn.F jimmy/divon4/quad.F jimmy/divon4/quasi.F jimmy/divon4/ranums.F jimmy/divon4/recparz.F jimmy/divon4/rlen.F jimmy/divon4/settol.F jimmy/divon4/shrnk.F jimmy/divon4/split.F jimmy/divon4/treaud.F jimmy/divon4/tredmp.F jimmy/divon4/tstext.F jimmy/divon4/usrint.F jimmy/divon4/usrtrm.F jimmy/jimmy/dfun.F jimmy/jimmy/dvnopt.F jimmy/jimmy/eikfun.F jimmy/jimmy/eikon.F jimmy/jimmy/epfun.F jimmy/jimmy/hwmsct.F jimmy/jimmy/hwnsct.F jimmy/jimmy/jimmin.F jimmy/jimmy/jmarea.F jimmy/jimmy/jmefin.F jimmy/jimmy/jmfact.F jimmy/jimmy/jmgamz.F jimmy/jimmy/jmgrid.F jimmy/jimmy/jminit.F jimmy/jimmy/jmkern.F jimmy/jimmy/jmknif.F jimmy/jimmy/jmpn.F jimmy/jimmy/jmrndm.F jimmy/jimmy/jmsn.F jimmy/jimmy/jmsnfn.F jimmy/jimmy/jmxs1.F jimmy/jimmy/qcdres.F)
+
+if( ILC_TARGET STREQUAL "win32gcc")
+	
+		set ( PACKSOFLAGS  ${SOFLAGS} -L${ILC_ROOT}/lib/tgt_${ILC_TARGET} -llhapdf)
+
+endif( ILC_TARGET STREQUAL "win32gcc")

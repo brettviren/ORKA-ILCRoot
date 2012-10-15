@@ -1,0 +1,6 @@
+* $Id: histrng.inc 11585 2005-04-29 01:47:59Z alibrary $
+        REAL PP, PT
+	COMMON/HISTRNG/NFP(300,15),PP(300,15),NFT(300,15),PT(300,15)
+#ifndef BLANKET_SAVE
+	SAVE  /HISTRNG/
+#endif

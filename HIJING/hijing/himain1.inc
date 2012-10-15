@@ -1,0 +1,6 @@
+* $Id: himain1.inc 11585 2005-04-29 01:47:59Z alibrary $
+        REAL EATT, BB
+	COMMON/HIMAIN1/NATT,EATT,JATT,NT,NP,N0,N01,N10,N11,BB
+#ifndef BLANKET_SAVE
+	SAVE  /HIMAIN1/
+#endif

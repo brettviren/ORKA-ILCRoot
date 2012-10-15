@@ -1,0 +1,238 @@
+/**************************************************************************
+ * 2012-2013 Infrastructure for Large Collider Experiment.       *
+ * All rights reserved.                                                   *
+ * Author: The International Lepton Collider Off-line Project.            *
+ *                                                                        *
+ * Part of the code has been developed by ILC Off-line Project.         *
+ * Contributors are mentioned in the code where appropriate.              *
+ *                                                                        *
+ * Permission to use, copy, modify and distribute this software and its   *
+ * documentation strictly for non-commercial purposes is hereby granted   *
+ * without fee, provided that the above copyright notice appears in all   *
+ * copies and that both the copyright notice and this permission notice   *
+ * appear in the supporting documentation. The authors make no claims     *
+ * about the suitability of this software for any purpose. It is          *
+ * provided "as is" without express or implied warranty.                  *
+ **************************************************************************/
+
+/* $Id: IlcAnalysisSelector.cxx 58023 2012-07-31 16:29:45Z hristov $ */
+// Author: Andrei Gheata, 31/05/2006
+
+//==============================================================================
+//   IlcAnalysisSelector - A transparent selector to be created by 
+// IlcAnalysisManager to handle analysis.
+//==============================================================================
+
+#include <Riostream.h>
+#include <TProcessID.h>
+#include <TROOT.h>
+
+#include "IlcAnalysisManager.h"
+#include "IlcAnalysisTask.h"
+#include "IlcAnalysisDataContainer.h"
+#include "IlcAnalysisSelector.h"
+
+using std::cout;
+using std::endl;
+ClassImp(IlcAnalysisSelector)
+
+//______________________________________________________________________________
+IlcAnalysisSelector::IlcAnalysisSelector()
+                    :TSelector(), 
+                     fInitialized(kFALSE), 
+                     fAnalysis(NULL)
+{
+// Dummy ctor.
+   fAnalysis = IlcAnalysisManager::GetAnalysisManager();
+   if (fAnalysis) fAnalysis->SetSelector(this);
+}   
+
+//______________________________________________________________________________
+IlcAnalysisSelector::IlcAnalysisSelector(IlcAnalysisManager *mgr)
+                    :TSelector(),
+                     fInitialized(kFALSE),
+                     fAnalysis(mgr)
+{
+// Constructor. Called by IlcAnalysisManager which registers itself on the
+// selector running on the master.
+   mgr->SetSelector(this);
+}
+
+//______________________________________________________________________________
+IlcAnalysisSelector::~IlcAnalysisSelector()
+{
+// Dtor. The analysis manager object is sent in the input list and duplicated
+// on the workers - it needs to be deleted (?)
+//   if (fAnalysis) delete fAnalysis;
+}
+
+//______________________________________________________________________________
+void IlcAnalysisSelector::Init(TTree *tree)
+{
+// Called after Begin/SlaveBegin, assumes that fAnalysis is already initialized.
+// Is Init called on workers in case of PROOF.
+   if (!fAnalysis) {
+      Error("Init", "Analysis manager NULL !");
+      Abort("Cannot initialize without analysis manager. Aborting.");
+      SetStatus(-1);
+      return;
+   }
+   if (fAnalysis->GetDebugLevel()>1) {
+      cout << "->IlcAnalysisSelector->Init()" << endl;
+   }   
+   if (!tree) {
+      Error("Init", "Input tree is NULL !");
+      Abort("Cannot initialize without tree. Aborting.");
+      SetStatus(-1);
+      return;
+   }
+   fInitialized = fAnalysis->Init(tree);
+   if (!fInitialized) {
+      Error("Init", "Some error occured during analysis manager initialization. Aborting.");
+      Abort("Error during IlcAnalysisManager::Init()");
+      SetStatus(-1);
+      return;
+   }   
+   if (fAnalysis->GetDebugLevel()>1) {
+      cout << "<-IlcAnalysisSelector->Init()" << endl;
+   }   
+}
+
+//______________________________________________________________________________
+void IlcAnalysisSelector::Begin(TTree *)
+{
+// Assembly the input list.
+   RestoreAnalysisManager();
+   if (fAnalysis && fAnalysis->GetDebugLevel()>1) {
+      cout << "->IlcAnalysisSelector->Begin: Analysis manager restored" << endl;
+      gROOT->SetMustClean(fAnalysis->MustClean());
+   }
+}
+
+//______________________________________________________________________________
+void IlcAnalysisSelector::SlaveBegin(TTree *tree)
+{
+// Called on each worker. We "unpack" analysis manager here and call InitAnalysis.
+   RestoreAnalysisManager();
+   if (fAnalysis) {
+      gROOT->SetMustClean(fAnalysis->MustClean());
+      if (fAnalysis->GetDebugLevel()>1) {
+         cout << "->IlcAnalysisSelector->SlaveBegin() after Restore" << endl;
+      }   
+      fAnalysis->SlaveBegin(tree);   
+      if (fAnalysis->GetDebugLevel()>1) {
+         cout << "<-IlcAnalysisSelector->SlaveBegin()" << endl;
+      }   
+   }   
+}
+
+//______________________________________________________________________________
+Bool_t IlcAnalysisSelector::Notify()
+{
+   // The Notify() function is called when a new file is opened. This
+   // can be either for a new TTree in a TChain or when when a new TTree
+   // is started when using PROOF. It is normaly not necessary to make changes
+   // to the generated code, but the routine can be extended by the
+   // user if needed. The return value is currently not used.
+   if (fAnalysis) return fAnalysis->Notify();
+   return kFALSE;
+}
+
+//______________________________________________________________________________
+Bool_t IlcAnalysisSelector::Process(Long64_t entry)
+{
+// Event loop.
+   static Int_t count = 0;
+   count++;
+   if (fAnalysis->GetDebugLevel() > 1) {
+      cout << "->IlcAnalysisSelector::Process()" << endl;
+   }
+   static Bool_t init=kTRUE;
+   static Int_t nobjCount = 0;
+   if(init) {
+     nobjCount = TProcessID::GetObjectCount();
+     init=kFALSE;
+   }
+   TProcessID::SetObjectCount(nobjCount);
+   Int_t returnCode = fAnalysis->GetEntry(entry);
+   if (returnCode <= 0) {
+      cout << "Error retrieving event:" << entry << " Skipping ..." << endl;
+      fAnalysis->CountEvent(1,0,1,0);
+      // Try to skip file
+      Abort("Bad stream to file. Trying next image.", kAbortFile);
+      return kFALSE;
+   } else {
+      fAnalysis->ExecAnalysis();
+      fAnalysis->CountEvent(1,1,0,0);
+   }   
+   if (fAnalysis->GetDebugLevel() > 1) {
+      cout << "<-IlcAnalysisSelector::Process()" << endl;
+   }   
+   return kTRUE;
+}   
+
+//______________________________________________________________________________
+void IlcAnalysisSelector::RestoreAnalysisManager()
+{
+// Restores analysis manager from the input list.
+   if (!fAnalysis) {
+      TIter next(fInput);
+      TObject *obj;
+      while ((obj=next())) {
+         if (obj->IsA() == IlcAnalysisManager::Class()) {
+            fAnalysis = (IlcAnalysisManager*)obj;
+            fAnalysis->SetSelector(this);
+            if (fAnalysis->GetDebugLevel()>1) {
+               cout << "->IlcAnalysisSelector->RestoreAnalysisManager: Analysis manager restored" << endl;
+            }   
+            break;
+         }
+      }
+      if (!fAnalysis) {
+         Error("SlaveBegin", "Analysis manager not found in the input list");
+         return;
+      }   
+   }
+}
+
+//______________________________________________________________________________
+void IlcAnalysisSelector::SlaveTerminate()
+{
+  // The SlaveTerminate() function is called after all entries or objects
+  // have been processed. When running with PROOF SlaveTerminate() is called
+  // on each slave server.
+   gROOT->SetMustClean(kTRUE);
+   if (fStatus == -1) return;  // TSelector won't abort...
+   if (fAnalysis->GetAnalysisType() == IlcAnalysisManager::kMixingAnalysis) return;
+   if (fAnalysis->GetDebugLevel() > 1) {
+      cout << "->IlcAnalysisSelector::SlaveTerminate()" << endl;
+   }   
+   fAnalysis->PackOutput(fOutput);
+   if (fAnalysis->GetDebugLevel() > 1) {
+      cout << "<-IlcAnalysisSelector::SlaveTerminate()" << endl;
+   }   
+}  
+
+//______________________________________________________________________________
+void IlcAnalysisSelector::Terminate()
+{
+  // The Terminate() function is the last function to be called during
+  // a query. It always runs on the client, it can be used to present
+  // the results graphically or save the results to file.
+   gROOT->SetMustClean(kTRUE);
+   if (fStatus == -1) return;  // TSelector won't abort...
+   if (!fAnalysis) {
+      Error("Terminate","IlcAnalysisSelector::Terminate: No analysis manager!!!");
+      return;
+   }   
+   // No Terminate() in case of event mixing
+   if (fAnalysis->GetAnalysisType() == IlcAnalysisManager::kMixingAnalysis) return;
+   if (fAnalysis->GetDebugLevel() > 1) {
+      cout << "->IlcAnalysisSelector::Terminate()" << endl;
+   }   
+   fAnalysis->UnpackOutput(fOutput);
+   fAnalysis->Terminate();   
+   if (fAnalysis->GetDebugLevel() > 1) {
+      cout << "<-IlcAnalysisSelector::Terminate()" << endl;
+   }   
+}

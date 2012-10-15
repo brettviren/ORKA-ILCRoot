@@ -1,0 +1,7 @@
+
+Unix.*.Root.MacroPath:  .:$(ILC_ROOT)/macros:$(ILC_ROOT):$(ILC_ROOT)/TPC
+
+Root.Html.OutputDir: $(ILC_ROOT)/html/roothtml/TARGET
+Root.Html.SourceDir: ./
+Root.Html.Author:  Roberto Barbera
+Root.Html.Root:  http://root.cern.ch/root/html

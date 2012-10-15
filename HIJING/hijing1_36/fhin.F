@@ -1,0 +1,10 @@
+* $Id: fhin.F 1074 2000-05-17 15:13:04Z fca $
+C
+C
+C
+	FUNCTION FHIN(X)
+#include "hiparnt.inc"
+	OMG=OMG0(X)*(HIPR1(30)+HINT1(11))/HIPR1(31)/2.0
+	FHIN=1.0-EXP(-2.0*OMG)
+	RETURN
+	END

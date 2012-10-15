@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+               "http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+<TITLE>How to run IlcRoot</TITLE>
+<!-- Changed by: ,  1-Nov-1999 -->
+<link rev="made" href="mailto:Federico.Carminati@cern.ch">
+<STYLE>
+BODY	{	
+	background:	#FFFFFF;
+	}	
+
+COL, COLGROUP, TABLE, TBODY, TD, TR	{	
+	color:	black;
+	text-decoration:	none;
+	border-color:	black;
+	border-style:	none;
+	background:	#FFFFFF;
+	}			
+
+</STYLE>
+<link rel="stylesheet" href="http://www.w3.org/StyleSheets/Core/Swiss" type="text/css">
+</HEAD>
+
+<BODY background=#FFFFFF>
+<TABLE>
+<TR>
+<TD><img src="picts/MadHatter.gif" alt="ILC Off-line Project Logo">
+<TD><img src="picts/howtorun_name.gif" alt="How to Run IlcRoot">
+<TD><img src="picts/IlcLogo.gif" alt="ILC Logo">
+</TR>
+</TABLE>
+
+
+<H2><A NAME="#Content">Content</A></H2>
+
+<UL>
+
+<LI><A HREF="#For the impatient">For the impatient user</A></LI>
+
+<LI><A HREF="#A more detailed view">A more detailed view</A></LI>
+
+<LI><A HREF="#Batch processing">Batch processing</A></LI>
+
+</UL>
+
+<HR>
+
+<h2><A HREF="#Content" NAME="For the impatient">For the impatient user</A></h2>
+
+<p> <a href="picts/menubar.gif">
+<img src="picts/menubar.gif" alt="IlcRoot menu bar"
+height=250 align=right></a>
+
+<p> To start up IlcRoot after installation just type
+
+<p> <KBD> $ ilcroot </KBD> 
+
+<p> this starts IlcRoot in interactive mode. When the <b>root [0]</b>
+prompt appears, you can start an IlcRoot interactive session by creating
+the standard menu
+
+<p> <KBD> root[0] .x menu.C </KBD>  
+
+<p> The macro <A HREf="roothtml/examples/menu.C.html">menu.C</A> invokes
+the <A HREF="roothtml/IlcRun.html">IlcRun</A>::Init() method. In turn this
+calls the configuration file <A
+HREF="roothtml/examples/Config.C.html">Config.C</A> where the configuration
+of the detector and several simulation parameters can be specified.
+
+<p> When the initialisation is finished the <b>root</b> prompt apears
+again and the Root control bar appears.
+
+<p> <a href="picts/display.gif">
+<img src="picts/display.gif" alt="IlcRoot Event Display"
+height=160 align=right></a>
+
+<p> You can now select several actions from the menu.
+
+<p> <b>Run</b>
+
+<p> generates an event with the number of tracks and the
+configuration as specified in <A
+HREF="roothtml/examples/Config.C.html">Config.C</A>. The hits deposited
+
+<p> <b> RunLego </b>    
+
+<p> <a href="picts/legoex.gif">
+<img src="picts/legoex.gif" alt="Example of Lego Plot"
+height=150 align=right></a>
+
+<p> generates the standard lego plots for radiation and absorption
+length. By default the granularity is 60 rays in theta and 60 rays in phi.
+
+<p> To view the results when this command is finished type:
+
+<p> <KBD> root[0] .x <A HREF="roothtml/examples/lego.C.html">lego.C</A> </KBD>
+
+<p> the parameters of the lego run can be specified 
+in the calling sequence of the RunLego method as follows:
+
+<p> <KBD> root[3] gIlc->RunLego (your list of parameters) </KBD> 
+
+<p> <a href="picts/treex.gif">
+<img src="picts/treex.gif" alt="Example of Tree"
+height=150 align=right></a>
+
+<p> see <A HREF="roothtml/IlcRun.html">IlcRun</a>::RunLego for details     
+
+<p> <b>Menu Trees</b>
+
+<p> This shows a new menu from which you can draw the geometry tree for the
+Ilc detectors. Clicking with the right button on the pad with the name of
+a geometrical element gives access to a number of graphic and inspect
+functions. Double-clicking on the pad generates a drawing of the specifications
+of the geometry of the element.
+
+<p> <a href="picts/tpcex.gif">
+<img src="picts/tpcex.gif" alt="Example of Picture"
+height=150 align=right></a>
+
+<p> <b>Menu Pictures</b>
+
+<p> From this menu you can draw pretty pictures of the major ILC components.
+Note that some pictures may take a long time to be produced. 
+
+<p> To quit IlcRoot
+
+<p> <KBD>root [ ] .q</KBD>
+
+<h2><A HREF="#Content" NAME="A more detailed view">A more detailed view</A></h2>
+
+<p> After startup of the <b>ilcroot</b> program the simulation
+infrastructure is initialised by the <a
+href="roothtml/IlcRun.html">IlcRun</a>::Init() method. This method takes
+an argument that is the name of the initialisation script.  The default
+name for this script is <a
+href="roothtml/examples/Config.C.html">Config.C</a>. This script
+initialises the version of the different detectors and of the generator to
+be used. In particular some generators can generate a fixed number of
+particles and in this case this number is an argument of the generator
+constructor.
+
+<p> A global variable <var>gIlc</var> holds the pointer to the instance
+of the <a href="roothtml/IlcRun.html">IlcRun</a> class. 
+
+<p> <KBD>root [ ] gIlc->Init()</KBD>
+
+<p> The <em>Init</em> method loads the chosen MonteCarlo (for the moment
+only Geant3 is available in production) and initialises it.  Another global
+variable <var>gMC</var> holds the pointer to the instance of the virtual
+MonteCarlo Class <a href="roothtml/IlcMC.html">IlcMC</a>. This allows to
+access all the functions of the Virtual Monte Carlo interface. Some of the
+functions are specific to Geant3, and these can be accessed recasting this
+pointer to a specific Geant3 pointer via the statement
+
+<p> <KBD>root [ ] TGeant3 *g3 = (TGeant3*) gMC</KBD>
+
+<p> <a href="picts/itsex.gif">
+<img src="picts/itsex.gif" alt="Example of Picture"
+height=150 align=right></a>
+
+<p> In particular all the drawing functions of Geant3 are available via
+this interface. To draw a cut view of the ITS the following commands
+can be used
+
+<p>
+<KBD>
+root [1] TGeant3 *g3 = (TGeant3*)gMC
+<br>root [2] g3->Gsatt("*","seen",1)
+<br>root [3] g3->Gdrawc("ITSV",1,.1,10,10,.125,.125)
+</KBD>
+
+<p> Note that several TGeant3 functions are also available by clicking with
+the right button on a canvas while in the IlcRoot session.
+
+<p> The <a href="roothtml/IlcRun.html">IlcRun</a>::Run() method starts a run
+composed by a single event. This method takes as argument the number of events
+to be processed. If this number is negative, the run is not terminated and
+more events can be run. If this number is positive, after the indicated number
+of events the run is terminated. No more events can be run.
+
+<h2><A HREF="#Content" NAME="Batch processing">Batch processing</A></h2>
+
+<p> In IlcRoot there is really no difference between batch and interactive
+processing. An <a href="roothtml/examples/grun.C.html">elementary macro</a>
+to run IlcRoot in batch mode is provided amongst the examples, and it can
+be used in the following way to run a 10 events run
+
+<p> <KBD> ilcroot -b -q grun.C\(10\)</KBD>
+
+<p> Note that the backslashes are necessary to prevent the shell from
+interpreting the brackets.
+
+<p> For very large output files we strongly discourage the use of afs
+space, as it has performance penalty and it is really intended to be used
+for user and program files and not data files. Users needing access to
+large data files should use the ILC staging facility. The procedure is
+the following:
+
+<p><ol>
+
+<li> Define a <var>STAGE_HOST</var> variable which is in our case
+<var>shiftilc</var>
+
+<p><li> In your <var>Config.C</var> macro, or in any other place where
+you open a file, instead of opening the file as
+
+<p><kbd>
+   TFile *f = new TFile("filename","option");
+</kbd>
+
+<p>use
+
+<p><kbd>
+   TFile *f = TFile::Open("rfio:filename","option");
+</kbd>
+
+<p><li>Stage a file via the command
+<p><kbd>
+   stagealloc -p ilc_stage filename
+</kbd>
+
+<p>This will create in your working directory a link <var>filename</var>
+that points to the <em>real</em> file in the stage pool.
+
+<p><li>Now you can run
+
+<p><li>When done with the file, do not <kbd>rm filename</kbd>. It will
+remove the link only, the file will still be in the pool, occupying our
+precious disk space. To delete a staged file instead do
+<p><kbd>
+   stageclr -P `stageqry -p ilc_stage -A filename -P`
+</kbd>
+<p>and this will do a proper job.
+</ol>
+
+<p>More information on stage can be found in the <a
+href="http://wwwinfo.cern.ch/pdp/castor/doc/public/all_man_pages.html">man pages</a> of
+the different stage commands or in the CORE <a
+href="http://wwwinfo.cern.ch/pdp/sc/coreplus.html">User Guide</a>.
+
+<br clear>
+<hr>
+<address>
+          Last modified Thu Oct 07 11:33:05 1999
+by <A href="mailto:Federico.Carminati@cern.ch">Federico Carminati</A>
+</ADDRESS>
+</BODY>
+</HTML>

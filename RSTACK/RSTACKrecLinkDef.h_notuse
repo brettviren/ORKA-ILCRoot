@@ -1,0 +1,30 @@
+#ifdef __CINT__
+ 
+#pragma link off all globals;
+#pragma link off all classes;
+#pragma link off all functions;
+
+#pragma link C++ class IlcRSTACKLink+;
+#pragma link C++ class IlcRSTACKClusterizerv1+;
+#pragma link C++ class IlcRSTACKTrackSegmentMakerv1+;
+#pragma link C++ class IlcRSTACKTrackSegmentMakerv2+;
+#pragma link C++ class IlcRSTACKPIDv0+;
+#pragma link C++ class IlcRSTACKIhepAnalyze+;
+#pragma link C++ class IlcRSTACKRecManager+;
+#pragma link C++ class IlcRSTACKRecCpvManager+;
+#pragma link C++ class IlcRSTACKRecEmcManager+;
+#pragma link C++ class IlcRSTACKClusterizerv2+;
+#pragma link C++ class IlcRSTACKEvalRecPoint+;
+#pragma link C++ class IlcRSTACKPIDv1+;
+#pragma link C++ class IlcRSTACKGridFile+;
+#pragma link C++ class IlcRSTACKTracker+;
+#pragma link C++ class IlcRSTACKEsdCluster+;
+#pragma link C++ class IlcRSTACKAodCluster+;
+#pragma link C++ class IlcRSTACKQADataMakerRec+;
+#pragma link C++ class IlcRSTACKTriggerRawReader+;
+#pragma link C++ class IlcRSTACKTRURawReader+;
+#pragma link C++ class IlcRSTACKTriggerRawDigiProducer+;
+#pragma link C++ class IlcRSTACKTriggerRawDigit+;
+
+#pragma link C++ class IlcRSTACKReconstructor+;
+#endif

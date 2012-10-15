@@ -1,0 +1,10 @@
+SRCS= IlcDCHgeometry.cxx \
+      IlcDCHwireposition.cxx \
+      IlcDCHXTREL.cxx \
+      IlcDCHParam.cxx   
+HDRS= $(SRCS:.cxx=.h) \
+      IlcDCHwiredata.h IlcDCHXTDataVlGas.h
+
+DHDR= DCHbaseLinkDef.h
+
+EINCLUDE= RAW

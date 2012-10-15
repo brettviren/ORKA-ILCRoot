@@ -1,0 +1,9 @@
+* $Id: aran9.F 1074 2000-05-17 15:13:04Z fca $
+C
+C
+      SUBROUTINE ARAN9(QRAN,NDIM)
+      DIMENSION QRAN(10)
+      DO 1 I=1,NDIM
+    1 QRAN(I)=RLU_HIJING(0)
+      RETURN
+      END

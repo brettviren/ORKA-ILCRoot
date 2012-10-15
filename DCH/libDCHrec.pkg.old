@@ -1,0 +1,15 @@
+SRCS:=  IlcDCHclusterizer.cxx IlcDCHcluster.cxx \
+        IlcDCHtrack.cxx \
+        IlcDCHseed.cxx IlcDCHrecoParam.cxx \
+        IlcComplexCluster.cxx \
+        IlcDCHpolyTrack.cxx IlcDCHRecoParam.cxx \
+	IlcDCHReconstructor.cxx \
+	IlcDCHtracker.cxx
+
+        
+HDRS:= $(SRCS:.cxx=.h) 
+
+DHDR:= DCHrecLinkDef.h
+
+EINCLUDE:= RAW
+

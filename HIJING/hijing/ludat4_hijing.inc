@@ -1,0 +1,4 @@
+* $Id: ludat4_hijing.inc 1074 2000-05-17 15:13:04Z fca $
+      COMMON/LUDAT4_HIJING/CHAF(500)   
+      CHARACTER CHAF*8  
+      SAVE /LUDAT4_HIJING/ 

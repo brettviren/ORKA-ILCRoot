@@ -1,0 +1,56 @@
+set(MFT_UPGRADE $ENV{MFT_UPGRADE})
+
+if(MFT_UPGRADE)
+set ( SRCS  IlcAODEvent.cxx IlcAODHeader.cxx IlcAODTrack.cxx IlcAODPid.cxx IlcAODVertex.cxx IlcAODCluster.cxx IlcAODCaloCluster.cxx IlcAODPmdCluster.cxx IlcAODFmdCluster.cxx IlcAODJet.cxx IlcAODJetEventBackground.cxx IlcAODPhoton.cxx IlcAODRedCov.cxx IlcAODRecoDecay.cxx IlcAODExtension.cxx IlcAODHandler.cxx IlcAODTracklets.cxx IlcAODTagCreator.cxx IlcAODv0.cxx IlcAODcascade.cxx IlcAODCaloCells.cxx IlcAODInputHandler.cxx IlcAODDiJet.cxx IlcAODMCParticle.cxx IlcAODMCHeader.cxx IlcAODPWG4Particle.cxx IlcAODPWG4ParticleCorrelation.cxx IlcAODDimuon.cxx IlcAODpidUtil.cxx IlcAODCentrality.cxx IlcAODBranchReplicator.cxx IlcAODVZERO.cxx IlcAODTZERO.cxx)
+
+# -*- mode: CMake -*-
+
+else(MFT_UPGRADE)
+set ( SRCS  IlcAODEvent.cxx IlcAODHeader.cxx IlcAODTrack.cxx IlcAODPid.cxx IlcAODVertex.cxx IlcAODCluster.cxx IlcAODCaloCluster.cxx IlcAODPmdCluster.cxx IlcAODFmdCluster.cxx IlcAODJet.cxx IlcAODJetEventBackground.cxx IlcAODPhoton.cxx IlcAODRedCov.cxx IlcAODRecoDecay.cxx IlcAODExtension.cxx IlcAODHandler.cxx IlcAODTracklets.cxx IlcAODTagCreator.cxx IlcAODv0.cxx IlcAODcascade.cxx IlcAODCaloCells.cxx IlcAODInputHandler.cxx IlcAODDiJet.cxx IlcAODMCParticle.cxx IlcAODMCHeader.cxx IlcAODPWG4Particle.cxx IlcAODPWG4ParticleCorrelation.cxx IlcAODDimuon.cxx IlcAODpidUtil.cxx IlcAODCentrality.cxx IlcAODBranchReplicator.cxx IlcAODVZERO.cxx IlcAODTZERO.cxx)
+endif(MFT_UPGRADE)
+
+set ( SRCS  
+    AOD/IlcAODEvent.cxx 
+    AOD/IlcAODHeader.cxx 
+    AOD/IlcAODTrack.cxx 
+    AOD/IlcAODPid.cxx 
+    AOD/IlcAODVertex.cxx 
+    AOD/IlcAODCluster.cxx 
+    AOD/IlcAODCaloCluster.cxx 
+    AOD/IlcAODPmdCluster.cxx 
+    AOD/IlcAODFmdCluster.cxx 
+    AOD/IlcAODJet.cxx 
+    AOD/IlcAODJetEventBackground.cxx 
+    AOD/IlcAODPhoton.cxx 
+    AOD/IlcAODRedCov.cxx 
+    AOD/IlcAODRecoDecay.cxx 
+    AOD/IlcAODExtension.cxx 
+    AOD/IlcAODHandler.cxx 
+    AOD/IlcAODTracklets.cxx 
+    AOD/IlcAODTagCreator.cxx 
+    AOD/IlcAODv0.cxx 
+    AOD/IlcAODcascade.cxx 
+    AOD/IlcAODCaloCells.cxx 
+    AOD/IlcAODCaloTrigger.cxx 
+    AOD/IlcAODInputHandler.cxx 
+    AOD/IlcAODDiJet.cxx 
+    AOD/IlcAODMCParticle.cxx 
+    AOD/IlcAODMCHeader.cxx 
+    AOD/IlcAODPWG4Particle.cxx 
+    AOD/IlcAODPWG4ParticleCorrelation.cxx 
+    AOD/IlcAODDimuon.cxx 
+    AOD/IlcAODpidUtil.cxx 
+    AOD/IlcAODBranchReplicator.cxx 
+    AOD/IlcAODTZERO.cxx
+    AOD/IlcAODVZERO.cxx
+    AOD/IlcAODZDC.cxx	
+    AOD/IlcAODHMPIDrings.cxx	
+    )
+
+string( REPLACE ".cxx" ".h" HDRS "${SRCS}")
+
+set ( DHDR AODLinkDef.h)
+
+set ( EXPORT ${HDRS} )
+
+set ( EINCLUDE  STEER/ESD STEER/STEERBase)

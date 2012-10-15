@@ -1,0 +1,55 @@
+
+# DO NOT DELETE
+
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/IlcRoot/trunk/PVBAR/IlcPVBARTriggerParameters.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TNamed.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TObject.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/Rtypes.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/RConfig.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/RVersion.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/DllImport.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/Rtypeinfo.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/snprintf.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/strlcpy.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TGenericClassInfo.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TSchemaHelper.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TStorage.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TVersionCheck.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/Riosfwd.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TBuffer.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TString.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TMathBase.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TH1F.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TH1.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAxis.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttAxis.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TArrayD.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TArray.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttLine.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttFill.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttMarker.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TArrayC.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TArrayS.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TArrayI.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TArrayF.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/Foption.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TVectorFfwd.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TVectorDfwd.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TFitResultPtr.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TH2F.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TH2.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TMatrixFBasefwd.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TMatrixDBasefwd.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TCanvas.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TPad.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TVirtualPad.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttPad.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TVirtualX.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttText.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/GuiTypes.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/Buttons.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TQObject.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TAttCanvas.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/TCanvasImp.h
+./readTRUPedestals_C.so: /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/cintdictversion.h /home/kharlov/work/ilc/IlcSoft/root/v5-30-02/include/RVersion.h
+readTRUPedestals_C__ROOTBUILDVERSION= 5.30/02

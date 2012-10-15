@@ -1,0 +1,44 @@
+#--------------------------------------------------------------------------------#
+# Package File for pythia6.4.21                                                  #
+# Author : Johny Jose (johny.jose@cern.ch)                                       #
+# Variables Defined :                                                            #
+#                                                                                #
+# SRCS - C++ source files                                                        #
+# HDRS - C++ header files                                                        #
+# DHDR - ROOT Dictionary Linkdef header file                                     #
+# CSRCS - C source files                                                         #
+# CHDRS - C header files                                                         #
+# EINCLUDE - Include directories                                                 #
+# EDEFINE - Compiler definitions                                                 #
+# ELIBS - Extra libraries to link                                                #
+# ELIBSDIR - Extra library directories                                           #
+# PACKFFLAGS - Fortran compiler flags for package                                #
+# PACKCXXFLAGS - C++ compiler flags for package                                  #
+# PACKCFLAGS - C compiler flags for package                                      #
+# PACKSOFLAGS - Shared library linking flags                                     #
+# PACKLDFLAGS - Module linker flags                                              #
+# PACKBLIBS - Libraries to link (Executables only)                               #
+# EXPORT - Header files to be exported                                           #
+# CINTHDRS - Dictionary header files                                             #
+# CINTAUTOLINK - Set automatic dictionary generation                             #
+# ARLIBS - Archive Libraries and objects for linking (Executables only)          #
+# SHLIBS - Shared Libraries and objects for linking (Executables only)           #
+#--------------------------------------------------------------------------------#
+
+set ( SRCS  pythia6.4.21/IlcPythia64Rndm.cxx)
+
+string ( REPLACE ".cxx" ".h" HDRS "${SRCS}" )
+
+set ( DHDR pythia6.4.25/pythia6425LinkDef.h)
+
+set ( EXPORT )
+
+set ( CSRCS  pythia6.4.25/main.c pythia6.4.25/pythia6_common_address.c)
+
+set ( FSRCS  pythia6.4.25/pythia6_common_block_address.F pythia6.4.25/tpythia6_called_from_cc.F pythia6.4.25/pythia-6.4.25.f pythia6.4.25/pydummy_6.4.25.f)
+
+if( ILC_TARGET STREQUAL "win32gcc")
+	
+		set ( PACKSOFLAGS  ${SOFLAGS} -L${ILC_ROOT}/lib/tgt_${ILC_TARGET} -lmicrocern -llhapdf)
+
+endif( ILC_TARGET STREQUAL "win32gcc")
