@@ -52,7 +52,7 @@ public:
  void	       			SetEditable(Bool_t b){gPad->SetEditable(b);};
  
  void	       			DoView(Int_t view);
- void	       			Draw(Float_t theta,Float_t phi,Float_t psi);
+ void	       			Draw(Float_t theta,Float_t phi,Float_t psi, Bool_t check=1);
  void	       			DrawDetector(const char *name);
  void	       			DrawHits();
  void	       			DrawX3d();
@@ -66,7 +66,7 @@ public:
  void		       		DisableDetector(const char *name);
  void		       		ExecuteEvent(Int_t event, Int_t px,Int_t py,TObject *);
  void                           SavePadGIF(const char *file);
- TGeometry*        		GetGeometry();
+ TGeometry*        		GetGeometry(Bool_t check=kTRUE);
 
 private:
 

@@ -135,19 +135,21 @@ void IlcDisplayFrame::DoView(Int_t view)
     fMainCanvas->Divide(2,2,0.005,0.005,1);
     
     fMainCanvas->cd(1);
-    Draw(30,30,0);
+    gIlcDisplay2->SetZoomFactor(.008);
+    Draw(80,170,70,0);
+    gIlcDisplay2->SetZoomFactor(5.5);
     
-    gIlcDisplay2->SetCurrentView(kIdbTOPVIEW);
     fMainCanvas->cd(2);
-    Draw(90,-90,90);
+    gIlcDisplay2->SetCurrentView(kIdbTOPVIEW);
+    Draw(90,-90,90,0);
     
-    gIlcDisplay2->SetCurrentView(kIdbSIDEVIEW);
     fMainCanvas->cd(3);		
-    Draw(90,0,-90);
+    gIlcDisplay2->SetCurrentView(kIdbSIDEVIEW);
+    Draw(90,180,90,0);
     
-    gIlcDisplay2->SetCurrentView(kIdbFRONTVIEW);
     fMainCanvas->cd(4);
-    Draw(0,-90,0);
+    gIlcDisplay2->SetCurrentView(kIdbFRONTVIEW);
+    Draw(0,-90,0,0);
     
     //fMainCanvas->cd();
     
@@ -170,7 +172,7 @@ void IlcDisplayFrame::DoView(Int_t view)
     gPad->SetFillColor(1);
     gPad->Clear();
     gPad->Draw();
-    Draw(90,0,-90);
+    Draw(90,180,90);
   }
     break;
   case kIdbFRONTVIEW:{
@@ -198,22 +200,25 @@ void IlcDisplayFrame::DrawDetector(const char *name)
 
 
 //_______________________________________________________________________
-TGeometry *IlcDisplayFrame::GetGeometry()
+TGeometry *IlcDisplayFrame::GetGeometry(Bool_t check)
 {
 
 
-  if(fGeometry)
-    fGeometry->Delete();
-  fGeometry = new TGeometry("IlcGeom","Gilc Geometry for Hits");
-  //
-  // Import Ilc geometry from current file
-  // Return pointer to geometry object
-  //
-  //   if (!fGeometry) fGeometry = dynamic_cast<TGeometry*>(gDirectory->Get("IlcGeom"));
-  //
-  // Unlink and relink nodes in detectors
-  // This is bad and there must be a better way...
-  //
+  if(check){
+    if(fGeometry)
+      fGeometry->Delete();
+    fGeometry = new TGeometry("IlcGeom","Gilc Geometry for Hits");
+  }
+  else {
+    if(!fGeometry){
+      fGeometry = new TGeometry("IlcGeom","Gilc Geometry for Hits");
+    }
+    else {
+      if(fGeometry)
+// 	fGeometry->Delete();
+      fGeometry = new TGeometry("IlcGeom","Gilc Geometry for Hits");
+    }
+  }
   
   TIter next(fModules);
   IlcModule *detector;
@@ -256,19 +261,19 @@ void IlcDisplayFrame::DisableDetector(const char *name)
 }
 
 //_____________________________________________________________
-void IlcDisplayFrame::Draw(Float_t theta, Float_t phi, Float_t psi)
+void IlcDisplayFrame::Draw(Float_t theta, Float_t phi, Float_t psi, Bool_t check)
 {
   // Draws everything???
   //clock_t t1,t2;
   time_t t1,t2;
   //t1 = clock();
-  TStopwatch timer;
-  timer.Start();
-  time(&t1);
+//   TStopwatch timer;
+//   timer.Start();
+//   time(&t1);
   gPad->SetCursor(kWatch);
   gPad->SetEditable(kTRUE);
   gPad->SetFillColor(1);
-  gPad->Clear();
+//   gPad->Clear();
   
   Int_t iret;
   
@@ -294,7 +299,7 @@ void IlcDisplayFrame::Draw(Float_t theta, Float_t phi, Float_t psi)
   
 // // // //   gIlc->GetGeometry()->Draw("same");
 
-  GetGeometry()->Draw("same");
+  GetGeometry(check)->Draw("same");
 
   if(gIlcDisplay2->IsEnabled(kHits)) DrawHits();
   if(gIlcDisplay2->IsEnabled(kClusters)) fClusters->Draw();
@@ -305,11 +310,11 @@ void IlcDisplayFrame::Draw(Float_t theta, Float_t phi, Float_t psi)
   
   view->ZoomView(gPad,gIlcDisplay2->GetZoomFactor());
   //t2 = clock();
-  time(&t2);
+//   time(&t2);
   //	printf("\nDrawn in....%f sec", ((double)t2-t1)/(10000*CLK_TCK));
-  printf("\nDrawn in....%f sec", difftime(t2,t1));
-  timer.Stop();
-  timer.Print("m");
+//   printf("\nDrawn in....%f sec", difftime(t2,t1));
+//   timer.Stop();
+//   timer.Print("m");
 }
 
 //_____________________________________________________________
@@ -395,7 +400,7 @@ void IlcDisplayFrame::LoadHits()
   if(!ppoints) {
     return;
   }
-  printf("\n 1 nb hits %d\n",ppoints->GetEntriesFast());
+//   printf("\n 1 nb hits %d\n",ppoints->GetEntriesFast());
 //   for(Int_t j=0;j<ppoints->GetEntriesFast();j++){
 //     if(!ppoints->UncheckedAt(j)) continue;
 //     fPoints2->AddLast((ppoints->UncheckedAt(j)));
