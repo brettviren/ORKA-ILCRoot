@@ -11,7 +11,7 @@ void sim(Int_t nevt=1) {
   timer.Start();
 
   //Perform Hits simulation
-  simulator.RunSimulation(nev);
+  simulator.RunSimulation(nevt);
 
   //Export geometry to be used for tracks reconstruction
   gGeoManager->Export("geometry.root");
