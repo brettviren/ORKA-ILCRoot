@@ -74,7 +74,7 @@ IlcDisplay2::IlcDisplay2(const TGWindow *p, UInt_t w, UInt_t h)
   fSliderUpdate = kFALSE;
   fZoomMode = kFALSE;
   fZoomStep = 1.2;
-  fZoomFactor = 6.;
+  fZoomFactor = 5.5;
   fNbParticles = 0;
   fEventNumber = 0;
   fNbHits = 0;
@@ -318,7 +318,7 @@ void IlcDisplay2::LoadHits()
   Int_t ntracks = gIlc->GetMCApp()->GetNtrack();
   if (fPoints == 0) fPoints = new TObjArray(ntracks*GetNbModules());
   for (Int_t track=0; track<ntracks*GetNbModules();track++)
-    fPoints->AddAt(0, track);
+    fPoints->AddAtAndExpand(0, track);
 
   while((module = (IlcModule*)next()))
   {
@@ -438,7 +438,7 @@ void IlcDisplay2::LoadPoints(IlcDetector* detector, Int_t track)
       points->SetPolyMarker(ntrk[trk],coor[trk],7);
       points->SetMarkerStyle(6);
 //       IlcInfo(Form("%s\t%d\t%d\t%d\t%d", detector->GetName(), tracks, trk, fModuleInfo->Id(detector->GetName()), trk+tracks*(fModuleInfo->Id(detector->GetName())-1000)));
-      fPoints->AddAt(points,trk+tracks*(fModuleInfo->Id(detector->GetName())-1000) );
+      fPoints->AddAtAndExpand(points,trk+tracks*(fModuleInfo->Id(detector->GetName())-1000) );
       delete [] coor[trk];
       coor[trk]=0;
     }
