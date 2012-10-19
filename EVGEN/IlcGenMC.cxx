@@ -273,10 +273,10 @@ Bool_t IlcGenMC::KinematicSelection(const TParticle *particle, Int_t flag) const
 	}
 //
 // rapidity cut
-	if (y > fYMax || y < fYMin) {
+//	if (y > fYMax || y < fYMin) {
 //	    printf("\n failed y cut %f %f %f \n",y,fYMin,fYMax);
-	    return kFALSE;
-	}
+//	    return kFALSE;
+//	}
 //
 // phi cut
 	if (phi > fPhiMax || phi < fPhiMin) {
