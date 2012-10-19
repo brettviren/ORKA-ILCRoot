@@ -46,6 +46,7 @@
 #pragma link C++ class  IlcGenReaderTreeK++;
 #pragma link C++ class  IlcGenReaderEcalHijing++;
 #pragma link C++ class  IlcGenReaderEcalJets++;
+#pragma link C++ class  IlcGenReaderHepEvt++;
 #pragma link C++ class  IlcGenGeVSim+;
 #pragma link C++ class  IlcGeVSimParticle+;
 #pragma link C++ class  IlcGenBeamGas+;
