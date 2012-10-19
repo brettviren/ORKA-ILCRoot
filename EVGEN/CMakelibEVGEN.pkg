@@ -54,7 +54,8 @@ set ( SRCS
   IlcGenReaderCwn.cxx 
   IlcGenReaderTreeK.cxx 
   IlcGenReaderEcalHijing.cxx 
-  IlcGenReaderEcalJets.cxx 
+  IlcGenReaderEcalJets.cxx
+  IlcGenReaderHepEvt.cxx 
   IlcGenHIJINGparaBa.cxx 
   IlcGeVSimParticle.cxx 
   IlcGenGeVSim.cxx 
