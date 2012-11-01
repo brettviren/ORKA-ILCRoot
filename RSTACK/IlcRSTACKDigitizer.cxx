@@ -75,7 +75,7 @@
 #include "IlcRunLoader.h"
 #include "IlcRSTACKLoader.h"
 #include "IlcRSTACKPulseGenerator.h"
-#include <../../../root/v5-34-02/include/TMathBase.h>
+#include "TMathBase.h"
 
 ClassImp(IlcRSTACKDigitizer)
 
