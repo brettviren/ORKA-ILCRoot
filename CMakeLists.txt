@@ -195,6 +195,10 @@ set(LIBS ${ROOTCLIBS} ${ROOTPLIBS} ${SYSLIBS})
 # Configure ARVerion.h
 # ------------------------------
 if(Subversion_FOUND)
+  # defaults
+  set(ILCROOT_SVN_REVISION -1)
+  set(ILCROOT_SVN_BRANCH unknown)
+
   if(EXISTS ${PROJECT_SOURCE_DIR}/.svn/ )
     Subversion_WC_INFO(${PROJECT_SOURCE_DIR} PROJECT)
     set(ILCROOT_SVN_REVISION ${PROJECT_WC_REVISION})
@@ -223,12 +227,6 @@ if(Subversion_FOUND)
   elseif(EXISTS ${PROJECT_SOURCE_DIR}/.git/)
     execute_process(WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} COMMAND git describe --contains --all HEAD OUTPUT_VARIABLE OUTPUTVAR)
     string(REGEX REPLACE "(\r?\n)+$" "" ILCROOT_SVN_BRANCH "${OUTPUTVAR}")
-    execute_process(WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} COMMAND git show-ref -s HEAD OUTPUT_VARIABLE OUTPUTVAR)
-    string(REGEX REPLACE "(\r?\n)+$" "" ILCROOT_SVN_REVISION "${OUTPUTVAR}")
-
-  else(NOT ${PROJECT_SOURCE_DIR}/.svn/)
-    set(ILCROOT_SVN_REVISION -1)
-    set(ILCROOT_SVN_BRANCH unknown)
 
   endif(EXISTS ${PROJECT_SOURCE_DIR}/.svn/ )
 
