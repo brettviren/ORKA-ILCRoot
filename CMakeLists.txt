@@ -208,6 +208,9 @@ if(Subversion_FOUND)
   string(REGEX MATCH "[^/]+$" ILCROOT_SVN_BRANCH ${ILCROOT_SVN_BRANCH})
 
   elseif(EXISTS ${PROJECT_SOURCE_DIR}/.git/ )
+    execute_process(WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} COMMAND git describe --contains HEAD OUTPUT_VARIABLE OUTPUTVAR)
+    
+  elseif(EXISTS ${PROJECT_SOURCE_DIR}/.git/svn/ )
     execute_process(WORKING_DIRECTORY ${PROJECT_SOURCE_DIR} COMMAND git svn info OUTPUT_VARIABLE OUTPUTVAR)
     string(REPLACE "\n" ";" OUTPUTVAR ${OUTPUTVAR})
     foreach(f ${OUTPUTVAR})
