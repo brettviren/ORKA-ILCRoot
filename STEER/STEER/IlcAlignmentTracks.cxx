@@ -24,6 +24,9 @@
 //   track residual sums (deriving from the IlcTrackResiduals).
 //-----------------------------------------------------------------
 
+
+#include "IlcESDfriend.h"       // needed in TChain.h ???
+
 #include <TChain.h>
 #include <TFile.h>
 #include <TVector3.h>
