@@ -4891,7 +4891,7 @@ void  IlcTARGETtrackerMI::FindV02(IlcESDEvent *event)
 					TMath::Min(pvertex->GetCausalityP()[3],Double_t(0.7)));
 #else
       Float_t causilctyA  = (1.0-pvertex->GetCausalityP()[0])*(1.0-pvertex->GetCausalityP()[1]);
-      Float_t causilctyB  = TMath::Sqrt(TMath::Min(pvertex->GetCausalityP()[2],Float_t(0.7))*
+      Float_t causilctyB  = TMath::Sqrt(TMath::Min(pvertex->GetCausalityP()[2],Double_t(0.7))*
 					TMath::Min(pvertex->GetCausalityP()[3],Double_t(0.7)));
 #endif
       //
@@ -5058,9 +5058,6 @@ void IlcTARGETtrackerMI::RefitV02(IlcESDEvent *event)
     }    
   }
 }
-
-
-
 
 
 
