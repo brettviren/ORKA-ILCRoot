@@ -24,11 +24,11 @@ See the =README_CMake= file
 The prerequisites and ORKA-ILCRoot itself can be installed in an
 automated fashion using =grinst=.  The basic steps are:
 
-#+begin_example
+#+BEGIN_EXAMPLE
 git clone git://github.com/brettviren/grinst.git
 cd grinst
 ./grinst orka-ilcroot.grinst install all
-#+end_example
+#+END_EXAMPLE
 
 About 10 GB of dick space is required.  After installation completes,
 and if it is desired, one can remove the =build/= directory and regain
@@ -44,9 +44,9 @@ satisfy dependencies.
 
 To set up the run-time environment after installation succeeds do:
 
-#+begin_example
+#+BEGIN_EXAMPLE
 eval $(./grinst orka-ilcroot.grinst setup all)
-#+end_example
+#+END_EXAMPLE
 
 This only supports the =bash= shell.
 
@@ -78,25 +78,25 @@ required for users of the remote repository.
 
 First cache SVN credentials:
 
-#+begin_example
+#+BEGIN_EXAMPLE
 bviren@lycastus:ilcroot> svn info http://m65g.fnal.gov:9880/ilcroot
 Authentication realm: <http://m65g.fnal.gov:9880> Subversion Repository
 Password for 'bviren':
 Authentication realm: <http://m65g.fnal.gov:9880> Subversion Repository
 Username: orka
 Password for 'orka':
-#+end_example
+#+END_EXAMPLE
 
 Then clone into git:
 
-#+begin_example
+#+BEGIN_EXAMPLE
 mkdir ilcroot
 cd ilcroot
 git svn init --prefix=upstream/ --username=orka -s  http://m65g.fnal.gov:9880/ilcroot svn2git
 cd svn2git
 git svn fetch
 git branch --track v1-01 remotes/upstream/tags/v1-01
-#+end_example
+#+END_EXAMPLE
 
 
 ** GitHub
@@ -105,11 +105,11 @@ While waiting for a Redmine subproject to house ORKA-ILCRoot use
 GitHub to make some progress.  Make the repo through GH's web
 interface then
 
-#+begin_example
+#+BEGIN_EXAMPLE
 cd svn2git   # made above
 git remote add github git@github.com:brettviren/ORKA-ILCRoot.git
 ssh-add ~/.ssh/id_github
 git push -u github
-#+end_example
+#+END_EXAMPLE
 
 Repo is at =git://github.com/brettviren/ORKA-ILCRoot.git=.
