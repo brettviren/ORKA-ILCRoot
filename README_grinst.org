@@ -30,7 +30,7 @@ cd grinst
 ./grinst orka-ilcroot.grinst install all
 #+END_EXAMPLE
 
-About 10 GB of dick space is required.  After installation completes,
+About 10 GB of disk space is required.  After installation completes,
 and if it is desired, one can remove the =build/= directory and regain
 ~7GB.
 
