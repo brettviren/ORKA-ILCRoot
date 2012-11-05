@@ -1,0 +1,115 @@
+ILCRoot for ORKA
+
+* Installation 
+
+ORKA-ILCRoot requires at least these packages:
+
+ - CMake
+
+ - Geant4
+
+ - Pythia6
+
+ - ROOT
+
+ - geant321+vmc
+
+** Manual Installation
+
+See the =README_CMake= file
+
+
+** Automatic Installation
+
+The prerequisites and ORKA-ILCRoot itself can be installed in an
+automated fashion using =grinst=.  The basic steps are:
+
+#+begin_example
+git clone git://github.com/brettviren/grinst.git
+cd grinst
+./grinst orka-ilcroot.grinst install all
+#+end_example
+
+About 10 GB of dick space is required.  After installation completes,
+and if it is desired, one can remove the =build/= directory and regain
+~7GB.
+
+Before running the =install all= step you wish to may edit the
+=orka-ilcroot.grinst= file to modify where the installation will go.
+
+Instead of supplying the =all= command one or more individual packages
+(as listed in the =orka-ilcroot.grinst= file) can be specified.  In
+general the order of installation in important in order to properly
+satisfy dependencies.
+
+To set up the run-time environment after installation succeeds do:
+
+#+begin_example
+eval $(./grinst orka-ilcroot.grinst setup all)
+#+end_example
+
+This only supports the =bash= shell.
+
+
+
+* Repository
+
+FNAL's Redmine+git repository system was chosen to hold the copy of
+ILCRoot that ORKA uses.  It is filled from the SVN repository directed
+to me by Anna: http://m65g.fnal.gov:9880/ilcroot
+
+** Redmine
+
+The main ORKA Redmine project is at:  
+
+  https://cdcvs.fnal.gov/redmine/projects/orka
+
+ORKA's ILCRoot is a sub-project "ORKA-ILCRoot". 
+
+
+** Sync to git
+
+To synchronize between SVN is a two step process.  First the commit
+history from SVN is brought in to a local git repository and then it
+is pushed to the remote.  This process is documented here but is not
+required for users of the remote repository.
+
+*** Sync to local git repository
+
+First cache SVN credentials:
+
+#+begin_example
+bviren@lycastus:ilcroot> svn info http://m65g.fnal.gov:9880/ilcroot
+Authentication realm: <http://m65g.fnal.gov:9880> Subversion Repository
+Password for 'bviren':
+Authentication realm: <http://m65g.fnal.gov:9880> Subversion Repository
+Username: orka
+Password for 'orka':
+#+end_example
+
+Then clone into git:
+
+#+begin_example
+mkdir ilcroot
+cd ilcroot
+git svn init --prefix=upstream/ --username=orka -s  http://m65g.fnal.gov:9880/ilcroot svn2git
+cd svn2git
+git svn fetch
+git branch --track v1-01 remotes/upstream/tags/v1-01
+#+end_example
+
+
+** GitHub
+
+While waiting for a Redmine subproject to house ORKA-ILCRoot use
+GitHub to make some progress.  Make the repo through GH's web
+interface then
+
+#+begin_example
+cd svn2git   # made above
+git remote add github git@github.com:brettviren/ORKA-ILCRoot.git
+ssh-add ~/.ssh/id_github
+git push -u github
+#+end_example
+
+Repo is at =git://github.com/brettviren/ORKA-ILCRoot.git=.
