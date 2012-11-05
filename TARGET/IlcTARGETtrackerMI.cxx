@@ -4866,8 +4866,8 @@ void  IlcTARGETtrackerMI::FindV02(IlcESDEvent *event)
 	 pvertex->SetNBefore(maxLayer);      
       }
       if (pvertex->GetRr()<90){
-	pa0  *= TMath::Min(track0->GetESDtrack()->GetTPCdensity(0,60),Float_t(1.));
-	pa1  *= TMath::Min(track1->GetESDtrack()->GetTPCdensity(0,60),Float_t(1.));
+	pa0  *= TMath::Min(track0->GetESDtrack()->GetTPCdensity(0,60),Double_t(1.));
+	pa1  *= TMath::Min(track1->GetESDtrack()->GetTPCdensity(0,60),Double_t(1.));
       }
       if (pvertex->GetRr()<20){
 	pa0  *= (0.2+TMath::Exp(-TMath::Min(minchi2after0,Float_t(16))/8.))/1.2;
@@ -4886,8 +4886,8 @@ void  IlcTARGETtrackerMI::FindV02(IlcESDEvent *event)
       Float_t    sigmap    = 0.5*sigmap0*(0.6+0.4*p12);           // "resolution: of point angle - as a function of radius and momenta
 
       Float_t causilctyA  = (1.0-pvertex->GetCausalityP()[0])*(1.0-pvertex->GetCausalityP()[1]);
-      Float_t causilctyB  = TMath::Sqrt(TMath::Min(pvertex->GetCausalityP()[2],Float_t(0.7))*
-					TMath::Min(pvertex->GetCausalityP()[3],Float_t(0.7)));
+      Float_t causilctyB  = TMath::Sqrt(TMath::Min(pvertex->GetCausalityP()[2],Double_t(0.7))*
+					TMath::Min(pvertex->GetCausalityP()[3],Double_t(0.7)));
       //
       Float_t likelihood0 = (TMath::Exp(-pvertex->GetDistNorm())+0.1) *(pvertex->GetDist2()<0.5)*(pvertex->GetDistNorm()<5);
 
@@ -5052,9 +5052,6 @@ void IlcTARGETtrackerMI::RefitV02(IlcESDEvent *event)
     }    
   }
 }
-
-
-
 
 
 
