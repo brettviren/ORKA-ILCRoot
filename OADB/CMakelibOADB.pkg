@@ -16,6 +16,7 @@ set ( EXPORT ${HDRS})
 set ( EINCLUDE ANALYSIS  STEER/STEERBase)
 
 # Install data to destination 
-install (DIRECTORY COMMON PWGPP PWGLF PWGJE PWGLF PWGDQ
+# removed due to nonexistence:  PWGJE
+install (DIRECTORY COMMON PWGPP PWGLF PWGLF PWGDQ
          DESTINATION OADB 
 	 PATTERN ".svn" EXCLUDE)
