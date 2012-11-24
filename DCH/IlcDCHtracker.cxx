@@ -42,7 +42,7 @@
 #include "IlcRunLoader.h"
 #include "IlcDCHReconstructor.h"
 #include "IlcDCHpolyTrack.h"
-#include "IlcDCHreco.h"
+#include "IlcDCHRecoParam.h"
 #include "IlcDCHseed.h" 
 #include "IlcDCHtracker.h"
 #include "TStopwatch.h"
@@ -51,7 +51,6 @@
 #include "TTreeStream.h"
 #include "IlcAlignObj.h"
 #include "IlcTrackPointArray.h"
-#include "IlcDCHrecoParam.h"
 #include "IlcDCHParam.h"
 #include "IlcDCHwireposition.h"
 
@@ -4916,7 +4915,7 @@ Int_t  IlcDCHtracker::CheckKinkPoint(IlcDCHseed*seed,IlcDCHseed &mother, IlcDCHs
   for (Int_t ilayer=1;ilayer<nchecks-1;ilayer++){
     if (TMath::Abs(kinks[ilayer].GetR())>fParam->GetOuterRadius()-fRecPar->GetDistFromEdge()) continue;
     if (TMath::Abs(kinks[ilayer].GetR())<fParam->GetInnerRadius()+fRecPar->GetDistFromEdge()) continue;
-    Float_t quilcty = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuilcty()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//dddddddddddddd
+    Float_t quilcty = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuality()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//dddddddddddddd
     if ( quilcty > maxchange){
       maxchange = quilcty;
       index = ilayer;
@@ -4972,7 +4971,7 @@ Int_t  IlcDCHtracker::CheckKinkPoint(IlcDCHseed*seed,IlcDCHseed &mother, IlcDCHs
   for (Int_t ilayer=0;ilayer<nchecks;ilayer++){
     if (TMath::Abs(kinks[ilayer].GetR())>fParam->GetOuterRadius()-fRecPar->GetDistFromEdge()) continue;
     if (TMath::Abs(kinks[ilayer].GetR())<fParam->GetInnerRadius()+fRecPar->GetDistFromEdge()) continue;
-    Float_t quilcty = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuilcty()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//ddddddddddddd
+    Float_t quilcty = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuality()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//ddddddddddddd
     if ( quilcty > maxchange){
       maxchange = quilcty;
       index = ilayer;

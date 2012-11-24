@@ -15,7 +15,7 @@
 
 #include <TError.h>
 #include "IlcTracker.h"
-#include "IlcDCHreco.h"
+#include "IlcDCHRecoParam.h"
 #include "IlcDCHcluster.h"
 #include "IlcExternalTrackParam.h"
 

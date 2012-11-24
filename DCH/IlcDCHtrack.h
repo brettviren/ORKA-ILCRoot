@@ -21,7 +21,7 @@
 #include <IlcKalmanTrack.h>
 #include <TMath.h>
 
-#include "IlcDCHreco.h"
+#include "IlcDCHRecoParam.h"
 #include "IlcExternalTrackParam.h"
 class IlcESDtrack;
 class IlcESDVertex;

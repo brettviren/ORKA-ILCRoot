@@ -23,7 +23,6 @@
 #include "IlcRunLoader.h"
 #include "IlcDCHReconstructor.h"
 #include "IlcDCHpolyTrack.h"
-#include "IlcDCHreco.h"
 #include "IlcDCHseed.h" 
 #include "IlcDCHtracker.h"
 #include "TStopwatch.h"
@@ -32,7 +31,7 @@
 #include "TTreeStream.h"
 #include "IlcAlignObj.h"
 #include "IlcTrackPointArray.h"
-#include "IlcDCHrecoParam.h"
+#include "IlcDCHRecoParam.h"
 #include "IlcDCHParam.h"
 #include "IlcDCHwireposition.h"
 

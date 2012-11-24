@@ -30,10 +30,9 @@ set ( SRCS
       IlcDCHclusterizer.cxx IlcDCHcluster.cxx
       IlcDCHtrack.cxx
       IlcDCHseed.cxx
-      IlcDCHrecoParam.cxx
+      IlcDCHRecoParam.cxx
       IlcComplexCluster.cxx
       IlcDCHpolyTrack.cxx
-      IlcDCHRecoParam.cxx
       IlcDCHReconstructor.cxx
       IlcDCHtracker.cxx
     )

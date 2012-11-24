@@ -120,5 +120,30 @@ IlcDCHRecoParam *IlcDCHRecoParam::GetCosmicTestParam(Bool_t bPedestal){
   return param;
 }
 
+/*********************************************/
+/*********************************************/
 
 
+IlcDCHrecoParam::IlcDCHrecoParam():
+fRoadY(1.),
+fRoadZ(3.),
+fSafetyZ(10.),
+fNearestByC(0.004),          
+fNearestByTgl(0.6),  
+fNearestByDistance2(325),
+fMinNOfClusetrs(10),
+fMinDensity(0.4),
+fSeedTrackSigma2(0.02),
+fSeedBeamSigma2(0.1),
+fCutTrackSigma2(0.6),
+fMinDCAr(5),
+fMinDCAz(5),
+fDeltaZ(60),
+fDistFromEdge(10),
+fScaleForQuality(3),
+fMinRofV0(5), 
+fMaxRofV0(150), 
+fCutOnDistanceInV0(4)
+{
+//IlcDCHrecoParam constructor
+}
