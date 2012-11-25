@@ -77,6 +77,16 @@ find_package(DATE)
 
 find_package(GEANT3)
 
+# GEANT4
+# ------------------------------
+
+find_package(GEANT4)
+
+# GEANT4VMC
+# ------------------------------
+
+find_package(GEANT4VMC)
+
 # AMORE
 # ------------------------------
 
@@ -148,6 +158,14 @@ ILC_RootConfig(EVE --has-opengl)
 if(NOT EVE STREQUAL "no")
   list(APPEND ILCROOTMODULES EVE)
 endif(NOT EVE STREQUAL "no")
+
+# PhysicsList
+# ------------------------------
+
+if(GEANT4_FOUND AND GEANT4VMC_FOUND)
+  list(APPEND ILCROOTMODULES PhysicsList)
+  message(STATUS "PhysicsList module set to be built")
+endif(GEANT4_FOUND AND GEANT4VMC_FOUND)
 
 # CERN Modules
 # ------------------------------
