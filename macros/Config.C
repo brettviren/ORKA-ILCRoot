@@ -216,6 +216,8 @@ void Config()
 	if (!gInterpreter->IsLoaded("$G4VMC/examples/macro/g4libs.C")) {
 	  gROOT->LoadMacro("$G4VMC/examples/macro/g4libs.C");
 	  gInterpreter->ProcessLine("g4libs()");
+	  if (gSystem->FindFile(gSystem->ExpandPathName("$ILC_ROOT/lib/tgt_$ILC_TARGET"),"libPhysicsList.so"))
+	    gSystem->Load("libPhysicsList.so");
 	}
 	
       }
@@ -233,8 +235,10 @@ void Config()
 	 * "specialControls" permits to set your own processes like:  gMC->SetProcess("DCAY",1);
 	 *  
 	 ********************************************************************************/
-	
-	
+
+	//ORKA Physics list defined by user
+	//ORKARunConfiguration *runConfiguration = new ORKARunConfiguration("geomVMCtoRoot","ORKA_PL_v1");
+
 	//QGSP_BERT HP neutrons Physics list
 	//TG4RunConfiguration* runConfiguration = new TG4RunConfiguration("geomVMCtoRoot","QGSP_BERT_HP");//,"stepLimiter+specialCut",true);
 	
