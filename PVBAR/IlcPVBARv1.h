@@ -40,7 +40,6 @@ public:
 
   using IlcPVBARv0::AddHit;
   virtual void   AddHit( Int_t shunt, Int_t primary, Int_t id, Float_t *hits) ; 
-  virtual void   AddHit( Int_t shunt, Int_t primary, Int_t id, Float_t *hits, Float_t *TotalNpe) ; 
   virtual void   FinishEvent() ;
   virtual void   FinishPrimary() ;
   virtual Int_t  IsVersion(void) const {
@@ -52,6 +51,7 @@ public:
   virtual const TString Version(void)const { return TString("v1") ;  }
 
   Float_t Npe_Cerenkov_in_Glass_Ex(Float_t beta, Float_t * uP, Float_t step, Float_t *zDistanceFromWLS, Float_t xyDistanceFromWLS, Int_t lambdabins, Float_t lambdazero, Float_t lambdawidth, Float_t (*Npe_Spectrum)[2], Float_t (*Npe_LG)[2],  Float_t (*Npe_WLS)[2], Float_t *TotalNpe);
+  Float_t Npe_Cerenkov(Float_t beta, Float_t * uP, Float_t step, Float_t *zDistanceFromWLS, Float_t xyDistanceFromWLS, Int_t lambdabins, Float_t lambdazero, Float_t lambdawidth);
   Float_t nIndex(Float_t lambda);
   Float_t AttenuationLength_m_LG(Float_t lambda);
   Float_t AttenuationLength_m_WLS(Float_t lambda);
@@ -60,15 +60,9 @@ public:
   Float_t QE_SiPM(Float_t lambda);
   Float_t Shifter_WLS(Float_t lambda);
 
-
-  void       CPVDigitize (TLorentzVector p, Float_t *xy, TClonesArray *digits) ;
-  Float_t    CPVPadResponseFunction(Float_t qhit, Float_t zg, Float_t xg) ;
-  Double_t   CPVCumulPadResponse(Double_t x, Double_t y) ;
-
  private:
   IlcPVBARv1(IlcPVBARv1 & PVBAR);
   IlcPVBARv1 & operator = (const IlcPVBARv1 & /*rvalue*/);
-  TClonesArray fCPVDigits; //! Array of CPV digits per current CPV hit
 
   ClassDef(IlcPVBARv1,5)  // Implementation of PVBAR manager class for layout EMC+PPSD
 
