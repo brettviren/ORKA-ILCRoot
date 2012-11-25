@@ -134,33 +134,33 @@ void IlcPVBARvFast::CreateGeometry()
     
   }
 
-  // Get pointer to the array containing media indeces
-  Int_t *idtmed = fIdtmed->GetArray() - 699 ;
-  
-  Float_t bigbox[3] ; 
-  bigbox[0] =   GetBigBox(0) / 2.0 ;
-  bigbox[1] =   GetBigBox(1) / 2.0 ;
-  bigbox[2] =   GetBigBox(2) / 2.0 ;
-  
-  gMC->Gsvolu("PVBAR", "BOX ", idtmed[798], bigbox, 3) ;
-  
-  // --- Position  PVBAR mdules in ILC setup ---
-  
-  Int_t idrotm[99] ;
-  Double_t const kRADDEG = 180.0 / TMath::Pi() ;
-  
-  for( Int_t i = 1; i <= GetGeometry()->GetNModules(); i++ ) {
-    
-    Float_t angle = GetGeometry()->GetPVBARAngle(i) ;
-    IlcMatrix(idrotm[i-1], 90.0, angle, 90.0, 90.0+angle, 0.0, 0.0) ;
- 
-    Float_t r = GetGeometry()->GetIPtoCrystalSurface() + GetBigBox(1) / 2.0 ;
-
-    Float_t xP1 = r * TMath::Sin( angle / kRADDEG ) ;
-    Float_t yP1 = -r * TMath::Cos( angle / kRADDEG ) ;
-    gMC->Gspos("PVBAR", i, "ILCM", xP1, yP1, 0.0, idrotm[i-1], "ONLY") ;
- 
-  } // for GetNModules
+// // //   // Get pointer to the array containing media indeces
+// // //   Int_t *idtmed = fIdtmed->GetArray() - 699 ;
+// // //   
+// // //   Float_t bigbox[3] ; 
+// // //   bigbox[0] =   GetBigBox(0) / 2.0 ;
+// // //   bigbox[1] =   GetBigBox(1) / 2.0 ;
+// // //   bigbox[2] =   GetBigBox(2) / 2.0 ;
+// // //   
+// // //   gMC->Gsvolu("PVBAR", "BOX ", idtmed[798], bigbox, 3) ;
+// // //   
+// // //   // --- Position  PVBAR mdules in ILC setup ---
+// // //   
+// // //   Int_t idrotm[99] ;
+// // //   Double_t const kRADDEG = 180.0 / TMath::Pi() ;
+// // //   
+// // //   for( Int_t i = 1; i <= GetGeometry()->GetNModules(); i++ ) {
+// // //     
+// // //     Float_t angle = GetGeometry()->GetPVBARAngle(i) ;
+// // //     IlcMatrix(idrotm[i-1], 90.0, angle, 90.0, 90.0+angle, 0.0, 0.0) ;
+// // //  
+// // //     Float_t r = GetGeometry()->GetIPtoCrystalSurface() + GetBigBox(1) / 2.0 ;
+// // // 
+// // //     Float_t xP1 = r * TMath::Sin( angle / kRADDEG ) ;
+// // //     Float_t yP1 = -r * TMath::Cos( angle / kRADDEG ) ;
+// // //     gMC->Gspos("PVBAR", i, "ILCM", xP1, yP1, 0.0, idrotm[i-1], "ONLY") ;
+// // //  
+// // //   } // for GetNModules
 
 }
 
@@ -249,38 +249,38 @@ TVector3 IlcPVBARvFast::MakePosition(Double_t energy, TVector3 pos, Double_t the
 }
 
 //____________________________________________________________________________
-void IlcPVBARvFast::MakeRecParticle(Int_t modid, TVector3 pos, IlcPVBARFastRecParticle & rp)
+void IlcPVBARvFast::MakeRecParticle(Int_t /*modid*/, TVector3 /*pos*/, IlcPVBARFastRecParticle & /*rp*/)
 {
   // Modify the primary particle properties according
   //  1. the response function of PVBAR
   //  2. the performance of the EMC+PPSD setup
   
-  Int_t type = MakeType( rp ) ;
-  rp.SetType(type) ;
-
-  
-  // get the detected energy
-
-  TLorentzVector momentum ;  
-  rp.Momentum(momentum) ; 
-  Double_t kineticenergy = TMath::Sqrt( TMath::Power(momentum.E(), 2) - TMath::Power(rp.GetMass(), 2) ) ; 
-  Double_t modifiedkineticenergy = MakeEnergy(kineticenergy ) ;
-  Double_t modifiedenergy = TMath::Sqrt( TMath::Power(modifiedkineticenergy, 2)  
-					 + TMath::Power( rp.GetMass(), 2) ) ;
- 
-  // get the angle of incidence 
-  
-  Double_t incidencetheta = 90. * TMath::Pi() /180 - rp.Theta() ; 
-  Double_t incidencephi   = ( 270 + GetGeometry()->GetPVBARAngle(modid) ) * TMath::Pi() / 180. - rp.Phi() ;   
-
-  // get the detected direction
-  
-  TVector3 modifiedposition = MakePosition(kineticenergy, pos, incidencetheta, incidencephi) ; 
-  modifiedposition *= modifiedkineticenergy / modifiedposition.Mag() ; 
-
-  // Set the modified 4-momentum of the reconstructed particle
-
-  rp.SetMomentum(modifiedposition.X(), modifiedposition.Y(), modifiedposition.Z(), modifiedenergy) ; 
+// // // //   Int_t type = MakeType( rp ) ;
+// // // //   rp.SetType(type) ;
+// // // // 
+// // // //   
+// // // //   // get the detected energy
+// // // // 
+// // // //   TLorentzVector momentum ;  
+// // // //   rp.Momentum(momentum) ; 
+// // // //   Double_t kineticenergy = TMath::Sqrt( TMath::Power(momentum.E(), 2) - TMath::Power(rp.GetMass(), 2) ) ; 
+// // // //   Double_t modifiedkineticenergy = MakeEnergy(kineticenergy ) ;
+// // // //   Double_t modifiedenergy = TMath::Sqrt( TMath::Power(modifiedkineticenergy, 2)  
+// // // // 					 + TMath::Power( rp.GetMass(), 2) ) ;
+// // // //  
+// // // //   // get the angle of incidence 
+// // // //   
+// // // //   Double_t incidencetheta = 90. * TMath::Pi() /180 - rp.Theta() ; 
+// // // //   Double_t incidencephi   = ( 270 + GetGeometry()->GetPVBARAngle(modid) ) * TMath::Pi() / 180. - rp.Phi() ;   
+// // // // 
+// // // //   // get the detected direction
+// // // //   
+// // // //   TVector3 modifiedposition = MakePosition(kineticenergy, pos, incidencetheta, incidencephi) ; 
+// // // //   modifiedposition *= modifiedkineticenergy / modifiedposition.Mag() ; 
+// // // // 
+// // // //   // Set the modified 4-momentum of the reconstructed particle
+// // // // 
+// // // //   rp.SetMomentum(modifiedposition.X(), modifiedposition.Y(), modifiedposition.Z(), modifiedenergy) ; 
 
  }
 
