@@ -60,7 +60,6 @@ public:
                                                                        
   // Return general PVBAR parameters
   Int_t    GetNModules(void)                    const { return fNModules ; }
-  Float_t  GetPVBARAngle(Int_t index)            const { return fPVBARAngle[index-1] ; }
   Float_t* GetPVBARParams(void)                        { return fPVBARParams;}  //Half-sizes of PVBAR trapecoid
   Float_t  GetIPtoUpperCPVsurface(void)         const { return fIPtoUpperCPVsurface ; }
   Float_t  GetOuterBoxSize(Int_t index)         const { return 2.*fPVBARParams[index]; }
@@ -121,24 +120,29 @@ public:
   Float_t GetCradleWheel  (Int_t index)  const { return fGeometrySUPP->GetCradleWheel  (index); }
   void Init(void) ;            // steering method for PVBAR and PPSD/CPV
 
+  Bool_t AbsToRelNumbering(Int_t AbsId, Int_t * RelId) const ; 
+        // converts the absolute PVBAR tile numbering to a relative
+  Bool_t RelToAbsNumbering(const Int_t * RelId, Int_t & AbsId) const ; 
+        // converts the absolute PVBAR numbering to a relative
+
   Double_t GetPVBARRmin(void)              const { return fPVBARRmin; }
   Double_t GetPVBARRmax(void)              const { return fPVBARRmax; }
   Double_t GetPVBARLength(void)            const { return fPVBARLength; }
   Double_t GetPVBARTileScintThickness(void)const { return fPVBARTileScintThickness; }
   Double_t GetPVBARTileSF57Thickness(void) const { return fPVBARTileSF57Thickness; }
-  Double_t GetPVBARNTiles(void)    const { return Int_t((fPVBARRmax-fPVBARRmin) / 
-                                                   (fPVBARTileScintThickness+fPVBARTileSF57Thickness) +0.00001); }
-  Int_t GetPVBARNSlicePhi(void)         const { return fPVBARNSlicePhi;}
+  Double_t GetWrapThick(void)       const { return fWrapThick;}
+  Int_t GetPVBARNSubSect(void)      const { return fPVBARNSubSect;}
+  Int_t *GetPVBARNSectorsPhi(void)  const { return fPVBARNSectorsPhi;}
+  Int_t GetNTilesPerSubSector(void) const { return fNTilesPerSubSector;}
+  Int_t GetNTotalElements(void)     const { return fNTotalElements;}
 
 protected:
 
   IlcPVBARGeometry(const Text_t* name, const Text_t* title="") ;
 private:
-  void                     SetPVBARAngles();  // calculates the PVBAR modules PHI angle
 
 
   Float_t                  fAngle ;          // Position angles between modules
-  Float_t                 *fPVBARAngle ;      //[fNModules] Position angles of modules
   Float_t                  fPVBARParams[4] ;  // Half-sizes of PVBAR trapecoid
   Float_t                  fIPtoUpperCPVsurface; // Minimal distance from IP to PVBAR
   Float_t                  fCrystalShift ;   //Distance from crystal center to front surface
@@ -152,7 +156,11 @@ private:
   Double_t fPVBARLength;
   Double_t fPVBARTileScintThickness; //cm
   Double_t fPVBARTileSF57Thickness; //cm
-  Int_t fPVBARNSlicePhi;
+  Double_t fWrapThick; //cm
+  Int_t    fPVBARNSubSect;
+  Int_t   *fPVBARNSectorsPhi; //[fPVBARNSubSect]
+  Int_t    fNTilesPerSubSector;
+  Int_t    fNTotalElements;
 
   static IlcPVBARGeometry * fgGeom ; // pointer to the unique instance of the singleton 
   static Bool_t fgInit ;            // Tells if geometry has been succesfully set up 

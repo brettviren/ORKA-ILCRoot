@@ -49,7 +49,6 @@ Bool_t             IlcPVBARGeometry::fgInit = kFALSE ;
 IlcPVBARGeometry::IlcPVBARGeometry() : 
                     IlcPVBARGeoUtils(),
 	            fAngle(0.f),
-	            fPVBARAngle(0),
 	            fIPtoUpperCPVsurface(0),
 		    fCrystalShift(0),
 		    fCryCellShift(0),
@@ -59,7 +58,11 @@ IlcPVBARGeometry::IlcPVBARGeometry() :
 	            fPVBARLength(0.),
 	            fPVBARTileScintThickness(0.),
 	            fPVBARTileSF57Thickness(0.),
-	            fPVBARNSlicePhi(0)
+	            fWrapThick(0.),
+	            fPVBARNSubSect(0),
+	            fPVBARNSectorsPhi(0),
+	            fNTilesPerSubSector(0),
+	            fNTotalElements(0)
 {
     // default ctor 
     // must be kept public for root persistency purposes, but should never be called by the outside world
@@ -75,7 +78,6 @@ IlcPVBARGeometry::IlcPVBARGeometry() :
 IlcPVBARGeometry::IlcPVBARGeometry(const IlcPVBARGeometry & rhs)
 		    : IlcPVBARGeoUtils(rhs),
 		      fAngle(rhs.fAngle),
-		      fPVBARAngle(0),
 		      fIPtoUpperCPVsurface(rhs.fIPtoUpperCPVsurface),
 		      fCrystalShift(rhs.fCrystalShift),
 		      fCryCellShift(rhs.fCryCellShift),
@@ -85,7 +87,11 @@ IlcPVBARGeometry::IlcPVBARGeometry(const IlcPVBARGeometry & rhs)
 		      fPVBARLength(rhs.fPVBARLength),
 		      fPVBARTileScintThickness(rhs.fPVBARTileScintThickness),
 		      fPVBARTileSF57Thickness(rhs.fPVBARTileSF57Thickness),
-		      fPVBARNSlicePhi(rhs.fPVBARNSlicePhi)
+		      fWrapThick(rhs.fWrapThick),
+		      fPVBARNSubSect(rhs.fPVBARNSubSect),
+		      fPVBARNSectorsPhi(rhs.fPVBARNSectorsPhi),
+		      fNTilesPerSubSector(rhs.fNTilesPerSubSector),
+		      fNTotalElements(rhs.fNTotalElements)
 {
   Fatal("cpy ctor", "not implemented") ; 
 }
@@ -94,7 +100,6 @@ IlcPVBARGeometry::IlcPVBARGeometry(const IlcPVBARGeometry & rhs)
 IlcPVBARGeometry::IlcPVBARGeometry(const Text_t* name, const Text_t* title) 
 	          : IlcPVBARGeoUtils(name, title),
 	            fAngle(0.f),
-	            fPVBARAngle(0),
 	            fIPtoUpperCPVsurface(0),
 		    fCrystalShift(0),
 		    fCryCellShift(0),
@@ -104,7 +109,11 @@ IlcPVBARGeometry::IlcPVBARGeometry(const Text_t* name, const Text_t* title)
 	            fPVBARLength(0.),
 	            fPVBARTileScintThickness(0.),
 	            fPVBARTileSF57Thickness(0.),
-	            fPVBARNSlicePhi(0)
+	            fWrapThick(0.),
+	            fPVBARNSubSect(0),
+	            fPVBARNSectorsPhi(0),
+	            fNTilesPerSubSector(0),
+	            fNTotalElements(0)
 { 
   // ctor only for internal usage (singleton)
   Init() ; 
@@ -118,7 +127,6 @@ IlcPVBARGeometry::~IlcPVBARGeometry(void)
 
   if (fRotMatrixArray) fRotMatrixArray->Delete() ; 
   if (fRotMatrixArray) delete fRotMatrixArray ; 
-  if (fPVBARAngle     ) delete[] fPVBARAngle ; 
 }
 
 //____________________________________________________________________________
@@ -130,62 +138,22 @@ void IlcPVBARGeometry::Init(void)
   fgInit     = kTRUE ; 
 
   fPVBARRmin = 75.;
-  fPVBARRmax = 127.5;
+  fPVBARRmax = 129.;
   fPVBARLength = 350.;
-  fPVBARNSlicePhi = 48;
   fPVBARTileScintThickness = 0.15; //cm
   fPVBARTileSF57Thickness = 0.2; //cm
+  fWrapThick = 0.01; //cm
+  fPVBARNSubSect = 10;
+  fPVBARNSectorsPhi = new Int_t[fPVBARNSubSect] ;
 
+  Int_t nSect[10] = {48, 51, 54, 58, 61, 64, 68, 71, 74, 78};
+  for(Int_t idx=0; idx<fPVBARNSubSect; idx++) fPVBARNSectorsPhi[idx] = nSect[idx];
 
-//   fAngle        = 20;
-// 
-//   
-//   fPVBARAngle = new Float_t[fNModules] ;
-//   
-//   const Float_t * emcParams = fGeometryEMCA->GetEMCParams() ;
-//   
-//   fPVBARParams[0] =  TMath::Max((Double_t)fGeometryCPV->GetCPVBoxSize(0)/2., 
-//  			       (Double_t)(emcParams[0] - (emcParams[1]-emcParams[0])*
-// 					  fGeometryCPV->GetCPVBoxSize(1)/2/emcParams[3]));
-//   fPVBARParams[1] = emcParams[1] ;
-//   fPVBARParams[2] = TMath::Max((Double_t)emcParams[2], (Double_t)fGeometryCPV->GetCPVBoxSize(2)/2.);
-//   fPVBARParams[3] = emcParams[3] + fGeometryCPV->GetCPVBoxSize(1)/2. ;
-//   
-//   fIPtoUpperCPVsurface = fGeometryEMCA->GetIPtoOuterCoverDistance() - fGeometryCPV->GetCPVBoxSize(1) ;
-// 
-//   //calculate offset to crystal surface
-//   const Float_t * inthermo = fGeometryEMCA->GetInnerThermoHalfSize() ;
-//   const Float_t * strip = fGeometryEMCA->GetStripHalfSize() ;
-//   const Float_t * splate = fGeometryEMCA->GetSupportPlateHalfSize();
-//   const Float_t * crystal = fGeometryEMCA->GetCrystalHalfSize() ;
-//   const Float_t * pin = fGeometryEMCA->GetAPDHalfSize() ;
-//   const Float_t * preamp = fGeometryEMCA->GetPreampHalfSize() ;
-//   fCrystalShift=-inthermo[1]+strip[1]+splate[1]+crystal[1]-fGeometryEMCA->GetAirGapLed()/2.+pin[1]+preamp[1] ;
-//   fCryCellShift=crystal[1]-(fGeometryEMCA->GetAirGapLed()-2*pin[1]-2*preamp[1])/2;
-//  
-//   Int_t index ;
-//   for ( index = 0; index < fNModules; index++ )
-//     fPVBARAngle[index] = 0.0 ; // Module position angles are set in CreateGeometry()
-//   
-//   fRotMatrixArray = new TObjArray(fNModules) ; 
-// 
-//   // Geometry parameters are calculated
-// 
-//   SetPVBARAngles();
-//   Double_t const kRADDEG = 180.0 / TMath::Pi() ;
-//   Float_t r = GetIPtoOuterCoverDistance() + fPVBARParams[3] - GetCPVBoxSize(1) ;
-//   for (Int_t iModule=0; iModule<fNModules; iModule++) {
-//     fModuleCenter[iModule][0] = r * TMath::Sin(fPVBARAngle[iModule] / kRADDEG );
-//     fModuleCenter[iModule][1] =-r * TMath::Cos(fPVBARAngle[iModule] / kRADDEG );
-//     fModuleCenter[iModule][2] = 0.;
-//     
-//     fModuleAngle[iModule][0][0] =  90;
-//     fModuleAngle[iModule][0][1] =   fPVBARAngle[iModule];
-//     fModuleAngle[iModule][1][0] =   0;
-//     fModuleAngle[iModule][1][1] =   0;
-//     fModuleAngle[iModule][2][0] =  90;
-//     fModuleAngle[iModule][2][1] = 270 + fPVBARAngle[iModule];
-//   }
+  fNTilesPerSubSector = 15;
+
+  fNTotalElements=0;
+  for(Int_t idx=0; idx<fPVBARNSubSect; idx++)
+    fNTotalElements += fPVBARNSectorsPhi[idx]*fNTilesPerSubSector;
 
 }
 
@@ -228,27 +196,6 @@ IlcPVBARGeometry *  IlcPVBARGeometry::GetInstance(const Text_t* name, const Text
   return rv ; 
 }
 
-//____________________________________________________________________________
-void IlcPVBARGeometry::SetPVBARAngles() 
-{ 
-  // Calculates the position of the PVBAR modules in ILC global coordinate system
-  // in ideal geometry
-  
-  Double_t const kRADDEG = 180.0 / TMath::Pi() ;
-  Float_t pphi =  2 * TMath::ATan( GetOuterBoxSize(0)  / ( 2.0 * GetIPtoUpperCPVsurface() ) ) ;
-  pphi *= kRADDEG ;
-  if (pphi > fAngle){ 
-    IlcError(Form("PVBAR modules overlap!\n pphi = %f fAngle = %f", 
-		  pphi, fAngle));
-
-  }
-  pphi = fAngle;
-  
-  for( Int_t i = 1; i <= fNModules ; i++ ) {
-    Float_t angle = pphi * ( i - fNModules / 2.0 - 0.5 ) ;
-    fPVBARAngle[i-1] = -  angle ;
-  } 
-}
 //____________________________________________________________________________
 void IlcPVBARGeometry::GetGlobal(const IlcRecPoint* , TVector3 & ) const
 {
@@ -314,9 +261,81 @@ void IlcPVBARGeometry::GetModuleCenter(TVector3& center,
   else 
     IlcFatal(Form("Wrong detector name %s",det));
 
-  Float_t angle = GetPVBARAngle(module); // (40,20,0,-20,-40) degrees
+  Float_t angle = 0.;//GetPVBARAngle(module); // (40,20,0,-20,-40) degrees
   angle *= TMath::Pi()/180;
   angle += 3*TMath::Pi()/2.;
   center.SetXYZ(rDet*TMath::Cos(angle), rDet*TMath::Sin(angle), 0.);
+}
+
+
+//____________________________________________________________________________
+Bool_t IlcPVBARGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
+{
+  
+  // Converts the absolute Id number into the following array
+  //  relid[0] = PVBAR subsector 1:fPVBARNSubSect
+  //  relid[1] = PVBAR sector 1:fPVBARNSectorsPhi
+  //  relid[2] = tile number inside PVBAR subsector
+  //  relid[3] = tile type: 0 Cer; 1 Sci
+  
+  Bool_t rv  = kTRUE ;
+
+  Int_t TotalSect=0;
+  for(Int_t idx=0; idx<GetPVBARNSubSect(); idx++)
+    TotalSect += GetPVBARNSectorsPhi()[idx]*GetNTilesPerSubSector();
+  
+  relid[3] = 0;
+  
+  if(absId > TotalSect){
+    relid[3] = 1;
+    absId -= TotalSect;
+  }
+
+  Int_t SubSect=1;
+  while(absId>GetPVBARNSectorsPhi()[SubSect-1]*GetNTilesPerSubSector()){
+    absId -= GetPVBARNSectorsPhi()[SubSect-1]*GetNTilesPerSubSector();
+    SubSect++;
+  }
+  relid[0] = SubSect;
+
+  Int_t Sect=1;
+  while(absId>GetNTilesPerSubSector()){
+    absId -= GetNTilesPerSubSector();
+    Sect++;
+  }
+  relid[1] = Sect;
+
+  relid[2] = absId;
+
+  return rv;  
+
+}
+
+//____________________________________________________________________________
+Bool_t IlcPVBARGeometry::RelToAbsNumbering(const Int_t * relid, Int_t &  absId) const
+{
+  // Converts the relative array Id number into the absolute Id number
+  //  relid[0] = PVBAR subsector 1:fPVBARNSubSect
+  //  relid[1] = PVBAR sector 1:fPVBARNSectorsPhi
+  //  relid[2] = tile number inside PVBAR subsector
+  //  relid[3] = tile type: 0 Cer; 1 Sci
+
+  Bool_t rv = kTRUE ;
+
+  absId = 0;
+  for(Int_t idx=0; idx<relid[0]-1; idx++)
+    absId += GetPVBARNSectorsPhi()[idx]*GetNTilesPerSubSector();
+
+  for(Int_t idx=0; idx<relid[1]-1; idx++)
+    absId += GetNTilesPerSubSector();
+
+  absId += relid[2];
+  
+  if(relid[3])
+    for(Int_t idx=0; idx<GetPVBARNSubSect(); idx++)
+      absId += GetPVBARNSectorsPhi()[idx]*GetNTilesPerSubSector();
+ 
+  return rv;
+
 }
 
