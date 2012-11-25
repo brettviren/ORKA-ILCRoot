@@ -44,8 +44,8 @@ class IlcPVBARDigit : public IlcDigitNew {
  public:
   
   IlcPVBARDigit() ;
-  IlcPVBARDigit(Int_t primary, Int_t id, Int_t DigEnergy, Float_t Time, Int_t index = -1) ;
-  IlcPVBARDigit(Int_t primary, Int_t id, Float_t energy , Float_t Time, Int_t index = -1) ;
+  IlcPVBARDigit(Int_t primary, Int_t id, Int_t DigEnergy, Float_t *NPE, Float_t Time, Int_t index = -1) ;
+  IlcPVBARDigit(Int_t primary, Int_t id, Float_t energy, Float_t *NPE, Float_t Time, Int_t index = -1) ;
   IlcPVBARDigit(const IlcPVBARDigit & digit) ;
   virtual ~IlcPVBARDigit() ;
 
@@ -75,16 +75,8 @@ public:
   void      SetALTROSamplesHG(Int_t nSamplesHG, Int_t *samplesHG);
   void      SetALTROSamplesLG(Int_t nSamplesLG, Int_t *samplesLG);
   void      ShiftPrimary(Int_t shift); // shift to separate different TreeK in merging
-
-  // Lead glass arrays and variables
-  Int_t  GetPeArrayLength(void) const {
-    return fTPE;          // Array length of total pe
-  }
-
-  Float_t *GetTotalNpe(void)  {
-    return fTotalNpe ;  //Contains the sum of Npe 
-  }
-
+  void      SetNPE(Float_t nPE[4])   {for(Int_t idx=0; idx<4; idx++) fNPE[idx]= nPE[idx];} 
+  Float_t*  GetNPE(void)   {return fNPE;} 
 
 private:
   IlcPVBARDigit & operator = (const IlcPVBARDigit & /*digit*/);
@@ -94,6 +86,11 @@ private:
   Int_t       fNprimary ;  // Number of primaries
   Int_t *     fPrimary ;   //[fNprimary] Array of primaries      
   Float_t     fEnergy ;    // Deposited energy in ADC counts
+  Float_t     fNPE[4] ;    // Number of photo-electrons in ADC counts
+// fNPE[0] = total pe lead glass front
+// fNPE[1] = total pe lead glass back
+// fNPE[2] = total pe WLS or scint front
+// fNPE[3] = total pe WLS or scint back
   Float_t     fTime ;      // Calculcated time 
   Float_t     fTimeR ;     // Earliest time: to be used by Digits2Raw
   Int_t       fNSamplesHG; // Number of high-gain ALTRO samples
@@ -101,13 +98,6 @@ private:
   UShort_t   *fSamplesHG;  //[fNSamplesHG] Array of high-gain ALTRO samples
   UShort_t   *fSamplesLG;  //[fNSamplesLG] Array of low-gain  ALTRO samples
 
-  const Int_t   fTPE;
-// TotalNpe[0] = total pe generated
-// TotalNpe[1] = total pe lead glass front
-// TotalNpe[2] = total pe lead glass back
-// TotalNpe[3] = total pe WLS or scint front
-// TotalNpe[4] = total pe WLS or scint back
-  Float_t *fTotalNpe;  //[fTPE] Contains the sum of photoelectrons
 
   ClassDef(IlcPVBARDigit,6) // Digit in PVBAR 
 

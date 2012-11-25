@@ -66,15 +66,16 @@ IlcPVBARDigit::IlcPVBARDigit() :
   fNSamplesHG(0),
   fNSamplesLG(0),
   fSamplesHG(0),
-  fSamplesLG(0),
-  fTPE(0),
-  fTotalNpe(0) 
+  fSamplesLG(0)
 {
   // default ctor 
+  for(Int_t idx=0; idx<4; idx++)
+    fNPE[idx] = 0.;
+
 }
 
 //____________________________________________________________________________
-IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Int_t digEnergy, Float_t time, Int_t index) :
+IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Int_t digEnergy, Float_t *NPE, Float_t time, Int_t index) :
   fNprimary(0),
   fPrimary(0),
   fEnergy(0.f),
@@ -83,14 +84,14 @@ IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Int_t digEnergy, Float_t t
   fNSamplesHG(0),
   fNSamplesLG(0),
   fSamplesHG(0),
-  fSamplesLG(0),
-  fTPE(0),
-  fTotalNpe(0)
+  fSamplesLG(0)
 {  
   // ctor with all data 
 
   fAmp         = digEnergy ;
   fEnergy      = 0 ;
+  for(Int_t idx=0; idx<4; idx++)
+    fNPE[idx] = NPE[idx];
   fTime        = time ;
   fTimeR       = fTime ;
   fId          = id ;
@@ -107,7 +108,7 @@ IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Int_t digEnergy, Float_t t
 }
 
 //____________________________________________________________________________
-IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Float_t energy, Float_t time, Int_t index) :
+IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Float_t energy, Float_t *NPE, Float_t time, Int_t index) :
   fNprimary(0),
   fPrimary(0),
   fEnergy(0.f),
@@ -116,14 +117,14 @@ IlcPVBARDigit::IlcPVBARDigit(Int_t primary, Int_t id, Float_t energy, Float_t ti
   fNSamplesHG(0),
   fNSamplesLG(0),
   fSamplesHG(0),
-  fSamplesLG(0),
-  fTPE(0),
-  fTotalNpe(0)
+  fSamplesLG(0)
 {  
   // ctor with all data 
 
   fAmp         = 0 ;
   fEnergy      = energy ;
+  for(Int_t idx=0; idx<4; idx++)
+    fNPE[idx] = NPE[idx];
   fTime        = time ;
   fTimeR       = fTime ;
   fId          = id ;
@@ -150,11 +151,11 @@ IlcPVBARDigit::IlcPVBARDigit(const IlcPVBARDigit & digit) :
   fNSamplesHG(0),
   fNSamplesLG(0),
   fSamplesHG(0),
-  fSamplesLG(0),
-  fTPE(digit.fTPE),
-  fTotalNpe(0)
+  fSamplesLG(0)
 {
   // copy ctor
+    for(Int_t idx=0; idx<4; idx++)
+      fNPE[idx] = digit.fNPE[idx];
   if(fNprimary){
     fPrimary = new Int_t[fNprimary] ;
     for (Int_t i = 0; i < fNprimary ; i++)
@@ -165,9 +166,6 @@ IlcPVBARDigit::IlcPVBARDigit(const IlcPVBARDigit & digit) :
   fAmp         = digit.fAmp ;
   fId          = digit.fId;
   fIndexInList = digit.fIndexInList ;
-
-  for (Int_t i = 0; i < fTPE; i++)
-       fTotalNpe[i]  = digit.fTotalNpe[i] ;
 
 }
 
@@ -185,10 +183,6 @@ IlcPVBARDigit::~IlcPVBARDigit()
   // Delete arrays of ALTRO samples if any
   if (fSamplesHG) delete [] fSamplesHG;
   if (fSamplesLG) delete [] fSamplesLG;
-
-  if(fTotalNpe) delete [] fTotalNpe;
-
-
 }
 
 //____________________________________________________________________________
@@ -292,7 +286,6 @@ Bool_t IlcPVBARDigit::operator==(IlcPVBARDigit const & digit) const
 IlcPVBARDigit& IlcPVBARDigit::operator+=(IlcPVBARDigit const & digit) 
 {
 
-     if(fTPE != digit.fTPE) IlcFatal("The summed digits have different number p.e. dimensions");
   // Adds the amplitude of digits and completes the list of primary particles
   if(digit.fNprimary>0){
      Int_t *tmp = new Int_t[fNprimary+digit.fNprimary] ;
@@ -320,14 +313,14 @@ IlcPVBARDigit& IlcPVBARDigit::operator+=(IlcPVBARDigit const & digit)
   fNprimary+=digit.fNprimary ;
    fAmp     += digit.fAmp ;
    fEnergy  += digit.fEnergy ;
+   for(Int_t idx=0; idx<4; idx++)
+     fNPE[idx] += digit.fNPE[idx];
+
    if(fTime > digit.fTime)
       fTime = digit.fTime ;
    fTimeR = fTime ; 
 
    
-   for (UShort_t ii=0; ii<fTPE; ii++)
-     fTotalNpe[ii] += digit.fTotalNpe[ii];
-
    // Add high-gain ALTRO samples
    UShort_t i;
    if (digit.fNSamplesHG > fNSamplesHG) {
@@ -384,8 +377,8 @@ IlcPVBARDigit& IlcPVBARDigit::operator *= (Float_t factor)
   tempo *= factor ; 
   fAmp = static_cast<Int_t>(TMath::Ceil(tempo)) ; 
   
-  for ( Int_t n = 0; n < fTPE; n++ )
-    fTotalNpe[n] *= factor ;
+  for ( Int_t n = 0; n < 4; n++ )
+    fNPE[n] *= factor ;
 
 
   return *this ;
