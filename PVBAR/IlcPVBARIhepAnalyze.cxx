@@ -217,7 +217,7 @@ void IlcPVBARIhepAnalyze::AnalyzeCPV1(Int_t Nevents)
 	ygen   = impact->Y();
       	
 	//Transform to the local ref.frame
-	Float_t phig = PVBARgeom->GetPVBARAngle(PVBARModule);
+	Float_t phig = 0.;//PVBARgeom->GetPVBARAngle(PVBARModule);
 	Float_t phi = TMath::Pi()/180*phig;
 	Float_t distanceIPtoCPV = PVBARgeom->GetIPtoOuterCoverDistance() -
 	  (PVBARgeom->GetFTPosition(1)+
@@ -446,7 +446,7 @@ void IlcPVBARIhepAnalyze::AnalyzeEMC1(Int_t Nevents)
       
 	
 	//Transform to the local ref.frame
-	Float_t phig = PVBARgeom->GetPVBARAngle(PVBARModule);
+	Float_t phig = 0.;//PVBARgeom->GetPVBARAngle(PVBARModule);
 	Float_t phi = TMath::Pi()/180*phig;
 	Float_t distanceIPtoEMC = PVBARgeom->GetIPtoCrystalSurface();
 	Float_t xoL,yoL,zoL ;

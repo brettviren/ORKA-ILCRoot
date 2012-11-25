@@ -199,7 +199,7 @@ void  IlcPVBARTrackSegmentMakerv2::FillOneModule()
       for (Int_t iTrack=0; iTrack<nTracks; iTrack++) {
         track = fESD->GetTrack(iTrack);
         for(Int_t iTestMod=1; iTestMod<=nPVBARmod; iTestMod++){
-           Double_t modAngle=270.+fGeom->GetPVBARAngle(iTestMod) ;
+           Double_t modAngle=270./*+fGeom->GetPVBARAngle(iTestMod)*/ ;
            modAngle*=TMath::Pi()/180. ;
            track->Rotate(modAngle);  
            if (!track->GetXYZAt(rEMC, fESD->GetMagneticField(), xyz))
@@ -238,7 +238,7 @@ void  IlcPVBARTrackSegmentMakerv2::GetDistanceInPVBARPlane(IlcPVBAREmcRecPoint *
   fGeom->GetGlobalPVBAR((IlcPVBARRecPoint*)emcClu,emcGlobal);
 
   //Calculate actual distance to the PVBAR surface
-  Double_t modAngle=270.+fGeom->GetPVBARAngle(emcClu->GetPVBARMod()) ;
+  Double_t modAngle=270./*+fGeom->GetPVBARAngle(emcClu->GetPVBARMod())*/ ;
   modAngle*=TMath::Pi()/180. ;
   Double_t rEMC = emcGlobal.X()*TMath::Cos(modAngle)+emcGlobal.Y()*TMath::Sin(modAngle) ;
   track->Rotate(modAngle);
