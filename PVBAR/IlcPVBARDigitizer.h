@@ -111,6 +111,15 @@ private:
   Int_t *fADCValuesLG;              //! Array of low-gain ALTRO samples
   Int_t *fADCValuesHG;              //! Array of high-gain ALTRO samples
   
+  Float_t fSiPMPixels;         //Number of pixels in a SiPM
+  Float_t fSiPMNoise;          //RMS of SiPM noise
+  Float_t fElectronicGain;     //Electronic Gain
+  Float_t fConversionFactor;   //factor to convert number of p.e. in ADC counts
+  Float_t fENF;                //Excess Noise Factor
+  Float_t fDigitsThreshold ;   //minimal energy to keep digit 
+  Float_t fADCchannel ;        //width of ADC channel in GeV
+  Int_t   fADCbits ;           //ADC bits
+
   ClassDef(IlcPVBARDigitizer,5)  // description 
 
 };

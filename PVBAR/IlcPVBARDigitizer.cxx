@@ -164,7 +164,15 @@ IlcPVBARDigitizer::IlcPVBARDigitizer() :
   fEventCounter(0),
   fPulse(0),
   fADCValuesLG(0),
-  fADCValuesHG(0)
+  fADCValuesHG(0),
+  fSiPMPixels(0.),
+  fSiPMNoise(0.),
+  fElectronicGain(0.),
+  fConversionFactor(0.),
+  fENF(0.),
+  fDigitsThreshold(0.),
+  fADCchannel(0.),
+  fADCbits(0)
 {
   // ctor
   InitParameters() ; 
@@ -189,7 +197,15 @@ IlcPVBARDigitizer::IlcPVBARDigitizer(TString ilcrunFileName,
   fEventCounter(0),
   fPulse(0),
   fADCValuesLG(0),
-  fADCValuesHG(0)
+  fADCValuesHG(0),
+  fSiPMPixels(0.),
+  fSiPMNoise(0.),
+  fElectronicGain(0.),
+  fConversionFactor(0.),
+  fENF(0.),
+  fDigitsThreshold(0.),
+  fADCchannel(0.),
+  fADCbits(0)
 {
   // ctor
   InitParameters() ; 
@@ -216,8 +232,15 @@ IlcPVBARDigitizer::IlcPVBARDigitizer(IlcDigitizationInput * rd) :
   fEventCounter(0),
   fPulse(0),
   fADCValuesLG(0),
-  fADCValuesHG(0)
-
+  fADCValuesHG(0),
+  fSiPMPixels(0.),
+  fSiPMNoise(0.),
+  fElectronicGain(0.),
+  fConversionFactor(0.),
+  fENF(0.),
+  fDigitsThreshold(0.),
+  fADCchannel(0.),
+  fADCbits(0)
 {
   // ctor Init() is called by RunDigitizer
   fDigInput = rd ; 
@@ -253,7 +276,7 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
   // This design avoids scanning over the list of digits to add 
   // contribution to new SDigits only.
 
-  Bool_t toMakeNoise = kFALSE; //FIXME kTRUE ; //Do not create noisy digits if merge with real data
+  Bool_t toMakeNoise = kTRUE ; //Do not create noisy digits if merge with real data
 
   //First stream 
   IlcRunLoader* rl = IlcRunLoader::GetRunLoader(fEventFolderName) ;
@@ -278,7 +301,7 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
   digits->Clear() ;
 
   //
-//   const IlcPVBARGeometry *geom = IlcPVBARGeometry::GetInstance() ;
+  const IlcPVBARGeometry *geom = IlcPVBARGeometry::GetInstance() ;
 // // // //   //Making digits with noise, first EMC
 // // // //   //Check which PVBAR modules are present
 // // // //   Bool_t isPresent[5] ;
@@ -296,31 +319,10 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
 // // // //     }
 // // // //   }
 
-//   Int_t nEMC = nmod*geom->GetNPhi()*geom->GetNZ();
-  Int_t nEMC = 47*140*2; //FIXME
+  Int_t nEMC = geom->GetNTotalElements(); //FIXME
   
-// // // //   Int_t nCPV ;
   Int_t absID ;
   
-// // // //   //check if CPV exists
-// // // //   Bool_t isCPVpresent=0 ;
-// // // //   for(Int_t i=1; i<=5 && !isCPVpresent; i++){
-// // // //     volpath = "/ILCM_1/PVBAR_";
-// // // //     volpath += i;
-// // // //     volpath += "/PCPV_1";
-// // // //     if (gGeoManager->CheckPath(volpath.Data())) 
-// // // //       isCPVpresent=1 ;
-// // // //   } 
-// // // //   
-// // // //   if(isCPVpresent){
-// // // //     nCPV = nEMC + geom->GetNumberOfCPVPadsZ() * geom->GetNumberOfCPVPadsPhi() * nmod ;
-// // // //   }
-// // // //   else{
-// // // //      nCPV = nEMC ;
-// // // //   }  
-
-// // // //   digits->Expand(nCPV) ;
-
   digits->Expand(nEMC) ;
 
   //take all the inputs to add together and load the SDigits
@@ -386,20 +388,18 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
 //  TClonesArray * ticks = new TClonesArray("IlcPVBARTick",1000) ;
   
   //Put Noise contribution
-  Double_t apdNoise = 0. ;
-  if(toMakeNoise)
-     apdNoise = IlcPVBARSimParam::GetInstance()->GetAPDNoise() ; 
+  Double_t SiPMNoise = 0. ;
+  Double_t ENF = 0. ;
+  if(toMakeNoise){
+     SiPMNoise = fSiPMNoise ; 
+     ENF = fENF;
+  }
 
-  Int_t emcpermod=nEMC;//geom->GetNPhi()*geom->GetNZ();
   Int_t idigit= 0;
-  for(Int_t imod=0; imod<1; imod++){
-//     if(!isPresent[imod])
-//       continue ;
-    Int_t firstAbsId=imod*emcpermod+1 ;
-    Int_t lastAbsId =(imod+1)*emcpermod ; 
-    for(absID = firstAbsId ; absID <= lastAbsId ; absID++){
-      Float_t noise = gRandom->Gaus(0.,apdNoise) ; 
-      new((*digits)[idigit]) IlcPVBARDigit( -1, absID, noise, TimeOfNoise() ) ;
+
+    for(absID = 1; absID <= nEMC; absID++){
+      Float_t noise[4]={0.,0.,0.,0.};
+      new((*digits)[idigit]) IlcPVBARDigit( -1, absID, 0.f, noise, TimeOfNoise() ) ;
       //look if we have to add signal?
       digit = static_cast<IlcPVBARDigit *>(digits->At(idigit)) ;
       idigit++ ;
@@ -477,8 +477,18 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
 	  if(curNext < nextSig) nextSig = curNext ;
         }
       }
+          
+    //Evaluate excess noise factor contribution to the signal and update the digit
+    //consider the limited number of SiPM pixels
+    Float_t NPE[4];
+    for(Int_t idx=0; idx<4; idx++){
+      NPE[idx] = TMath::Min(fSiPMPixels, digit->GetNPE()[idx]) ;
+      NPE[idx] += gRandom->Gaus(0., TMath::Sqrt(SiPMNoise*SiPMNoise + ((1.-ENF)*NPE[idx])*((1.-ENF)*NPE[idx]))) ;
     }
-  }
+
+    digit->SetNPE(NPE);
+
+    }
 
 
 // // // //   //Apply non-linearity
@@ -496,11 +506,23 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
 
 
   //distretize energy if necessary
+  IlcPVBARSimParam::GetInstance()->SetEDigitizationOn();
   if(IlcPVBARSimParam::GetInstance()->IsEDigitizationOn()){
-    Float_t adcW=IlcPVBARSimParam::GetInstance()->GetADCchannelW() ;
+    Float_t adcW=fADCchannel ;
+    Float_t ConversionFactor = fConversionFactor;
     for(Int_t i = 0 ; i < nEMC ; i++){                                                                                                       
       digit = static_cast<IlcPVBARDigit*>( digits->At(i) ) ;
-      digit->SetEnergy(adcW*ceil(digit->GetEnergy()/adcW)) ;
+//       digit->SetEnergy(adcW*ceil(digit->GetEnergy()/adcW)) ;
+
+      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
+      digit->SetAmp(TMath::Ceil(Amp/adcW)) ;
+      
+      Float_t NPE[4];
+      for(Int_t idx=0; idx<4; idx++)
+	NPE[idx] = TMath::Min(1<<fADCbits, TMath::CeilNint((digit->GetNPE()[idx] * ConversionFactor)/adcW));
+
+      digit->SetNPE(NPE);
+
     } 
   }
  
@@ -586,10 +608,9 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
 // // // //   }
 
   //remove digits below thresholds
-  Float_t emcThreshold = 0.001;// FIXME IlcPVBARSimParam::GetInstance()->GetEmcDigitsThreshold() ;
   for(Int_t i = 0 ; i < nEMC ; i++){
     digit = static_cast<IlcPVBARDigit*>( digits->At(i) ) ;
-    if(digit->GetEnergy() < emcThreshold){
+    if(digit->GetNPE()[0] < fDigitsThreshold && digit->GetNPE()[1] < fDigitsThreshold){
       digits->RemoveAt(i) ;
       continue ;
     }
@@ -686,7 +707,7 @@ Float_t IlcPVBARDigitizer::CalibrateT(Float_t time,Int_t absId){
   return time ;
 }
 //____________________________________________________________________________
-Int_t IlcPVBARDigitizer::DigitizeCPV(Float_t charge, Int_t absId)
+Int_t IlcPVBARDigitizer::DigitizeCPV(Float_t /*charge*/, Int_t absId)
 {
   // Returns digitized value of the CPV charge in a pad absId
 
@@ -695,22 +716,22 @@ Int_t IlcPVBARDigitizer::DigitizeCPV(Float_t charge, Int_t absId)
   //Determine rel.position of the cell absId
   Int_t relId[4];
   geom->AbsToRelNumbering(absId,relId);
-  Int_t module=relId[0];
-  Int_t row   =relId[2];
-  Int_t column=relId[3];
+//   Int_t module=relId[0];
+//   Int_t row   =relId[2];
+//   Int_t column=relId[3];
   
   Int_t channel = 0;
   
-  if(absId > fEmcCrystals){ //digitize CPV only
-
-    //reading calibration data for cell absId.
-    Float_t adcPedestalCpv = fcdb->GetADCpedestalCpv(module,column,row);
-    Float_t adcChanelCpv   = fcdb->GetADCchannelCpv( module,column,row);
-
-    channel = (Int_t) TMath::Ceil((charge - adcPedestalCpv)/adcChanelCpv) ;       
-    Int_t nMax = IlcPVBARSimParam::GetInstance()->GetNADCcpv() ;
-    if(channel > nMax ) channel = nMax ;
-  }
+//   if(absId > fEmcCrystals){ //digitize CPV only
+// 
+//     //reading calibration data for cell absId.
+//     Float_t adcPedestalCpv = fcdb->GetADCpedestalCpv(module,column,row);
+//     Float_t adcChanelCpv   = fcdb->GetADCchannelCpv( module,column,row);
+// 
+//     channel = (Int_t) TMath::Ceil((charge - adcPedestalCpv)/adcChanelCpv) ;       
+//     Int_t nMax = IlcPVBARSimParam::GetInstance()->GetNADCcpv() ;
+//     if(channel > nMax ) channel = nMax ;
+//   }
   return channel ;
 }
 
@@ -813,7 +834,7 @@ Bool_t IlcPVBARDigitizer::Init()
         geom = IlcPVBARGeometry::GetInstance("ORKA","");
 //   const IlcPVBARGeometry *geom = IlcPVBARGeometry::GetInstance() ;
 
-  fEmcCrystals = geom->GetPVBARNSlicePhi() * geom->GetPVBARNTiles()*2 ;
+  fEmcCrystals = geom->GetNTotalElements();//FIXME geom->GetPVBARNSlicePhi() * geom->GetPVBARNTiles()*2 ;
   
   fFirstEvent = 0 ; 
   fLastEvent = fFirstEvent ; 
@@ -846,6 +867,13 @@ void IlcPVBARDigitizer::InitParameters()
 {
   // Set initial parameters Digitizer
 
+  fSiPMPixels = IlcPVBARSimParam::GetInstance()->GetSiPMPixels()  ;        
+  fSiPMNoise = IlcPVBARSimParam::GetInstance()->GetSiPMNoise()  ;         
+  fConversionFactor = IlcPVBARSimParam::GetInstance()->GetConversionFactor()  ;        
+  fENF = IlcPVBARSimParam::GetInstance()->GetENF()  ;               
+  fDigitsThreshold = IlcPVBARSimParam::GetInstance()->GetDigitsThreshold()  ;  
+  fADCchannel = IlcPVBARSimParam::GetInstance()->GetADCchannelW()  ;       
+  fADCbits = IlcPVBARSimParam::GetInstance()->GetADCbits() ;
   fDigitsInRun  = 0 ; 
   SetEventRange(0,-1) ;
   fPulse = new IlcPVBARPulseGenerator();
@@ -909,10 +937,10 @@ void IlcPVBARDigitizer::Print(const Option_t *)const
 //     printf("\nEMC digits (with primaries):\n")  ;
     printf("\n   Id  Amplitude    Time          Index Nprim: Primaries list \n") ;    
 
-    Int_t PVBARNSlicePhi = geom->GetPVBARNSlicePhi();
-    Int_t PVBARNTiles = geom->GetPVBARNTiles();
+//     Int_t PVBARNSlicePhi = 80;//FIXME geom->GetPVBARNSlicePhi();
+//     Int_t PVBARNTiles = 150;//FIXME geom->GetPVBARNTiles();
     
-    Int_t maxEmc = PVBARNSlicePhi * PVBARNTiles*2 ; //FIXME Sci and Cer
+    Int_t maxEmc = geom->GetNTotalElements();//PVBARNSlicePhi * PVBARNTiles*2 ; //FIXME Sci and Cer
     Int_t index ;
     for (index = 0 ; (index < digits->GetEntriesFast()) && 
 	   (static_cast<IlcPVBARDigit *>(digits->At(index))->GetId() <= maxEmc) ; index++) {
