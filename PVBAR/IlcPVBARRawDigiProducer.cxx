@@ -270,9 +270,10 @@ void IlcPVBARRawDigiProducer::MakeDigits(TClonesArray *digits, TClonesArray *tmp
       
       if(energy <= 0.) 
 	continue;
-      
+      Float_t NPhotons[4]={0.,0.,0.,0.};
+
       if (caloFlag == IlcCaloRawStreamV3::kLowGain) {
-	new((*tmpDigLG)[ilgDigit]) IlcPVBARDigit(-1,absId,(Float_t)energy,(Float_t)time);
+	new((*tmpDigLG)[ilgDigit]) IlcPVBARDigit(-1,absId,(Float_t)energy,NPhotons,(Float_t)time);
 	if (sigLength>0 && fADCValuesLG!=0)
 	  static_cast<IlcPVBARDigit*>(tmpDigLG->At(ilgDigit))->SetALTROSamplesLG(sigLength,fADCValuesLG);
 	ilgDigit++ ; 
@@ -280,9 +281,9 @@ void IlcPVBARRawDigiProducer::MakeDigits(TClonesArray *digits, TClonesArray *tmp
       else if (caloFlag == IlcCaloRawStreamV3::kHighGain) {
 	if(fitter->IsOverflow()) //Keep this digit to replace it by Low Gain later.
 	  //If there is no LogGain it wil be removed by cut on Min E
-	  new((*digits)[iDigit]) IlcPVBARDigit(-1,absId,-1.f,(Float_t)time);
+	  new((*digits)[iDigit]) IlcPVBARDigit(-1,absId,-1.f,NPhotons,(Float_t)time);
 	else
-	  new((*digits)[iDigit]) IlcPVBARDigit(-1,absId,(Float_t)energy,(Float_t)time);
+	  new((*digits)[iDigit]) IlcPVBARDigit(-1,absId,(Float_t)energy,NPhotons,(Float_t)time);
 	if (sigLength>0 && fADCValuesHG!=0)
 	  static_cast<IlcPVBARDigit*>(digits->At(iDigit))->SetALTROSamplesHG(sigLength,fADCValuesHG);
 	iDigit++;
