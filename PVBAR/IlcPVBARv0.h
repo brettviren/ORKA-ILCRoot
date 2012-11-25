@@ -50,13 +50,8 @@ class IlcPVBARv0 : public IlcPVBAR {
   }
 
   TList *   BuildGeometry2(void) ;             // creates the geometry for the ROOT display
-  TList *   BuildGeometryforEMC(void) ;      // creates the PVBAR EMC geometry for the ROOT display
 
   virtual void   CreateGeometry(void) ;            // creates the geometry for GEANT
-  void           CreateGeometryforEMC(void) ;     // creates the PVBAR geometry for GEANT
-  //  void           CreateGeometryforPPSD(void) ;     // creates the PPSD geometry for GEANT
-  void           CreateGeometryforCPV(void) ;      // creates the CPV  geometry for GEANT
-  void           CreateGeometryforSupport(void) ;  // creates the Support geometry for GEANT
   virtual void   AddAlignableVolumes() const;      // define sym.names for alignable volumes
 
   virtual Float_t ZMin() const;                    // overall dimension of the module (min)

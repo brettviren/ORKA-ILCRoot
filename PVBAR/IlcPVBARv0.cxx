@@ -91,6 +91,7 @@
 #include <TGeoMatrix.h>
 #include <TVector3.h>
 #include <TGeoTube.h>
+#include <TGeoPgon.h>
 #include <TBRIK.h>
 #include <TTUBS.h>
 #include <TNode.h>
@@ -125,50 +126,6 @@ IlcPVBARv0::IlcPVBARv0(const char *name, const char *title):
 TList* IlcPVBARv0::BuildGeometry2()
 {
   // Build the PVBAR geometry for the ROOT display
-  //BEGIN_HTML
-  /*
-   *    <H2>
-   *     PVBAR in ILC displayed by root
-   *    </H2>
-   *    <UL>
-   *    <LI> All Views
-   *    <P>
-   *    <CENTER>
-   *    <IMG Align=BOTTOM ALT="All Views" SRC="../images/IlcPVBARv0AllViews.gif">
-   *    </CENTER></P></LI>
-   *    <LI> Front View
-   *    <P>
-   *    <CENTER>
-   *    <IMG Align=BOTTOM ALT="Front View" SRC="../images/IlcPVBARv0FrontView.gif">
-   *    </CENTER></P></LI>
-   *     <LI> 3D View 1
-   *    <P>
-   *    <CENTER>
-   *    <IMG Align=BOTTOM ALT="3D View 1" SRC="../images/IlcPVBARv03DView1.gif">
-   *    </CENTER></P></LI>
-   *    <LI> 3D View 2
-   *    <P>
-   *    <CENTER>
-   *    <IMG Align=BOTTOM ALT="3D View 2" SRC="../images/IlcPVBARv03DView2.gif">
-   *    </CENTER></P></LI>
-   *    </UL>
-   */
-  //END_HTML
-
-  //===============================================================
-  // --- ILC EMC ---
-  return this->BuildGeometryforEMC() ;
-  //===============================================================
-
-}
-
-//===============================================================
-// --- ILC EMC ---
-
-//____________________________________________________________________________
-TList* IlcPVBARv0::BuildGeometryforEMC(void)
-{
-  // Build the PVBAR geometry for the ROOT display
 
   TList *Nodes = new TList();       //List of geometry nodes
 
@@ -183,12 +140,12 @@ TList* IlcPVBARv0::BuildGeometryforEMC(void)
   Double_t PVBARRmin = geom->GetPVBARRmin();
   Double_t PVBARRmax = geom->GetPVBARRmax();
   Double_t PVBARLength = geom->GetPVBARLength();
-  Int_t    PVBARNSlicePhi = geom->GetPVBARNSlicePhi();
+  Int_t    PVBARNSectorPhi = 48;
   
   Double_t PVBARparam[3] = {PVBARRmin, PVBARRmax, PVBARLength/2.};
 
   TTUBS *tubs = new TTUBS("sPVBAR","sPVBAR","void",PVBARparam[0],PVBARparam[1],PVBARparam[2], 0., 360.);
-  tubs->SetNumberOfDivisions(PVBARNSlicePhi);
+  tubs->SetNumberOfDivisions(PVBARNSectorPhi);
   top->cd();
   TNode *nNode = new TNode("PVBAR","PVBAR","sPVBAR",0.,0.,0.,"");
   nNode->SetLineColor(4);
@@ -213,19 +170,19 @@ void IlcPVBARv0::CreateGeometry()
     
   }
 
-//   IlcPVBARGeometry * geom = GetGeometry() ; 
-
-  // Get pointer to the array containing media indeces
-//   Int_t *idtmed = fIdtmed->GetArray() - 699 ;
-
+  
   // Create a PVBAR module.
-  TGeoMedium *Air=gGeoManager->GetMedium("PVBAR_Air          $");
-//   TGeoMedium *Scint=gGeoManager->GetMedium("PVBAR_CPV scint.   $");
-  Int_t ScintId=gGeoManager->GetMedium("PVBAR_CPV scint.   $")->GetId();
-  Int_t LeadGlassId=gGeoManager->GetMedium("PVBAR_LeadGlass")->GetId();
-//   TGeoMedium *Scint=gGeoManager->GetMedium("PVBAR_ArCo2      $");
-//   TGeoMedium *Scint=gGeoManager->GetMedium("PVBAR_Air          $");
 
+  //Media
+  TGeoMedium *pMedAir=gGeoManager->GetMedium("PVBAR_Air");
+  TGeoMedium *pMedSF57HHT=gGeoManager->GetMedium("PVBAR_SF57HHT");
+//   TGeoMedium *pMedScint=gGeoManager->GetMedium("PVBAR_Scint");
+  TGeoMedium *pMedKevlar=gGeoManager->GetMedium("PVBAR_Kevlar");
+  Int_t SF57Id=gGeoManager->GetMedium("PVBAR_SF57HHT")->GetId();
+  Int_t ScintId=gGeoManager->GetMedium("PVBAR_Scint")->GetId();
+//   Int_t KevlarId=gGeoManager->GetMedium("PVBAR_Kevlar")->GetId();
+
+  
   TGeoVolume *ilc = gGeoManager->GetVolume("ILCM");
 
   IlcPVBARGeometry * geom = GetGeometry() ; 
@@ -233,573 +190,71 @@ void IlcPVBARv0::CreateGeometry()
   Double_t PVBARRmin = geom->GetPVBARRmin();
   Double_t PVBARRmax = geom->GetPVBARRmax();
   Double_t PVBARLength = geom->GetPVBARLength();
-  Int_t PVBARNSlicePhi = geom->GetPVBARNSlicePhi();
   Double_t PVBARTileScintThickness = geom->GetPVBARTileScintThickness();
   Double_t PVBARTileSF57Thickness = geom->GetPVBARTileSF57Thickness();
-  Int_t PVBARNTiles = Int_t((PVBARRmax-PVBARRmin)/(PVBARTileScintThickness+PVBARTileSF57Thickness)+0.00001);
-
-  Double_t PVBARparam[3] = {PVBARRmin, PVBARRmax, PVBARLength/2.};
-
-  TGeoTube *PVBARtube = new TGeoTube(PVBARparam[0], PVBARparam[1], PVBARparam[2]);
-  TGeoVolume *VolPVBARtube = new TGeoVolume("PVBAR_TUBE", PVBARtube, Air);
-
-  Double_t CellAngleDegPhi=360./PVBARNSlicePhi;
-  VolPVBARtube->Divide("PVBAR_BSTRIPPHI", 2, PVBARNSlicePhi, 0., CellAngleDegPhi,LeadGlassId);
-  
-  TGeoVolume *VolPVBARStripPhi = gGeoManager->GetVolume("PVBAR_BSTRIPPHI");
-
-  TString PVBARTileName("PVBAR_BSCITILES");
-  
-  Double_t PVBARTileParam[5];
-  TGeoVolume *VolPVBARTile = gGeoManager->Volume(PVBARTileName.Data(), "tubs", ScintId, PVBARTileParam, 0);
-  for(Int_t idx=0; idx<PVBARNTiles; idx++){
-    PVBARTileParam[0] = PVBARRmin+PVBARTileSF57Thickness+idx*(PVBARTileScintThickness+PVBARTileSF57Thickness);
-    PVBARTileParam[1] = PVBARTileParam[0]+PVBARTileScintThickness;
-    PVBARTileParam[2] = PVBARLength/2.;
-    PVBARTileParam[3] = -CellAngleDegPhi/2.;
-    PVBARTileParam[4] = CellAngleDegPhi/2.;
-    gGeoManager->Node(VolPVBARTile->GetName(), idx+1, VolPVBARStripPhi->GetName(), 0., 0., 0., 0, 1, PVBARTileParam, 5);
-  }
-  
-  ilc->AddNode(VolPVBARtube, 1);
+  Double_t WrapThick = geom->GetWrapThick(); //cm
+  Int_t NTilesPerSubSector = geom->GetNTilesPerSubSector();
+  Double_t PVBARdR = (PVBARTileScintThickness+PVBARTileSF57Thickness)*NTilesPerSubSector;
+  const Int_t PVBARNSubSect = geom->GetPVBARNSubSect();
+  Int_t nSect[PVBARNSubSect];
+  for(Int_t idx=0; idx<PVBARNSubSect; idx++) nSect[idx] = geom->GetPVBARNSectorsPhi()[idx];
 
 
-}
-
-//____________________________________________________________________________
-void IlcPVBARv0::CreateGeometryforEMC()
-{
-  // Create the PVBAR-EMC geometry for GEANT
-  // Author: Dmitri Peressounko August 2001
-  // The used coordinate system: 
-  //   1. in Module: X along longer side, Y out of beam, Z along shorter side (along beam)
-  //   2. In Strip the same: X along longer side, Y out of beam, Z along shorter side (along beam)
+  TGeoTube *PVBARtube = new TGeoTube(PVBARRmin, PVBARRmax, PVBARLength/2.);
+  TGeoVolume *VolPVBARtube = new TGeoVolume("PVBAR_TUBE", PVBARtube, pMedAir);
 
 
-    //BEGIN_HTML
-  /*
-    <H2>
-    Geant3 geometry tree of PVBAR-EMC in ILC
-    </H2>
-    <P><CENTER>
-    <IMG Align=BOTTOM ALT="EMC geant tree" SRC="../images/EMCinIlc.gif"> 
-    </CENTER><P>
-  */
-  //END_HTML  
-  
-  // Get pointer to the array containing media indexes
-  Int_t *idtmed = fIdtmed->GetArray() - 699 ;
+  TGeoPgon *PVBARSect[PVBARNSubSect];
+  TGeoVolume *VolPVBARSect[PVBARNSubSect];
+  TGeoVolume *VolPVBARSubSect[PVBARNSubSect];
 
-  IlcPVBARGeometry * geom = GetGeometry() ; 
-  IlcPVBAREMCAGeometry * emcg = geom->GetEMCAGeometry() ;
-  Float_t par[4];
-  Int_t  ipar;
-
-  // ======= Define the strip ===============
-
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetStripHalfSize() + ipar);
-  gMC->Gsvolu("PSTR", "BOX ", idtmed[716], par, 3) ;  //Made of steel
-   
-  // --- define steel volume (cell of the strip unit)
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetAirCellHalfSize() + ipar);
-  gMC->Gsvolu("PCEL", "BOX ", idtmed[798], par, 3);
-
-  // --- define wrapped crystal and put it into steel cell
-
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetWrappedHalfSize() + ipar);
-  gMC->Gsvolu("PWRA", "BOX ", idtmed[702], par, 3);
-  const Float_t * pin    = emcg->GetAPDHalfSize() ; 
-  const Float_t * preamp = emcg->GetPreampHalfSize() ;
-  Float_t y = (emcg->GetAirGapLed()-2*pin[1]-2*preamp[1])/2;
-  gMC->Gspos("PWRA", 1, "PCEL", 0.0, y, 0.0, 0, "ONLY") ;
+  for (Int_t idx = 0; idx<PVBARNSubSect; idx++){
+    PVBARSect[idx] = new TGeoPgon(0., 360., nSect[idx], 2);
+    PVBARSect[idx]->DefineSection(0, -PVBARLength/2., PVBARRmin, PVBARRmin+PVBARdR);
+    PVBARSect[idx]->DefineSection(1,   PVBARLength/2, PVBARRmin, PVBARRmin+PVBARdR);
     
-  // --- Define crystal and put it into wrapped crystall ---
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetCrystalHalfSize() + ipar);
-  gMC->Gsvolu("PXTL", "BOX ", idtmed[699], par, 3) ;
-  gMC->Gspos("PXTL", 1, "PWRA", 0.0, 0.0, 0.0, 0, "ONLY") ;
-      
-  // --- define APD/PIN preamp and put it into AirCell
- 
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetAPDHalfSize() + ipar);
-  gMC->Gsvolu("PPIN", "BOX ", idtmed[705], par, 3) ;
-  const Float_t * crystal = emcg->GetCrystalHalfSize() ;
-  y = crystal[1] + emcg->GetAirGapLed() /2 - preamp[1]; 
-  gMC->Gspos("PPIN", 1, "PCEL", 0.0, y, 0.0, 0, "ONLY") ;
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetPreampHalfSize() + ipar);
-  gMC->Gsvolu("PREA", "BOX ", idtmed[711], par, 3) ;   // Here I assumed preamp as a printed Circuit
-  y = crystal[1] + emcg->GetAirGapLed() /2 + pin[1]  ;    // May it should be changed
-  gMC->Gspos("PREA", 1, "PCEL", 0.0, y, 0.0, 0, "ONLY") ; // to ceramics?
-  
-  
-  // --- Fill strip with wrapped cristals in steel cells
-  
-  const Float_t* splate = emcg->GetSupportPlateHalfSize();  
-  y = -splate[1] ;
-  const Float_t* acel = emcg->GetAirCellHalfSize() ;
-  
-  for(Int_t lev = 2, icel = 1; 
-      icel <= emcg->GetNCellsXInStrip()*emcg->GetNCellsZInStrip(); 
-      icel += 2, lev += 2) {
-    Float_t x = (2*(lev / 2) - 1 - emcg->GetNCellsXInStrip())* acel[0] ;
-    Float_t z = acel[2];
-    gMC->Gspos("PCEL", icel, "PSTR", x, y, +z, 0, "ONLY") ;
-    gMC->Gspos("PCEL", icel + 1, "PSTR", x, y, -z, 0, "ONLY") ;
-  }
+    VolPVBARSect[idx] = new TGeoVolume(Form("PVBAR_SECT%02d",idx), PVBARSect[idx], pMedKevlar);
+    VolPVBARSect[idx]->SetLineColor(2+(idx%5));
 
-  // --- define the support plate, hole in it and position it in strip ----
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetSupportPlateHalfSize() + ipar);
-  gMC->Gsvolu("PSUP", "BOX ", idtmed[701], par, 3) ;
-  
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetSupportPlateInHalfSize() + ipar);
-  gMC->Gsvolu("PSHO", "BOX ", idtmed[798], par, 3) ;
-  Float_t z = emcg->GetSupportPlateThickness()/2 ;
-  gMC->Gspos("PSHO", 1, "PSUP", 0.0, 0.0, z, 0, "ONLY") ;
+    VolPVBARSubSect[idx] = PVBARSect[idx]->Divide(VolPVBARSect[idx], Form("PVBAR_SUBSECT%02d",idx), 2, nSect[idx], 0., 360./nSect[idx]);
+    VolPVBARSubSect[idx]->SetMedium(pMedSF57HHT);
+    VolPVBARSubSect[idx]->SetLineColor(2+(idx%5));
+    
+    gGeoManager->Matrix(1,90.,90.,0.,0.,90.,0.);
+    TString PVBARSciTileName("PVBAR_BSCITILE");
+    TString PVBARCerTileName("PVBAR_BCERTILE");
+    Double_t PVBARSciTileParam[4];
+    Double_t PVBARCerTileParam[4];
+    TGeoVolume *VolPVBARSciTile = gGeoManager->Volume(PVBARSciTileName.Data(), "trd1", ScintId, PVBARSciTileParam, 0);
+    VolPVBARSciTile->SetLineColor(5);
+    TGeoVolume *VolPVBARCerTile = gGeoManager->Volume(PVBARCerTileName.Data(), "trd1", SF57Id, PVBARCerTileParam, 0);
+    VolPVBARCerTile->SetLineColor(4);
+    for(Int_t idx2=0; idx2<NTilesPerSubSector; idx2++){
 
-  y = acel[1] ;
-  gMC->Gspos("PSUP", 1, "PSTR", 0.0, y, 0.0, 0, "ONLY") ;
+      PVBARCerTileParam[0] = (PVBARRmin+idx2*(PVBARTileSF57Thickness+PVBARTileScintThickness))*TMath::Tan(360./nSect[idx]/2.*TMath::DegToRad()) - WrapThick;
+      PVBARCerTileParam[1] = (PVBARRmin+PVBARTileSF57Thickness+idx2*(PVBARTileSF57Thickness+PVBARTileScintThickness))*TMath::Tan(360./nSect[idx]/2.*TMath::DegToRad()) - WrapThick;
+      PVBARCerTileParam[2] = PVBARLength/2.;
+      PVBARCerTileParam[3] = PVBARTileSF57Thickness/2.;
+      gGeoManager->Node(VolPVBARCerTile->GetName(), idx2+1, VolPVBARSubSect[idx]->GetName(), PVBARRmin+PVBARTileSF57Thickness/2.+idx2*(PVBARTileSF57Thickness+PVBARTileScintThickness), 0., 0., 1, 1, PVBARCerTileParam, 4);
 
-  
-  // ========== Fill module with strips and put them into inner thermoinsulation=============
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetInnerThermoHalfSize() + ipar);
-  gMC->Gsvolu("PTII", "BOX ", idtmed[706], par, 3) ;     
-  
-  const Float_t * inthermo = emcg->GetInnerThermoHalfSize() ;
-  const Float_t * strip    = emcg->GetStripHalfSize() ;
-  y = inthermo[1] - strip[1] ;
-  Int_t irow;
-  Int_t nr = 1 ;
-  Int_t icol ;
-  
-  for(irow = 0; irow < emcg->GetNStripX(); irow ++){
-    Float_t x = (2*irow + 1 - emcg->GetNStripX())* strip[0] ;
-    for(icol = 0; icol < emcg->GetNStripZ(); icol ++){
-      z = (2*icol + 1 - emcg->GetNStripZ()) * strip[2] ;
-      gMC->Gspos("PSTR", nr, "PTII", x, y, z, 0, "ONLY") ;
-      nr++ ;
+      PVBARSciTileParam[0] = (PVBARRmin+PVBARTileSF57Thickness+idx2*(PVBARTileSF57Thickness+PVBARTileScintThickness))*TMath::Tan(360./nSect[idx]/2.*TMath::DegToRad()) - WrapThick;
+      PVBARSciTileParam[1] = (PVBARRmin+PVBARTileSF57Thickness+PVBARTileScintThickness+idx2*(PVBARTileSF57Thickness+PVBARTileScintThickness))*TMath::Tan(360./nSect[idx]/2.*TMath::DegToRad()) - WrapThick;
+      PVBARSciTileParam[2] = PVBARLength/2.;
+      PVBARSciTileParam[3] = PVBARTileScintThickness/2.;
+      gGeoManager->Node(VolPVBARSciTile->GetName(), idx2+1, VolPVBARSubSect[idx]->GetName(), PVBARRmin+PVBARTileSF57Thickness+PVBARTileScintThickness/2.+idx2*(PVBARTileSF57Thickness+PVBARTileScintThickness), 0., 0., 1, 1, PVBARSciTileParam, 4);
+
     }
-  }
-  
-  
-  // ------- define the air gap between thermoinsulation and cooler
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetAirGapHalfSize() + ipar);
-  gMC->Gsvolu("PAGA", "BOX ", idtmed[798], par, 3) ;   
-  const Float_t * agap = emcg->GetAirGapHalfSize() ;
-  y = agap[1] - inthermo[1]  ;
-  
-  gMC->Gspos("PTII", 1, "PAGA", 0.0, y, 0.0, 0, "ONLY") ;
 
+    TGeoRotation * rot = new TGeoRotation ("rot", 0., 0., idx*0.05);
+    rot->RegisterYourself();
 
-  // ------- define the Al passive cooler 
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetCoolerHalfSize() + ipar);
-  gMC->Gsvolu("PCOR", "BOX ", idtmed[701], par, 3) ;   
-  const Float_t * cooler = emcg->GetCoolerHalfSize() ;
-  y = cooler[1] - agap[1]  ;
-  
-  gMC->Gspos("PAGA", 1, "PCOR", 0.0, y, 0.0, 0, "ONLY") ;
-  
-  // ------- define the outer thermoinsulating cover
-  for (ipar=0; ipar<4; ipar++) par[ipar] = *(emcg->GetOuterThermoParams() + ipar);
-  gMC->Gsvolu("PTIO", "TRD1", idtmed[706], par, 4) ;        
-  const Float_t * outparams = emcg->GetOuterThermoParams() ; 
-  
-  Int_t idrotm[99] ;
-  IlcMatrix(idrotm[1], 90.0, 0.0, 0.0, 0.0, 90.0, 270.0) ;
-  // Frame in outer thermoinsulation and so on: z out of beam, y along beam, x across beam
-  
-  z = outparams[3] - cooler[1] ;
-  gMC->Gspos("PCOR", 1, "PTIO", 0., 0.0, z, idrotm[1], "ONLY") ;
-  
-  // -------- Define the outer Aluminium cover -----
-  for (ipar=0; ipar<4; ipar++) par[ipar] = *(emcg->GetAlCoverParams() + ipar);
-  gMC->Gsvolu("PCOL", "TRD1", idtmed[701], par, 4) ;        
-  const Float_t * covparams = emcg->GetAlCoverParams() ; 
-  z = covparams[3] - outparams[3] ;
-  gMC->Gspos("PTIO", 1, "PCOL", 0., 0.0, z, 0, "ONLY") ;
+    VolPVBARtube->AddNode(VolPVBARSect[idx], idx+1, rot);
 
-  // --------- Define front fiberglass cover -----------
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFiberGlassHalfSize() + ipar);
-  gMC->Gsvolu("PFGC", "BOX ", idtmed[717], par, 3) ;  
-  z = - outparams[3] ;
-  gMC->Gspos("PFGC", 1, "PCOL", 0., 0.0, z, 0, "ONLY") ;
-
-  //=============This is all with cold section==============
-  
-
-  //------ Warm Section --------------
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetWarmAlCoverHalfSize() + ipar);
-  gMC->Gsvolu("PWAR", "BOX ", idtmed[701], par, 3) ; 
-  const Float_t * warmcov = emcg->GetWarmAlCoverHalfSize() ;
-  
-  // --- Define the outer thermoinsulation ---
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetWarmThermoHalfSize() + ipar);
-  gMC->Gsvolu("PWTI", "BOX ", idtmed[706], par, 3) ; 
-  const Float_t * warmthermo = emcg->GetWarmThermoHalfSize() ;
-  z = -warmcov[2] + warmthermo[2] ;
-  
-  gMC->Gspos("PWTI", 1, "PWAR", 0., 0.0, z, 0, "ONLY") ;     
-  
-  // --- Define cables area and put in it T-supports ---- 
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetTCables1HalfSize() + ipar);
-  gMC->Gsvolu("PCA1", "BOX ", idtmed[718], par, 3) ; 
-  const Float_t * cbox = emcg->GetTCables1HalfSize() ;
-  
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetTSupport1HalfSize() + ipar);
-  gMC->Gsvolu("PBE1", "BOX ", idtmed[701], par, 3) ;
-  const Float_t * beams = emcg->GetTSupport1HalfSize() ;
-  Int_t isup ;
-  for(isup = 0; isup < emcg->GetNTSuppots(); isup++){
-    Float_t x = -cbox[0] + beams[0] + (2*beams[0]+emcg->GetTSupportDist())*isup ;
-    gMC->Gspos("PBE1", isup, "PCA1", x, 0.0, 0.0, 0, "ONLY") ;
-  }
-  
-  z = -warmthermo[2] + cbox[2];
-  gMC->Gspos("PCA1", 1, "PWTI", 0.0, 0.0, z, 0, "ONLY") ;     
-  
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetTCables2HalfSize() + ipar);
-  gMC->Gsvolu("PCA2", "BOX ", idtmed[718], par, 3) ; 
-  const Float_t * cbox2 = emcg->GetTCables2HalfSize() ;
-  
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetTSupport2HalfSize() + ipar);
-  gMC->Gsvolu("PBE2", "BOX ", idtmed[701], par, 3) ;
-  for(isup = 0; isup < emcg->GetNTSuppots(); isup++){
-    Float_t x = -cbox[0] + beams[0] + (2*beams[0]+emcg->GetTSupportDist())*isup ;
-    gMC->Gspos("PBE2", isup, "PCA2", x, 0.0, 0.0, 0, "ONLY") ;
-  }
-  
-  z = -warmthermo[2] + 2*cbox[2] + cbox2[2];
-  gMC->Gspos("PCA2", 1, "PWTI", 0.0, 0.0, z, 0, "ONLY") ;     
-  
-  
-  // --- Define frame ---
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFrameXHalfSize() + ipar);
-  gMC->Gsvolu("PFRX", "BOX ", idtmed[716], par, 3) ; 
-  const Float_t * posit1 = emcg->GetFrameXPosition() ;
-  gMC->Gspos("PFRX", 1, "PWTI", posit1[0],  posit1[1], posit1[2], 0, "ONLY") ;
-  gMC->Gspos("PFRX", 2, "PWTI", posit1[0], -posit1[1], posit1[2], 0, "ONLY") ;
-  
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFrameZHalfSize() + ipar);
-  gMC->Gsvolu("PFRZ", "BOX ", idtmed[716], par, 3) ; 
-  const Float_t * posit2 = emcg->GetFrameZPosition() ;
-  gMC->Gspos("PFRZ", 1, "PWTI",  posit2[0], posit2[1], posit2[2], 0, "ONLY") ;
-  gMC->Gspos("PFRZ", 2, "PWTI", -posit2[0], posit2[1], posit2[2], 0, "ONLY") ;
-
- // --- Define Fiber Glass support ---
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFGupXHalfSize() + ipar);
-  gMC->Gsvolu("PFG1", "BOX ", idtmed[717], par, 3) ; 
-  const Float_t * posit3 = emcg->GetFGupXPosition() ;
-  gMC->Gspos("PFG1", 1, "PWTI", posit3[0],  posit3[1], posit3[2], 0, "ONLY") ;
-  gMC->Gspos("PFG1", 2, "PWTI", posit3[0], -posit3[1], posit3[2], 0, "ONLY") ;
-
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFGupZHalfSize() + ipar);
-  gMC->Gsvolu("PFG2", "BOX ", idtmed[717], par, 3) ; 
-  const Float_t * posit4 = emcg->GetFGupZPosition();
-  gMC->Gspos("PFG2", 1, "PWTI",  posit4[0], posit4[1], posit4[2], 0, "ONLY") ;
-  gMC->Gspos("PFG2", 2, "PWTI", -posit4[0], posit4[1], posit4[2], 0, "ONLY") ;
-
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFGlowXHalfSize() + ipar);
-  gMC->Gsvolu("PFG3", "BOX ", idtmed[717], par, 3) ; 
-  const Float_t * posit5 = emcg->GetFGlowXPosition() ;
-  gMC->Gspos("PFG3", 1, "PWTI", posit5[0],  posit5[1], posit5[2], 0, "ONLY") ;
-  gMC->Gspos("PFG3", 2, "PWTI", posit5[0], -posit5[1], posit5[2], 0, "ONLY") ;
-
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFGlowZHalfSize() + ipar);
-  gMC->Gsvolu("PFG4", "BOX ", idtmed[717], par, 3) ; 
-  const Float_t * posit6 = emcg->GetFGlowZPosition() ;
-  gMC->Gspos("PFG4", 1, "PWTI",  posit6[0], posit6[1], posit6[2], 0, "ONLY") ;
-  gMC->Gspos("PFG4", 2, "PWTI", -posit6[0], posit6[1], posit6[2], 0, "ONLY") ;
-
-  // --- Define Air Gap for FEE electronics ----- 
-  
-  for (ipar=0; ipar<3; ipar++) par[ipar] = *(emcg->GetFEEAirHalfSize() + ipar);
-  gMC->Gsvolu("PAFE", "BOX ", idtmed[798], par, 3) ; 
-  const Float_t * posit7 = emcg->GetFEEAirPosition() ;
-  gMC->Gspos("PAFE", 1, "PWTI",  posit7[0], posit7[1], posit7[2], 0, "ONLY") ;
-  
-  // Define the EMC module volume and combine Cool and Warm sections
-  
-  for (ipar=0; ipar<4; ipar++) par[ipar] = *(emcg->GetEMCParams() + ipar);
-  gMC->Gsvolu("PEMC", "TRD1", idtmed[798], par, 4) ;        
-  z =  - warmcov[2] ;
-  gMC->Gspos("PCOL", 1, "PEMC",  0., 0., z, 0, "ONLY") ;
-  z = covparams[3] ;
-  gMC->Gspos("PWAR", 1, "PEMC",  0., 0., z, 0, "ONLY") ;
-  
-  
-  // Put created EMC geometry into PVBAR volume
-  
-  z = geom->GetCPVBoxSize(1) / 2. ;
-  gMC->Gspos("PEMC", 1, "PVBAR", 0., 0., z, 0, "ONLY") ; 
-  
-}
-
-//____________________________________________________________________________
-void IlcPVBARv0::CreateGeometryforCPV()
-{
-  // Create the PVBAR-CPV geometry for GEANT
-  // Author: Yuri Kharlov 11 September 2000
-  //BEGIN_HTML
-  /*
-    <H2>
-    Geant3 geometry of PVBAR-CPV in ILC
-    </H2>
-    <table width=700>
-
-    <tr>
-         <td>CPV perspective view</td>
-         <td>CPV front view      </td>
-    </tr>
-
-    <tr>
-         <td> <img height=300 width=290 src="../images/CPVallPersp.gif"> </td>
-         <td> <img height=300 width=290 src="../images/CPVallFront.gif"> </td>
-    </tr>
-
-    <tr>
-         <td>One CPV module, perspective view                            </td>
-         <td>One CPV module, front view (extended in vertical direction) </td>
-    </tr>
-
-    <tr>
-         <td><img height=300 width=290 src="../images/CPVmodulePers.gif"></td>
-         <td><img height=300 width=290 src="../images/CPVmoduleSide.gif"></td>
-    </tr>
-
-    </table>
-
-    <H2>
-    Geant3 geometry tree of PVBAR-CPV in ILC
-    </H2>
-    <center>
-    <img height=300 width=290 src="../images/CPVtree.gif">
-    </center>
-  */
-  //END_HTML  
-
-  Float_t par[3], x,y,z;
-
-  // Get pointer to the array containing media indexes
-  Int_t *idtmed = fIdtmed->GetArray() - 699 ;
-
-  IlcPVBARGeometry * geom = GetGeometry() ; 
-
-  // The box containing all CPV for one PVBAR module filled with air 
-  par[0] = geom->GetCPVBoxSize(0) / 2.0 ;  
-  par[1] = geom->GetCPVBoxSize(1) / 2.0 ; 
-  par[2] = geom->GetCPVBoxSize(2) / 2.0 ;
-  gMC->Gsvolu("PCPV", "BOX ", idtmed[798], par, 3) ;
-
-  const Float_t * emcParams = geom->GetEMCAGeometry()->GetEMCParams() ;
-  z = - emcParams[3] ;
-  Int_t rotm ;
-  IlcMatrix(rotm, 90.,0., 0., 0., 90., 90.) ;
-
-  gMC->Gspos("PCPV", 1, "PVBAR", 0.0, 0.0, z, rotm, "ONLY") ; 
-  
-  // Gassiplex board
-  
-  par[0] = geom->GetGassiplexChipSize(0)/2.;
-  par[1] = geom->GetGassiplexChipSize(1)/2.;
-  par[2] = geom->GetGassiplexChipSize(2)/2.;
-  gMC->Gsvolu("PCPC","BOX ",idtmed[707],par,3);
-  
-  // Cu+Ni foil covers Gassiplex board
-
-  par[1] = geom->GetCPVCuNiFoilThickness()/2;
-  gMC->Gsvolu("PCPD","BOX ",idtmed[710],par,3);
-  y      = -(geom->GetGassiplexChipSize(1)/2 - par[1]);
-  gMC->Gspos("PCPD",1,"PCPC",0,y,0,0,"ONLY");
-
-  // Position of the chip inside CPV
-
-  Float_t xStep = geom->GetCPVActiveSize(0) / (geom->GetNumberOfCPVChipsPhi() + 1);
-  Float_t zStep = geom->GetCPVActiveSize(1) / (geom->GetNumberOfCPVChipsZ()   + 1);
-  Int_t   copy  = 0;
-  y = geom->GetCPVFrameSize(1)/2           - geom->GetFTPosition(0) +
-    geom->GetCPVTextoliteThickness() / 2 + geom->GetGassiplexChipSize(1) / 2 + 0.1;
-  for (Int_t ix=0; ix<geom->GetNumberOfCPVChipsPhi(); ix++) {
-    x = xStep * (ix+1) - geom->GetCPVActiveSize(0)/2;
-    for (Int_t iz=0; iz<geom->GetNumberOfCPVChipsZ(); iz++) {
-      copy++;
-      z = zStep * (iz+1) - geom->GetCPVActiveSize(1)/2;
-      gMC->Gspos("PCPC",copy,"PCPV",x,y,z,0,"ONLY");
-    }
+    PVBARRmin = (PVBARRmin+PVBARdR)/TMath::Cos(360./nSect[idx]*TMath::DegToRad()/2.);
+    
   }
 
-  // Foiled textolite (1 mm of textolite + 50 mkm of Cu + 6 mkm of Ni)
-  
-  par[0] = geom->GetCPVActiveSize(0)        / 2;
-  par[1] = geom->GetCPVTextoliteThickness() / 2;
-  par[2] = geom->GetCPVActiveSize(1)        / 2;
-  gMC->Gsvolu("PCPF","BOX ",idtmed[707],par,3);
-
-  // Argon gas volume
-
-  par[1] = (geom->GetFTPosition(2) - geom->GetFTPosition(1) - geom->GetCPVTextoliteThickness()) / 2;
-  gMC->Gsvolu("PCPG","BOX ",idtmed[715],par,3);
-
-  for (Int_t i=0; i<4; i++) {
-    y = geom->GetCPVFrameSize(1) / 2 - geom->GetFTPosition(i) + geom->GetCPVTextoliteThickness()/2;
-    gMC->Gspos("PCPF",i+1,"PCPV",0,y,0,0,"ONLY");
-    if(i==1){
-      y-= (geom->GetFTPosition(2) - geom->GetFTPosition(1)) / 2;
-      gMC->Gspos("PCPG",1,"PCPV ",0,y,0,0,"ONLY");
-    }
-  }
-
-  // Dummy sensitive plane in the middle of argone gas volume
-
-  par[1]=0.001;
-  gMC->Gsvolu("PCPQ","BOX ",idtmed[715],par,3);
-  gMC->Gspos ("PCPQ",1,"PCPG",0,0,0,0,"ONLY");
-
-  // Cu+Ni foil covers textolite
-
-  par[1] = geom->GetCPVCuNiFoilThickness() / 2;
-  gMC->Gsvolu("PCP1","BOX ",idtmed[710],par,3);
-  y = geom->GetCPVTextoliteThickness()/2 - par[1];
-  gMC->Gspos ("PCP1",1,"PCPF",0,y,0,0,"ONLY");
-
-  // Aluminum frame around CPV
-
-  par[0] = geom->GetCPVFrameSize(0)/2;
-  par[1] = geom->GetCPVFrameSize(1)/2;
-  par[2] = geom->GetCPVBoxSize(2)  /2;
-  gMC->Gsvolu("PCF1","BOX ",idtmed[701],par,3);
-
-  par[0] = geom->GetCPVBoxSize(0)/2 - geom->GetCPVFrameSize(0);
-  par[1] = geom->GetCPVFrameSize(1)/2;
-  par[2] = geom->GetCPVFrameSize(2)/2;
-  gMC->Gsvolu("PCF2","BOX ",idtmed[701],par,3);
-
-  for (Int_t j=0; j<=1; j++) {
-    x = TMath::Sign(1,2*j-1) * (geom->GetCPVBoxSize(0) - geom->GetCPVFrameSize(0)) / 2;
-    gMC->Gspos("PCF1",j+1,"PCPV", x,0,0,0,"ONLY");
-    z = TMath::Sign(1,2*j-1) * (geom->GetCPVBoxSize(2) - geom->GetCPVFrameSize(2)) / 2;
-    gMC->Gspos("PCF2",j+1,"PCPV",0, 0,z,0,"ONLY");
-  }
-
-}
-
-
-//____________________________________________________________________________
-void IlcPVBARv0::CreateGeometryforSupport()
-{
-  // Create the PVBAR' support geometry for GEANT
-    //BEGIN_HTML
-  /*
-    <H2>
-    Geant3 geometry of the PVBAR's support
-    </H2>
-    <P><CENTER>
-    <IMG Align=BOTTOM ALT="EMC geant tree" SRC="../images/PVBAR_support.gif"> 
-    </CENTER><P>
-  */
-  //END_HTML  
-  
-  Float_t par[5], x0,y0,z0 ; 
-  Int_t   i,j,copy;
-
-  // Get pointer to the array containing media indexes
-  Int_t *idtmed = fIdtmed->GetArray() - 699 ;
-
-  IlcPVBARGeometry * geom = GetGeometry() ; 
-
-  // --- Dummy box containing two rails on which PVBAR support moves
-  // --- Put these rails to the bottom of the L3 magnet
-
-  par[0] =  geom->GetRailRoadSize(0) / 2.0 ;
-  par[1] =  geom->GetRailRoadSize(1) / 2.0 ;
-  par[2] =  geom->GetRailRoadSize(2) / 2.0 ;
-  gMC->Gsvolu("PRRD", "BOX ", idtmed[798], par, 3) ;
-
-  y0     = -(geom->GetRailsDistanceFromIP() - geom->GetRailRoadSize(1) / 2.0) ;
-  gMC->Gspos("PRRD", 1, "ILCM", 0.0, y0, 0.0, 0, "ONLY") ; 
-
-  // --- Dummy box containing one rail
-
-  par[0] =  geom->GetRailOuterSize(0) / 2.0 ;
-  par[1] =  geom->GetRailOuterSize(1) / 2.0 ;
-  par[2] =  geom->GetRailOuterSize(2) / 2.0 ;
-  gMC->Gsvolu("PRAI", "BOX ", idtmed[798], par, 3) ;
-
-  for (i=0; i<2; i++) {
-    x0     = (2*i-1) * geom->GetDistanceBetwRails()  / 2.0 ;
-    gMC->Gspos("PRAI", i, "PRRD", x0, 0.0, 0.0, 0, "ONLY") ; 
-  }
-
-  // --- Upper and bottom steel parts of the rail
-
-  par[0] =  geom->GetRailPart1(0) / 2.0 ;
-  par[1] =  geom->GetRailPart1(1) / 2.0 ;
-  par[2] =  geom->GetRailPart1(2) / 2.0 ;
-  gMC->Gsvolu("PRP1", "BOX ", idtmed[716], par, 3) ;
-
-  y0     = - (geom->GetRailOuterSize(1) - geom->GetRailPart1(1))  / 2.0 ;
-  gMC->Gspos("PRP1", 1, "PRAI", 0.0, y0, 0.0, 0, "ONLY") ;
-  y0     =   (geom->GetRailOuterSize(1) - geom->GetRailPart1(1))  / 2.0 - geom->GetRailPart3(1);
-  gMC->Gspos("PRP1", 2, "PRAI", 0.0, y0, 0.0, 0, "ONLY") ;
-
-  // --- The middle vertical steel parts of the rail
-
-  par[0] =  geom->GetRailPart2(0) / 2.0 ;
-  par[1] =  geom->GetRailPart2(1) / 2.0 ;
-  par[2] =  geom->GetRailPart2(2) / 2.0 ;
-  gMC->Gsvolu("PRP2", "BOX ", idtmed[716], par, 3) ;
-
-  y0     =   - geom->GetRailPart3(1) / 2.0 ;
-  gMC->Gspos("PRP2", 1, "PRAI", 0.0, y0, 0.0, 0, "ONLY") ; 
-
-  // --- The most upper steel parts of the rail
-
-  par[0] =  geom->GetRailPart3(0) / 2.0 ;
-  par[1] =  geom->GetRailPart3(1) / 2.0 ;
-  par[2] =  geom->GetRailPart3(2) / 2.0 ;
-  gMC->Gsvolu("PRP3", "BOX ", idtmed[716], par, 3) ;
-
-  y0     =   (geom->GetRailOuterSize(1) - geom->GetRailPart3(1))  / 2.0 ;
-  gMC->Gspos("PRP3", 1, "PRAI", 0.0, y0, 0.0, 0, "ONLY") ; 
-
-  // --- The wall of the cradle
-  // --- The wall is empty: steel thin walls and air inside
-
-  par[1] =  TMath::Sqrt(TMath::Power((geom->GetIPtoCPVDistance() + geom->GetOuterBoxSize(3)),2) +
-			TMath::Power((geom->GetOuterBoxSize(1)/2),2))+10. ;
-  par[0] =  par[1] - geom->GetCradleWall(1) ;
-  par[2] =  geom->GetCradleWall(2) / 2.0 ;
-  par[3] =  geom->GetCradleWall(3) ;
-  par[4] =  geom->GetCradleWall(4) ;
-  gMC->Gsvolu("PCRA", "TUBS", idtmed[716], par, 5) ;
-
-  par[0] +=  geom->GetCradleWallThickness() ;
-  par[1] -=  geom->GetCradleWallThickness() ;
-  par[2] -=  geom->GetCradleWallThickness() ;
-  gMC->Gsvolu("PCRE", "TUBS", idtmed[798], par, 5) ;
-  gMC->Gspos ("PCRE", 1, "PCRA", 0.0, 0.0, 0.0, 0, "ONLY") ; 
-
-  for (i=0; i<2; i++) {
-    z0 = (2*i-1) * (geom->GetOuterBoxSize(2) + geom->GetCradleWall(2) )/ 2.0  ;
-        gMC->Gspos("PCRA", i, "ILCM", 0.0, 0.0, z0, 0, "ONLY") ; 
-  }
-
-  // --- The "wheels" of the cradle
-  
-  par[0] = geom->GetCradleWheel(0) / 2;
-  par[1] = geom->GetCradleWheel(1) / 2;
-  par[2] = geom->GetCradleWheel(2) / 2;
-  gMC->Gsvolu("PWHE", "BOX ", idtmed[716], par, 3) ;
-
-  y0 = -(geom->GetRailsDistanceFromIP() - geom->GetRailRoadSize(1) -
-	 geom->GetCradleWheel(1)/2) ;
-  for (i=0; i<2; i++) {
-    z0 = (2*i-1) * ((geom->GetOuterBoxSize(2) + geom->GetCradleWheel(2))/ 2.0 +
-                    geom->GetCradleWall(2));
-    for (j=0; j<2; j++) {
-      copy = 2*i + j;
-      x0 = (2*j-1) * geom->GetDistanceBetwRails()  / 2.0 ;
-      gMC->Gspos("PWHE", copy, "ILCM", x0, y0, z0, 0, "ONLY") ; 
-    }
-  }
-
+  ilc->AddNode(VolPVBARtube,1);
 }
 
 //_____________________________________________________________________________
@@ -853,15 +308,15 @@ void IlcPVBARv0::AddAlignableVolumes() const
 //      IlcFatal(Form("Alignable entry %s not created. Volume path %s not valid", symname.Data(),volpath.Data()));
 
     // Creates the Tracking to Local transformation matrix for PVBAR modules
-    TGeoPNEntry *alignableEntry = gGeoManager->GetAlignableEntryByUID(modUID) ;
+//     TGeoPNEntry *alignableEntry = gGeoManager->GetAlignableEntryByUID(modUID) ;
 
-    Float_t angle = GetGeometry()->GetPVBARAngle(iModule);
-    TGeoHMatrix* globMatrix = alignableEntry->GetGlobalOrig();
-
-    TGeoHMatrix *matTtoL = new TGeoHMatrix;
-    matTtoL->RotateZ(-90.+angle);
-    matTtoL->MultiplyLeft(&(globMatrix->Inverse()));
-    alignableEntry->SetMatrix(matTtoL);
+//     Float_t angle = GetGeometry()->GetPVBARAngle(iModule);
+//     TGeoHMatrix* globMatrix = alignableEntry->GetGlobalOrig();
+// 
+//     TGeoHMatrix *matTtoL = new TGeoHMatrix;
+//     matTtoL->RotateZ(-90.+angle);
+//     matTtoL->MultiplyLeft(&(globMatrix->Inverse()));
+//     alignableEntry->SetMatrix(matTtoL);
   }
 
   //Aligning of CPV should be done for volume PCPV_1
@@ -890,15 +345,15 @@ void IlcPVBARv0::AddAlignableVolumes() const
       IlcFatal(Form("Alignable entry %s not created. Volume path %s not valid", symname.Data(),volpath.Data()));
           
     // Creates the TGeo Local to Tracking transformation matrix ...
-    TGeoPNEntry *alignableEntry = gGeoManager->GetAlignableEntryByUID(modUID) ;
+//     TGeoPNEntry *alignableEntry = gGeoManager->GetAlignableEntryByUID(modUID) ;
 
-    Float_t angle = GetGeometry()->GetPVBARAngle(iModule);
-    TGeoHMatrix* globMatrix = alignableEntry->GetGlobalOrig();
-
-    TGeoHMatrix *matTtoL = new TGeoHMatrix;
-    matTtoL->RotateZ(-90.+angle);
-    matTtoL->MultiplyLeft(&(globMatrix->Inverse()));
-    alignableEntry->SetMatrix(matTtoL);
+//     Float_t angle = GetGeometry()->GetPVBARAngle(iModule);
+//     TGeoHMatrix* globMatrix = alignableEntry->GetGlobalOrig();
+// 
+//     TGeoHMatrix *matTtoL = new TGeoHMatrix;
+//     matTtoL->RotateZ(-90.+angle);
+//     matTtoL->MultiplyLeft(&(globMatrix->Inverse()));
+//     alignableEntry->SetMatrix(matTtoL);
     
   }
  
