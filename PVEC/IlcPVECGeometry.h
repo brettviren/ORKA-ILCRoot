@@ -51,9 +51,9 @@ public:
 
   Bool_t IsInitialized(void)                  const { return fgInit ; }  
   Bool_t AbsToRelNumbering(Int_t AbsId, Int_t * RelId) const ; 
-        // converts the absolute RSTACK tile numbering to a relative
+        // converts the absolute PVEC tile numbering to a relative
   Bool_t RelToAbsNumbering(const Int_t * RelId, Int_t & AbsId) const ; 
-        // converts the absolute RSTACK numbering to a relative
+        // converts the absolute PVEC numbering to a relative
                                                                        
   // Return general PVEC parameters
   
