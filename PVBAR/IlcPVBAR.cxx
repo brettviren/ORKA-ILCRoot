@@ -283,6 +283,22 @@ void IlcPVBAR::CreateMaterials()
 
   IlcMixture(19, "Cables  $", aCA, zCA, dCA, -4, wCA) ;
 
+   // SF57HHT Lead Glass with 75% PbO
+  // Pb, Si, O, As, Na, K
+  Float_t aLeadGlass[6] = {207.19,  28.0855, 15.9994, 74.9216, 22.98977, 39.0983};
+  Float_t zLeadGlass[6] = {82., 14., 8., 33., 11., 19.};
+  Float_t wLeadGlass[6] = {0.690, 0.114, 0.187, 0.002, 0.002, 0.005};
+  Float_t dLeadGlass = 5.51;
+
+  IlcMixture(20,"SF57HHT", aLeadGlass, zLeadGlass, dLeadGlass, 6, wLeadGlass);
+
+  // Kevlar C14H22O2N2
+  Float_t amat[4] = {12.011, 1.00794, 15.999, 14.006}; // atomic numbers
+  Float_t zmat[4] = {6., 1., 8., 7.}; // z
+  Float_t wmat[4] = {14., 22., 2., 2.}; // proportions
+  Float_t density = 1.45;
+
+  IlcMixture(21,"Kevlar",amat,zmat,density,-4,wmat);
 
   // --- Air ---
   Float_t aAir[4]={12.0107,14.0067,15.9994,39.948};
@@ -291,15 +307,6 @@ void IlcPVBAR::CreateMaterials()
   Float_t dAir = 1.20479E-3;
  
   IlcMixture(99, "Air$", aAir, zAir, dAir, 4, wAir) ;
-
-   // SF57HHT Lead Glass with 75% PbO
-  // Pb, Si, O, As, Na, K
-  Float_t aLeadGlass[6] = {207.19,  28.0855, 15.9994, 74.9216, 22.98977, 39.0983};
-  Float_t zLeadGlass[6] = {82., 14., 8., 33., 11., 19.};
-  Float_t wLeadGlass[6] = {0.690, 0.114, 0.187, 0.002, 0.002, 0.005};
-  Float_t dLeadGlass = 5.51;
-
-  IlcMixture(20,"LeadGlass", aLeadGlass, zLeadGlass, dLeadGlass, 6, wLeadGlass);
 
 
   // DEFINITION OF THE TRACKING MEDIA
@@ -313,7 +320,7 @@ void IlcPVBAR::CreateMaterials()
 	    isxfld, sxmgmx, 10.0, 0.1, 0.1, 0.1, 0.1, 0, 0) ;
 
   // The scintillator of the CPV made of Polystyrene scintillator                   -> idtmed[700]
-  IlcMedium(1, "CPV scint.   $", 1, 1,
+  IlcMedium(1, "Scint", 1, 1,
 	    isxfld, sxmgmx, 10.0, 0.1, 0.1, 0.1, 0.1, 0, 0) ;
 
   // Various Aluminium parts made of Al                                             -> idtmed[701]
@@ -384,14 +391,16 @@ void IlcPVBAR::CreateMaterials()
   IlcMedium(19, "Cables    $", 19, 0,
 	     isxfld, sxmgmx, 10.0, 0.1, 0.1, 0.1, 0.1, 0, 0) ;
 
-  // Air                                                                            -> idtmed[798] 
-  IlcMedium(99, "Air          $", 99, 0,
-	     isxfld, sxmgmx, 10.0, 1.0, 0.1, 0.1, 10.0, 0, 0) ;
-	     
   // SF57HHT Lead Glass with 75% PbO
   // Pb, Si, O, As, Na, K
-  IlcMedium( 20,"LeadGlass", 20, 1,  isxfld, sxmgmx ,10.0, 0.1, 0.1, 0.1, 0.1, 0, 0);
+  IlcMedium( 20,"SF57HHT", 20, 1,  isxfld, sxmgmx ,10.0, 0.1, 0.1, 0.1, 0.1, 0, 0);
 
+  // Kevlar C14H22O2N2
+  IlcMedium(21,"Kevlar",21,0, isxfld, sxmgmx, 10., 999., .1, .0005, .001);
+ 
+  // Air                                                                            -> idtmed[798] 
+  IlcMedium(99, "Air", 99, 0, isxfld, sxmgmx, 10.0, 1.0, 0.1, 0.1, 10.0, 0, 0) ;
+	     
 
 }
 
@@ -613,51 +622,51 @@ void IlcPVBAR::SetTreeAddress()
 }
 
 //____________________________________________________________________________ 	 
-Bool_t IlcPVBAR::Raw2SDigits(IlcRawReader* rawReader) 	 
-{ 	 
-	  	 
-  IlcPVBARLoader * loader = static_cast<IlcPVBARLoader*>(fLoader) ; 	 
-	  	 
-  TTree * tree = 0 ; 	 
-  tree = loader->TreeS() ; 	 
-  if ( !tree ) { 	 
-    loader->MakeTree("S"); 	 
-    tree = loader->TreeS() ; 	 
-  } 	 
-	  	 
-  TClonesArray * sdigits = loader->SDigits() ; 	 
-  if(!sdigits) { 	 
-    loader->MakeSDigitsArray(); 	 
-    sdigits = loader->SDigits(); 	 
-  } 	 
-  sdigits->Clear(); 	 
-	  	 
-  rawReader->Reset() ;
+Bool_t IlcPVBAR::Raw2SDigits(IlcRawReader* /*rawReader*/) 	 
+{
 
-  const TObjArray* maps = IlcPVBARRecoParam::GetMappings();
-  if(!maps) IlcFatal("Cannot retrieve ALTRO mappings!!");
-
-  IlcAltroMapping *mapping[20];
-  for(Int_t i = 0; i < 20; i++) {
-    mapping[i] = (IlcAltroMapping*)maps->At(i);
-  }
-
-  IlcPVBARRawFitterv0 fitter;
-
-  fitter.SubtractPedestals(IlcPVBARSimParam::GetInstance()->EMCSubtractPedestals());
-  fitter.SetAmpOffset(IlcPVBARSimParam::GetInstance()->GetGlobalAltroOffset());
-  fitter.SetAmpThreshold(IlcPVBARSimParam::GetInstance()->GetGlobalAltroThreshold());
-
-  IlcPVBARRawDigiProducer pr(rawReader,mapping);
-  pr.SetSampleQualityCut(IlcPVBARSimParam::GetInstance()->GetEMCSampleQualityCut()); 	 
-  pr.MakeDigits(sdigits,&fitter);
-	  	 
-  Int_t bufferSize = 32000 ; 	 
-  // TBranch * sdigitsBranch = tree->Branch("PVBAR",&sdigits,bufferSize); 	 
-  tree->Branch("PVBAR",&sdigits,bufferSize); 	 
-  tree->Fill(); 	 
-	  	 
-  fLoader->WriteSDigits("OVERWRITE"); 	 
+// // //   IlcPVBARLoader * loader = static_cast<IlcPVBARLoader*>(fLoader) ; 	 
+// // // 
+// // //   TTree * tree = 0 ; 	 
+// // //   tree = loader->TreeS() ; 	 
+// // //   if ( !tree ) { 	 
+// // //     loader->MakeTree("S"); 	 
+// // //     tree = loader->TreeS() ; 	 
+// // //   } 	 
+// // // 
+// // //   TClonesArray * sdigits = loader->SDigits() ; 	 
+// // //   if(!sdigits) { 	 
+// // //     loader->MakeSDigitsArray(); 	 
+// // //     sdigits = loader->SDigits(); 	 
+// // //   } 	 
+// // //   sdigits->Clear(); 	 
+// // // 	  	 
+// // //   rawReader->Reset() ;
+// // // 
+// // //   const TObjArray* maps = IlcPVBARRecoParam::GetMappings();
+// // //   if(!maps) IlcFatal("Cannot retrieve ALTRO mappings!!");
+// // // 
+// // //   IlcAltroMapping *mapping[20];
+// // //   for(Int_t i = 0; i < 20; i++) {
+// // //     mapping[i] = (IlcAltroMapping*)maps->At(i);
+// // //   }
+// // // 
+// // //   IlcPVBARRawFitterv0 fitter;
+// // // 
+// // //   fitter.SubtractPedestals(IlcPVBARSimParam::GetInstance()->EMCSubtractPedestals());
+// // //   fitter.SetAmpOffset(IlcPVBARSimParam::GetInstance()->GetGlobalAltroOffset());
+// // //   fitter.SetAmpThreshold(IlcPVBARSimParam::GetInstance()->GetGlobalAltroThreshold());
+// // // 
+// // //   IlcPVBARRawDigiProducer pr(rawReader,mapping);
+// // //   pr.SetSampleQualityCut(IlcPVBARSimParam::GetInstance()->GetEMCSampleQualityCut()); 	 
+// // //   pr.MakeDigits(sdigits,&fitter);
+// // // 	  	 
+// // //   Int_t bufferSize = 32000 ; 	 
+// // //   // TBranch * sdigitsBranch = tree->Branch("PVBAR",&sdigits,bufferSize); 	 
+// // //   tree->Branch("PVBAR",&sdigits,bufferSize); 	 
+// // //   tree->Fill(); 	 
+// // // 	  	 
+// // //   fLoader->WriteSDigits("OVERWRITE");
   return kTRUE; 	 
   
 }
