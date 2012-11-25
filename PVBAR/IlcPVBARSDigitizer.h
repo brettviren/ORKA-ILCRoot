@@ -75,9 +75,15 @@ private:
   void     PrintSDigits(Option_t * option) ;
   void     Unload() const ;
 
+  Float_t AttenuationLength_m_LG(Float_t lambda);
+  Float_t AttenuationLength_m_WLS(Float_t lambda);
+  Float_t QE_SiPM(Float_t lambda);
+  Float_t Shifter_WLS(Float_t lambda);
 
 private:
   Float_t fPrimThreshold ;  // To store primari if Elos > threshold
+  Float_t fCollectEff;      //geometric collection efficiency
+  Float_t fAttenuationLength; //Scintillator attenuation length
   Bool_t  fDefaultInit;     //! Says if the task was created by defaut ctor (only parameters are initialized)
   TString fEventFolderName; // event folder name
   Bool_t  fInit ;           //! tells if initialisation wennt OK, will revent exec if not
