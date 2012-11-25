@@ -27,82 +27,62 @@ ClassImp(IlcPVBARSimParam)
 
 IlcPVBARSimParam  * IlcPVBARSimParam::fgSimParam = 0 ;
 //-----------------------------------------------------------------------------
-IlcPVBARSimParam::IlcPVBARSimParam() :
-  TNamed(),
-  fLightYieldMean(0.),fIntrinsicAPDEfficiency(0.),
-  fLightFactor(0.),fAPDFactor(0.),         
-  fAPDNoise(0.),fEMCDigitThreshold(0.),
-  fEMCADCchannel(0.),fTOFa(0.),fTOFb(0.),
-  fCellNonLineaityA(0.),fCellNonLineaityB(1.),fCellNonLineaityC(1.),
-  fEMCSubtractPedestals(kFALSE),
-  fGlobalAltroOffset(0),fGlobalAltroThreshold(0),fEMCSampleQualityCut(0),
-  fADCpedestalCpv(0.),fADCchanelCpv(0.),
-  fCPVNoise(0.),fCPVDigitThreshold(0.),fNADCcpv(0),
-  fDigitizeE(0),fCellNonLineaityOn(1)
+IlcPVBARSimParam::IlcPVBARSimParam() : TNamed(),
+fLightYieldMean(0.),fBirks(0.),fAttenuationLength(0.),
+fSiPMPDE(0.),fSiPMPixels(0.),fCollectEff(0.),fSiPMNoise(0.),
+fElectronicGain(0.),fConversionFactor(0.),
+fENF(0.),fDigitsThreshold(0.),fPrimaryThreshold(0.),fADCchannel(0.),fADCbits(0),
+fTOFa(0.),fTOFb(0.),fCellNonLinearityA(0.),fCellNonLinearityB(1.),fCellNonLinearityC(1.),
+fDigitizeE(0),fCellNonLinearityOn(0)
 {
   //Default constructor.
   for(Int_t i=0; i<10; i++) fDStream[i] = 0 ;
 }
 
 //-----------------------------------------------------------------------------
-IlcPVBARSimParam::IlcPVBARSimParam(Int_t) :
-  TNamed(),
-  fLightYieldMean(0.),fIntrinsicAPDEfficiency(0.),
-  fLightFactor(0.),fAPDFactor(0.),         
-  fAPDNoise(0.),fEMCDigitThreshold(0.),
-  fEMCADCchannel(0.),fTOFa(0.),fTOFb(0.),
-  fCellNonLineaityA(0.),fCellNonLineaityB(1.),fCellNonLineaityC(1.),
-  fEMCSubtractPedestals(kFALSE),
-  fGlobalAltroOffset(0),fGlobalAltroThreshold(0),fEMCSampleQualityCut(0),
-  fADCpedestalCpv(0.),fADCchanelCpv(0.),
-  fCPVNoise(0.),fCPVDigitThreshold(0.),
-  fNADCcpv(0),
-  fDigitizeE(0),fCellNonLineaityOn(1)
+IlcPVBARSimParam::IlcPVBARSimParam(Int_t) : TNamed(),
+fLightYieldMean(0.),fBirks(0.),fAttenuationLength(0.),
+fSiPMPDE(0.),fSiPMPixels(0.),fCollectEff(0.),fSiPMNoise(0.),
+fElectronicGain(0.),fConversionFactor(0.),
+fENF(0.),fDigitsThreshold(0.),fPrimaryThreshold(0.),fADCchannel(0.),fADCbits(0),
+fTOFa(0.),fTOFb(0.),fCellNonLinearityA(0.),fCellNonLinearityB(1.),fCellNonLinearityC(1.),
+fDigitizeE(0),fCellNonLinearityOn(0)
 {
   //Real (private) constructor 
   //Set default parameters
 
-  //Parameters describing energy deposition and light collection by APD, used in IlcPVBARv1
+  //Parameters describing energy deposition and light collection by SiPM, used in IlcRSTACKv1
   //Photoelectron statistics:
   // The light yield is a poissonian distribution of the number of
-  // photons created in the PbWo4 crystal, calculated using following formula
-  // NumberOfPhotons = EnergyLost * LightYieldMean* APDEfficiency 
-  // LightYieldMean is parameter calculated to be over 47000 photons per GeV
-  // APDEfficiency is 0.02655
-  // k_0 is 0.0045 from Valery Antonenko
-  // The number of electrons created in the APD is
-  // NumberOfElectrons = APDGain * LightYield
-  // The APD Gain is 300
-  fLightYieldMean = 47000;            //Average number of photoelectrons per GeV
-  fIntrinsicAPDEfficiency = 0.02655 ; //APD efficiency including geometric coverage
-//  fLightYieldAttenuation  = 0.0045 ;  //light attenuation in PWO. Last analysis shows no z-position dependence
-//                                      //so we removed this dependence from simulations 
-  fLightFactor            = fLightYieldMean * fIntrinsicAPDEfficiency ; //Average number of photons collected by 
-                            //APD per GeV deposited energy
-  fAPDFactor              = (13.418/fLightYieldMean/100.) * 300. ; //factor relating light yield and APD response
-                            //evaluated as (13.418/fLightYieldMean/100) * APDGain ;
+  // photons created in the scintillator, calculated using following formula
+  // NumberOfPhotons = EnergyLost * LightYieldMean
+  // NumberOfPhotoElectrons = NumberOfPhotons * IntrinsicSiPMEfficiency 
+  // The number of electrons created in the SiPM is
+  // NumberOfElectrons = SiPMGain * NumberOfPhotoElectrons
+  fBirks = 9.0;                // Birk's constant for organic scintillator
+  fLightYieldMean = 1.131e7;   //Average number of photons per GeV for BC408
+  fAttenuationLength  = 200. ; //light attenuation length in BC408.
+
 
 
   //Parameters defining electronic noise calculation and Digits noise thresholds
-  //used in IlcPVBARDigitizer
-  fAPDNoise           = 0.004 ;  // [GeV]
-  fEMCDigitThreshold  = 2.5   ;  // [ADC counts]
-  fEMCADCchannel      = 0.005 ;  // [GeV]
-  fTOFa               = 0.5e-9 ; // [sec] constant term
-  fTOFb               = 1.e-9 ;  // [sec/sqrt(GeV)]] stohastic term
-  fCellNonLineaityA   = 0.18 ;   //Amp of non-linearity of cell responce
-  fCellNonLineaityB   = 0.109;   //Scale of non-linearity of cell responce
-  fCellNonLineaityC   = 0.976;   //Overall calibration
-
-  fADCpedestalCpv     = 0.012 ;  // [aux units]
-  fADCchanelCpv       = 0.0012;  // [aux units]    
-  fCPVNoise           = 0.01;    // [aux units]
-  fCPVDigitThreshold  = 0.09 ;   // [aux units]
-  fNADCcpv  =  (Int_t)TMath::Power(2,12) ;
-
-  fGlobalAltroOffset = 10;
-  fGlobalAltroThreshold = 5;
-  fEMCSampleQualityCut = 4.;
+  //used in IlcRSTACKDigitizer
+  fSiPMPDE           = 0.2 ;    // SiPM Photon Detection Efficiency
+  fSiPMPixels        = 6400.;   // Number of pixels in 1 SiPM
+  fCollectEff        = 0.9 ;    // geometric collection efficiency
+  fSiPMNoise         = 0.1 ;    // [photo-electron] SiPM dark current noise (shot noise)
+  fElectronicGain    = 1. ;     // [photo-electron] SiPM Gain
+  fENF               = 1.016 ;  // Excess Noise Factor
+  fDigitsThreshold   = 1. ;     // [ADC counts] Threshold
+  fPrimaryThreshold  = 10. ;    // [photon] minum number of photons to assign primary particle index to sdigit
+  fADCchannel        = 5.e-5 ;  // [GeV/count] : 10bit ADC -> Max Val = 51.2 MeV
+  fADCbits           = 10 ;     // ADC bits
+  fConversionFactor  =  fLightYieldMean*fCollectEff*fSiPMPDE*fADCchannel; //[p.e./ADC count] factor to convert number of p.e. in ADC counts
+  fTOFa              = 0.5e-9 ; // [s] constant term
+  fTOFb              = 1.e-9 ;  // [s/sqrt(GeV)]] stochastic term
+  fCellNonLinearityA = 0.18 ;   // Amp of non-linearity of cell responce
+  fCellNonLinearityB = 0.109 ;  // Scale of non-linearity of cell responce
+  fCellNonLinearityC = 0.976 ;  // Overall calibration
 
   //Imput streams for merging. If true => this stream contains digits (and thus noise) and not SDigits.
   for(Int_t i=0; i<10; i++){
@@ -112,18 +92,13 @@ IlcPVBARSimParam::IlcPVBARSimParam(Int_t) :
 }
 
 //-----------------------------------------------------------------------------
-IlcPVBARSimParam::IlcPVBARSimParam(const IlcPVBARSimParam& ):
-  TNamed(),
-  fLightYieldMean(0.),fIntrinsicAPDEfficiency(0.),
-  fLightFactor(0.),fAPDFactor(0.),         
-  fAPDNoise(0.),fEMCDigitThreshold(0.),
-  fEMCADCchannel(0.),fTOFa(0.),fTOFb(0.),
-  fCellNonLineaityA(0.),fCellNonLineaityB(1.),fCellNonLineaityC(1.),
-  fEMCSubtractPedestals(kFALSE),
-  fGlobalAltroOffset(0),fGlobalAltroThreshold(0),fEMCSampleQualityCut(1.),
-  fADCpedestalCpv(0.),fADCchanelCpv(0.),
-  fCPVNoise(0.),fCPVDigitThreshold(0.),fNADCcpv(0),
-  fDigitizeE(0),fCellNonLineaityOn(1)
+IlcPVBARSimParam::IlcPVBARSimParam(const IlcPVBARSimParam& ) : TNamed(),
+fLightYieldMean(0.),fBirks(0.),fAttenuationLength(0.),
+fSiPMPDE(0.),fSiPMPixels(0.),fCollectEff(0.),fSiPMNoise(0.),
+fElectronicGain(0.),fConversionFactor(0.),
+fENF(0.),fDigitsThreshold(0.),fPrimaryThreshold(0.),fADCchannel(0.),fADCbits(0),
+fTOFa(0.),fTOFb(0.),fCellNonLinearityA(0.),fCellNonLinearityB(1.),fCellNonLinearityC(1.),
+fDigitizeE(0),fCellNonLinearityOn(0)
 {
   //Copy constructor.
   IlcError("Should not use copy constructor for singleton") ;

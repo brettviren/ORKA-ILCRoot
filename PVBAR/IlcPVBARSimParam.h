@@ -23,79 +23,78 @@ public:
 
   static IlcPVBARSimParam * GetInstance() ;
 
-  //Parameters used in conversion of deposited energy to APD response [see IlcPVBARv1 for details]
-  void SetMeanLightYield(Float_t ly=47000.){fLightYieldMean=ly; //recalculate now dependencies
-                                            fLightFactor = fLightYieldMean * fIntrinsicAPDEfficiency ; 
-                                            fAPDFactor   = (13.418/fLightYieldMean/100.) * 300. ; }
-  void SetAPDEfficiency(Float_t eff=0.02655){fIntrinsicAPDEfficiency=eff;
-                                             fLightFactor = fLightYieldMean * fIntrinsicAPDEfficiency ;}
-  Float_t GetLightFactor(void) const { return fLightFactor ;}
-  Float_t GetAPDFactor(void) const { return fAPDFactor ;}
+  //Parameters used in conversion of deposited energy to photons [see IlcPVBARv1 for details]
+  void SetBirks(Float_t Birks=9.0){fBirks=Birks;}
+  Float_t GetBirks(void)  const {return fBirks;}
+  
+  void SetAttenuationLength(Float_t AttenuationLength=210.){fAttenuationLength=AttenuationLength;}
+  Float_t GetAttenuationLength(void)  const {return fAttenuationLength;}
+  
+  void SetLightYieldMean(Float_t ly=619000.){fLightYieldMean=ly;}
+  Float_t GetLightYieldMean(void)  const {return fLightYieldMean;}
 
-  //Parameters use in EMC noise calculation [see IlcPVBARDigitizer for details]
-  Float_t GetAPDNoise() const { return fAPDNoise;  }          //RMS of APD noise
-  void SetAPDNoise(Float_t noise=0.012){fAPDNoise = noise;  }
+  //Parameters used to convert photons in electronic signal [see IlcPVBARDigitizer for details]
+  void SetSiPMPDE(Float_t PDE=0.02){fSiPMPDE=PDE;}  // SiPM Photon Detection Efficiency
+  Float_t GetSiPMPDE(void)  const {return fSiPMPDE;}
 
-  //Parameters to apply non-lineary on cell level
-  Bool_t IsCellNonlinearityOn() const {return fCellNonLineaityOn;}
-  void SetCellNonLinearity(Bool_t on=kTRUE){fCellNonLineaityOn=on;} //default: on=kFALSE
-  Double_t GetCellNonLineairyA(void) const {return fCellNonLineaityA; }
-  Double_t GetCellNonLineairyB(void) const {return fCellNonLineaityB; }
-  Double_t GetCellNonLineairyC(void) const {return fCellNonLineaityC; }
-  void SetCellNonLineairyA(Double_t a=0.30) {fCellNonLineaityA = a; }
-  void SetCellNonLineairyB(Double_t b=0.109){fCellNonLineaityB = b; }
-  void SetCellNonLineairyC(Double_t c=0.955){fCellNonLineaityC = c; }
+  void SetSiPMPixels(Float_t Npixels=6400.){fSiPMPixels=Npixels;} //Number of pixels in a SiPM
+  Float_t GetSiPMPixels(void)  const {return fSiPMPixels;}
 
+  void SetCollectEff(Float_t CollectEff=0.9){fCollectEff = CollectEff;  }
+  Float_t GetCollectEff() const { return fCollectEff;  } //geometric collection efficiency
 
+  void SetSiPMNoise(Float_t noise=0.1){fSiPMNoise = noise;  }
+  Float_t GetSiPMNoise() const { return fSiPMNoise;  }          //RMS of SiPM noise
 
-  Float_t GetEmcDigitsThreshold() const { return fEMCDigitThreshold ; }  //Minimal energy to keep digit
-  void SetEMCDigitsThreshold(Float_t thresh=0.01){fEMCDigitThreshold=thresh;} 
+  void SetElectronicGain(Float_t gain=1.){fElectronicGain = gain;  }
+  Float_t GetElectronicGain() const { return fElectronicGain;  }    //Electronic Gain
+
+  void SetConversionFactor(Float_t factor=7.e-6){fConversionFactor = factor;  }
+  Float_t GetConversionFactor() const { return fConversionFactor;  }      //Convert p.e. in energy
+
+  void SetENF(Float_t ENF=1.016){fENF = ENF;  }
+  Float_t GetENF() const { return fENF;  }          //Excess Noise Factor
+
+  void SetDigitsThreshold(Float_t thresh=0.01){fDigitsThreshold=thresh;} 
+  Float_t GetDigitsThreshold() const { return fDigitsThreshold; }  //Minimal energy to keep digit
+
+  void SetPrimaryThreshold(Float_t thresh=1.){fPrimaryThreshold=thresh;} 
+  Float_t GetPrimaryThreshold() const { return fPrimaryThreshold; }  //Minimal number of photons to assign primary particle index to digit
 
   //Parameters for energy digitization [see IlcPVBARDigitizer for details]
-  void SetADCchannelW(Float_t width=0.005){fEMCADCchannel=width ;} //EMC channel width
-  Float_t GetADCchannelW(void) const {return fEMCADCchannel; }
+  void SetADCchannelW(Float_t width=0.005){fADCchannel=width ;} //ADC channel width
+  Float_t GetADCchannelW(void) const {return fADCchannel; }
 
+  void SetADCbits(Int_t bits=10){fADCbits=bits;} //ADC bits
+  Int_t GetADCbits(void) const {return fADCbits; }
+  
   void SetEDigitizationOn(Bool_t on=kTRUE){fDigitizeE=on ;}   //Use digitization in simulation or left it
   Bool_t IsEDigitizationOn(void)const {return fDigitizeE ;}   //for Digits2Raw->Digits procedure
+
+
+
+  //Parameters to apply non-lineary on cell level
+  Bool_t IsCellNonlinearityOn() const {return fCellNonLinearityOn;}
+  void SetCellNonLinearity(Bool_t on=kTRUE){fCellNonLinearityOn=on;} //default: on=kFALSE
+  Double_t GetCellNonLineariryA(void) const {return fCellNonLinearityA; }
+  Double_t GetCellNonLineariryB(void) const {return fCellNonLinearityB; }
+  Double_t GetCellNonLineariryC(void) const {return fCellNonLinearityC; }
+  void SetCellNonLineariryA(Double_t a=0.30) {fCellNonLinearityA = a; }
+  void SetCellNonLineariryB(Double_t b=0.109){fCellNonLinearityB = b; }
+  void SetCellNonLineariryC(Double_t c=0.955){fCellNonLinearityC = c; }
+
+
 
   //Parameters for EMC TOF resolution [see IlcPVBARDigitizer::TimeResolution()]
   Float_t GetTOFa()const{return fTOFa ;}  //constant term
   Float_t GetTOFb()const{return fTOFb ;}  //stohastic term
   void SetTOFparameters(Float_t a=0.5e-9, Float_t b=1.5e-9){fTOFa=a; fTOFb=b; }
 
-  //Parameters for CPV noise and digitization  [see IlcPVBARDigitizer for details] 
-  Float_t GetCPVNoise() const {return fCPVNoise ;}           //RMS of CPV noise in
-  void SetCPVNoise(Float_t noise=0.01){ fCPVNoise = noise ;} //CPV popugais
-
-  Float_t GetCpvDigitsThreshold() const {return fCPVDigitThreshold ;}           //Minimal energy to keep digit in
-  void SetCpvDigitsThreshold(Float_t thresh=0.09){fCPVDigitThreshold = thresh;} //CPV popugais
-
-  Float_t GetADCpedestalCpv() const {return fADCpedestalCpv ;}      //CPV pedestal value 
-  void SetADCpedestalCpv(Float_t ped=0.012){ fADCpedestalCpv=ped ;} //in CPV popugais
-
-  Float_t GetADCchanelCpv() const {return fADCchanelCpv;}     //Price of one ADC channel 
-  void SetADCchanelCpv(Float_t w=0.0012) {fADCchanelCpv=w; }  //for CPV
-
-  Int_t GetNADCcpv() const {return fNADCcpv ;}                         //Max number of channels
-  void SettNADCcpv(Int_t n=12) { fNADCcpv=(Int_t)TMath::Power(2,n) ; } //in CPV  ADC
-
   //Mark streams for mixing as streams contaning Digits (true) or SDigits (false)
   //Streamt numbering the same as in StreamManager
   void    SetStreamDigits(Int_t i){if(i<10)fDStream[i]=kTRUE;}
   Bool_t  IsStreamDigits(Int_t i){return fDStream[i]; }
 
-  //Parameters for RAW embedding
-  void SetEMCSubtractPedestals(Bool_t subtract) { fEMCSubtractPedestals = subtract;}
-  Bool_t  EMCSubtractPedestals()      const { return fEMCSubtractPedestals;    }
-
-  void SetGlobalAltroOffset(Int_t offset)  { fGlobalAltroOffset = offset ; }
-  Int_t   GetGlobalAltroOffset()      const { return fGlobalAltroOffset ;  }
-
-  void SetGlobalAltroThreshold(Int_t ZSth) { fGlobalAltroThreshold = ZSth; }
-  Int_t   GetGlobalAltroThreshold()   const { return fGlobalAltroThreshold;}
-
-  void SetSampleQualityCut(Float_t qcut) { fEMCSampleQualityCut=qcut; }
-  Float_t GetEMCSampleQualityCut()    const { return fEMCSampleQualityCut; }
 
 private:
 
@@ -103,38 +102,34 @@ private:
 
 private:
 
-  //Parameters used in conversion of deposited energy to APD response (IlcPVBARv1)
+  //Parameters used in conversion of deposited energy to photons (IlcPVBARv1)
   Float_t  fLightYieldMean ;        //Average number of photoelectrons per GeV
-  Float_t  fIntrinsicAPDEfficiency; //APD efficiency including geometric coverage
-  Float_t  fLightFactor ;           //Average number of photons collected by APD per GeV deposited energy
-  Float_t  fAPDFactor ;             //factor relating light yield and APD response 
- 
-  //Parameters used in electronic noise calculation and thresholds for EMC (IlcPVBARDigitizer)
-  Float_t fAPDNoise;            //RMS of APD noise
-  Float_t fEMCDigitThreshold ;  //minimal energy to keep digit 
-  Float_t fEMCADCchannel ;      //width of ADC channel in GeV
-  Float_t fTOFa  ;              //constant term of TOF resolution 
-  Float_t fTOFb  ;              //stohastic term of TOF resolution 
-  Float_t fCellNonLineaityA ;   //Amp of cel non-linearity
-  Float_t fCellNonLineaityB ;   //Energy scale of cel non-linearity
-  Float_t fCellNonLineaityC ;   //Overall calibration
+  Float_t  fBirks ;                //Birk's constant
+  Float_t  fAttenuationLength ;
 
-  //Parameters used for RAW embedding
-  Bool_t  fEMCSubtractPedestals;   // true if pedestal should be subtracted (in non-ZS)
-  Int_t   fGlobalAltroOffset ;     // Offset used in ALTRO chips in SZ runs
-  Int_t   fGlobalAltroThreshold ;  // Threshold used in ALTRO chips in SZ runs
-  Float_t fEMCSampleQualityCut;    // Cut on pulse shape fit quality
+  
+  //Parameters used in electronic noise calculation and thresholds (IlcPVBARDigitizer)
+  Float_t fSiPMPDE;             //SiPM Photon Detection Efficiency
+  Float_t fSiPMPixels;         //Number of pixels in a SiPM
+  Float_t fCollectEff;         //geometric collection efficiency
+  Float_t fSiPMNoise;          //RMS of SiPM noise (shot noise)
+  Float_t fElectronicGain;     //Electronic Gain
+  Float_t fConversionFactor;   //factor to convert number of p.e. in ADC counts
+  Float_t fENF;                // Excess Noise Factor
+  Float_t fDigitsThreshold ;   //minimal energy to keep digit 
+  Float_t fPrimaryThreshold ;  //Minimal number of photons to assign primary particle index to sdigit
+  Float_t fADCchannel ;        //width of ADC channel in GeV
+  Int_t   fADCbits ;           //ADC bits
+  Float_t fTOFa  ;             //constant term of TOF resolution 
+  Float_t fTOFb  ;             //stohastic term of TOF resolution 
+  Float_t fCellNonLinearityA ; //Amp of cel non-linearity
+  Float_t fCellNonLinearityB ; //Energy scale of cel non-linearity
+  Float_t fCellNonLinearityC ; //Overall calibration
 
-  //CPV parameters
-  Float_t fADCpedestalCpv ;    //Pedestal value
-  Float_t fADCchanelCpv ;      //ADC channel width
-  Float_t fCPVNoise ;          //RMS of CPV noise 
-  Float_t fCPVDigitThreshold ; //Minimal energy to keep digit 
-  Int_t   fNADCcpv ;           //Max number of channels in CPV ADC
  
   Bool_t fDStream[10] ;   //Mark mixing stream contains digits or SDigits
   Bool_t fDigitizeE ;     //Use energy digitization in simulation or left to Digits2Raw()
-  Bool_t fCellNonLineaityOn ;  //Model scintillator non-linearity in IlcPVBARDigitizer
+  Bool_t fCellNonLinearityOn ;  //Model scintillator non-linearity in IlcPVBARDigitizer
   
   static IlcPVBARSimParam * fgSimParam ; // pointer to the unique instance of the class
 
