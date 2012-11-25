@@ -26,12 +26,11 @@ class IlcPVBARHit : public IlcHit {
   
  public:
   
-  IlcPVBARHit() : fId(0),fELOS(0),fTime(0), fTPE(0), fTotalNpe(0) {
+  IlcPVBARHit() : fId(0),fELOS(0),fTime(0),fNPhotons(0.),fDistFromLowerZ(0.) {
     // default ctor 
   }
   IlcPVBARHit(const IlcPVBARHit & hit) ; 
   IlcPVBARHit(Int_t shunt, Int_t tracknumber, Int_t id, Float_t *hits);
-  IlcPVBARHit(Int_t shunt, Int_t tracknumber, Int_t id, Float_t *hits, Float_t *TotalNpe);
   virtual ~IlcPVBARHit(void) {
     // dtor 
   }  
@@ -54,13 +53,14 @@ class IlcPVBARHit : public IlcHit {
     return fTime ;
   }
 
-  // Lead glass arrays and variables
-  Int_t  GetPeArrayLength(void) const {
-    return fTPE;          // Array length of total pe
+  Float_t GetNPhotons(void) const { 
+    // return the number of photons produced
+    return fNPhotons ; 
   }
 
-  Float_t *GetTotalNpe(void)  {
-    return fTotalNpe ;  //Contains the sum of Npe 
+  Float_t GetDistFromLowerZ(void)     const {
+    // returns the distance of the hit production from the lower z edge of the PVBAR tile of the first energy deposition
+    return fDistFromLowerZ ;
   }
 
   Bool_t operator == (IlcPVBARHit const &rValue) const ;
@@ -72,17 +72,12 @@ private:
 
 private:
 
-  Int_t          fId ;        // Absolute Id number of PVBAR Xtal or PPSD pad
-  Float_t        fELOS ;      // Energy deposited
-  Float_t        fTime ;      // Time of the energy deposition
+  Int_t     fId ;        // Absolute Id number of PVBAR module
+  Float_t   fELOS ;      // Energy deposited
+  Float_t   fTime ;      // Time of the energy deposition
+  Float_t   fNPhotons ;  // Number of photons produced
+  Float_t   fDistFromLowerZ ; // Distance of the hit production from the lower z edge of the scintillator tile
 
-  Int_t   fTPE;
-// TotalNpe[0] = total pe generated
-// TotalNpe[1] = total pe lead glass front
-// TotalNpe[2] = total pe lead glass back
-// TotalNpe[3] = total pe WLS or scint front
-// TotalNpe[4] = total pe WLS or scint back
-  Float_t *fTotalNpe ;  //[fTPE] Contains the sum of photoelectrons
 
   ClassDef(IlcPVBARHit,1)  // Hit for PVBAR
 

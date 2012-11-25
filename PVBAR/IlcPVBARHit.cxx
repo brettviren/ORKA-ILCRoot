@@ -24,6 +24,7 @@
 //*-- Author: Maxime Volkov (RRC KI) & Yves Schutz (SUBATECH) & Dmitri Peressounko (RRC KI & SUBATECH)
 
 // --- ROOT system ---
+#include <TMath.h>
 
 // --- Standard library ---
 
@@ -34,18 +35,14 @@ ClassImp(IlcPVBARHit)
   
   //____________________________________________________________________________
 IlcPVBARHit::IlcPVBARHit(const IlcPVBARHit & hit) :
-  IlcHit(hit),fId(hit.fId),fELOS(hit.fELOS),fTime(hit.fTime), fTPE(hit.fTPE), fTotalNpe(0)
+  IlcHit(hit),fId(hit.fId),fELOS(hit.fELOS),fTime(hit.fTime),fNPhotons(hit.fNPhotons),fDistFromLowerZ(hit.fDistFromLowerZ)
 {
   // copy ctor
-
-  fTotalNpe = new Float_t[fTPE]; 
-  for(Int_t i=0; i<fTPE; i++)
-    fTotalNpe[i] = hit.fTotalNpe[i];
 } 
 
 //____________________________________________________________________________
 IlcPVBARHit::IlcPVBARHit(Int_t shunt, Int_t track, Int_t id, Float_t *hits) : 
-  IlcHit(shunt, track),fId(0),fELOS(0),fTime(0), fTPE(5), fTotalNpe(0)
+  IlcHit(shunt, track),fId(0),fELOS(0),fTime(0), fNPhotons(0.), fDistFromLowerZ(0)
 {
   //
   // Create a CPV hit object
@@ -57,32 +54,8 @@ IlcPVBARHit::IlcPVBARHit(Int_t shunt, Int_t track, Int_t id, Float_t *hits) :
   fTime       = hits[3] ;
   fId         = id ;
   fELOS       = hits[4] ;
-
-  fTotalNpe = new Float_t[fTPE];
-  for(Int_t i=0; i<fTPE; i++)
-    fTotalNpe[i] = 0.;
-
-}
-
-//____________________________________________________________________________
-IlcPVBARHit::IlcPVBARHit(Int_t shunt, Int_t track, Int_t id, Float_t *hits, Float_t *TotalNpe) : 
-  IlcHit(shunt, track),fId(0),fELOS(0),fTime(0), fTPE(5), fTotalNpe(0)
-{
-  //
-  // Create a CPV hit object
-  //
-  
-  fX          = hits[0] ;
-  fY          = hits[1] ;
-  fZ          = hits[2] ;
-  fTime       = hits[3] ;
-  fId         = id ;
-  fELOS       = hits[4] ;
-
-  fTotalNpe = new Float_t[fTPE];
-  for(Int_t i=0; i<fTPE; i++)
-    fTotalNpe[i] = TotalNpe[i];
-
+  fNPhotons    = hits[5];
+  fDistFromLowerZ = hits[6];
 }
 
 //____________________________________________________________________________
@@ -92,7 +65,7 @@ Bool_t IlcPVBARHit::operator==(IlcPVBARHit const &rValue) const
 
   Bool_t rv = kFALSE ; 
 
-  if ( (fId == rValue.GetId()) && ( fTrack == rValue.GetPrimary() ) )
+  if ( (fId == rValue.GetId()) && ( fTrack == rValue.GetPrimary() ) && ( TMath::Abs(fTime - rValue.GetTime()) < 1.e-12 ) )
     rv = kTRUE;
   
   return rv;
@@ -104,18 +77,17 @@ IlcPVBARHit & IlcPVBARHit::operator = (const IlcPVBARHit &)
   Fatal("operator =", "not implemented");
   return *this;
 }
+
 //____________________________________________________________________________
 IlcPVBARHit IlcPVBARHit::operator+(const IlcPVBARHit &rValue)
 {
   // Add the energy of the hit
   
   fELOS += rValue.GetEnergy() ;
+  fNPhotons += rValue.GetNPhotons();
 
   if(rValue.GetTime() < fTime)
     fTime = rValue.GetTime() ;
-    
-  for(Int_t i=0; i<fTPE; i++)
-    fTotalNpe[i] = rValue.fTotalNpe[i];
 
   return *this;
 
