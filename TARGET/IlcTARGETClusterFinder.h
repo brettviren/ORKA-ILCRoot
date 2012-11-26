@@ -134,10 +134,10 @@ class IlcTARGETClusterFinder :public TObject{
     Int_t              fClusterSize;   //! ClusterSize
     Int_t              fNPeaks;        //! NPeaks  
     // Data members needed to fill IlcCluster objects
-    Float_t fYshift[10000];       // y-shifts of detector local coor. systems 
-    Float_t fZshift[10000];       // z-shifts of detector local coor. systems 
-    Int_t fNdet[10000];           // detector index  
-    Int_t fNlayer[10000];         // detector layer
+    Float_t fYshift[100];       // y-shifts of detector local coor. systems 
+    Float_t fZshift[100];       // z-shifts of detector local coor. systems 
+    Int_t fNdet[100];           // detector index  
+    Int_t fNlayer[100];         // detector layer
 
 
     ClassDef(IlcTARGETClusterFinder,6) //Class for clustering and reconstruction of space points

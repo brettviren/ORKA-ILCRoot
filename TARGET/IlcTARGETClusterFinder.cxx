@@ -39,6 +39,7 @@ fNdigits(0),
 fDetTypeRec(0),
 fClusters(0),
 fNRawClusters(0),
+fMap(0),
 fNperMax(0),
 fDeclusterFlag(0),
 fClusterSize(0),
@@ -51,6 +52,13 @@ fNPeaks(-1){
     // Return:
     //   A default constructed IlcTARGETCulsterFinder
     fMap=new TObjArray(100);
+    for(Int_t i=0; i<100; i++){
+      fYshift[i] = 0.;
+      fZshift[i] = 0.;
+      fNdet[i]=0;
+      fNlayer[i]=0;
+  }
+
 }
 //----------------------------------------------------------------------
 IlcTARGETClusterFinder::IlcTARGETClusterFinder(IlcTARGETDetTypeRec* dettyp):
@@ -61,6 +69,7 @@ fDigits(0),
 fNdigits(0),
 fClusters(0),
 fNRawClusters(0),
+fMap(0),
 fNperMax(0),
 fDeclusterFlag(0),
 fClusterSize(0),
@@ -91,6 +100,7 @@ fNdigits(0),
 fDetTypeRec(dettyp),
 fClusters(0),
 fNRawClusters(0),
+fMap(0),
 fNperMax(0),
 fDeclusterFlag(0),
 fClusterSize(0),
@@ -158,8 +168,8 @@ void IlcTARGETClusterFinder::InitGeometry(){
     return;
   }
   Int_t mmax=fDetTypeRec->GetTARGETgeom()->GetIndexMax();
-  if (mmax>8752) {//Dan Endcap
-    Fatal("IlcTARGETClusterFinder","Too many TARGET subdetectors !"); 
+  if (mmax>100) {
+    Fatal("IlcTARGETClusterFinder",Form("Too many TARGET subdetectors! Max val=%d",mmax)); 
   }
   Int_t m;
   for (m=0; m<mmax; m++) {
