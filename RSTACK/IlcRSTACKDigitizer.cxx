@@ -437,12 +437,12 @@ void IlcRSTACKDigitizer::Digitize(Int_t event)
       digit = static_cast<IlcRSTACKDigit*>( digits->At(i) ) ;
       // digit->SetEnergy(ceil(digit->GetEnergy()/adcW)) ;
 
-      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
-      digit->SetAmp(TMath::Ceil(Amp/adcW)) ;
+//       Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
+//       digit->SetAmp(TMath::Ceil(Amp/adcW)) ;
       
       Float_t NPE[2];
       for(Int_t idx=0; idx<2; idx++)
-	NPE[idx] = TMath::Min(1<<fADCbits, TMath::CeilNint((digit->GetNPE()[idx] * ConversionFactor)/adcW));
+	NPE[idx] = TMath::Min((ULong64_t)(1<<fADCbits), (ULong64_t)((digit->GetNPE()[idx] * ConversionFactor)/adcW + 0.5) );
 
       digit->SetNPE(NPE);
 
