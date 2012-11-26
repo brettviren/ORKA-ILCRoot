@@ -42,9 +42,9 @@ public:
   Double_t *fZ1pitchSPD,*fZ2pitchSPD;    //pixel sizes in Z
   Double_t *fHwSPD;        //half width of the SPD detector
   Double_t *fHlSPD;        //half length of the SPD detector
-  Double_t fXSPD[32][100000];    //X-coordinates of pixel centers era Double_t fYSPD[13][10000]
-  Double_t fYSPD[32][100000];    //Y-coordinates of pixel centers era Double_t fYSPD[13][10000]
-  Double_t fZSPD[32][100000];    //Z-coordinates of pixel centers era Double_t fZSPD[13][10000]
+  //Double_t fXSPD[22][100];    //X-coordinates of pixel centers (not used)
+  Double_t fYSPD[22][100];    //Y-coordinates of pixel centers
+  Double_t fZSPD[22][100];    //Z-coordinates of pixel centers
   static IlcBin *fBins;
   static int fMaxNbins;
 

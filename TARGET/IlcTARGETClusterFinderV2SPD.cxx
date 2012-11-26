@@ -144,6 +144,9 @@ IlcTARGETClusterFinderV2SPD::~IlcTARGETClusterFinderV2SPD(){
     fBins=0;
     fMaxNbins=0;
   }
+  
+  delete[] fYSPD;
+  delete[] fZSPD;
 }
 
 void IlcTARGETClusterFinderV2SPD::FindRawClusters(Int_t mod){
@@ -440,7 +443,7 @@ void IlcTARGETClusterFinderV2SPD::FindClustersSPD(Int_t lay,TClonesArray *digits
 //  cout <<"qui invece non va piu!!!"<<endl;
   Int_t ndigits=digits->GetEntriesFast();
   if(!fBins||fMaxNbins<kMAXBIN){
-    if(fBins) delete fBins;
+    if(fBins) delete[] fBins;
     fBins=new IlcBin[kMAXBIN];
     fMaxNbins=kMAXBIN;
   }
