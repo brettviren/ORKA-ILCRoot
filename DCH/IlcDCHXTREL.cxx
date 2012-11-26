@@ -59,7 +59,7 @@ IlcDCHXTREL::IlcDCHXTREL(const char *XTFname ){
 
 IlcDCHXTREL::~IlcDCHXTREL(){
   if(trxtf!=0) { if (trxtf->IsOpen()) {trxtf->Close();} }
-  delete x;
+  delete[] x;
 }
 
 void IlcDCHXTREL::OpenXT(){
