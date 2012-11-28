@@ -2628,7 +2628,7 @@ Double_t maxStep, Bool_t rotateTo, Double_t maxSnp){
     if(rotateTo&&((TMath::Hypot(xyz1[0],xyz1[1])-TMath::Hypot(xyz0[0],xyz0[1]))*
 		  (xToGo-xpos))<0) return kFALSE;
     xyz1[2]+=kEpsilon; // waiting for bug correction in geo
-//     IlcTrackerBase::MeanMaterialBudget(xyz0,xyz1,param);
+    IlcTrackerBase::MeanMaterialBudget(xyz0,xyz1,param);
     if (TMath::Abs(GetSnpAt(x,b)) >= maxSnp) return kFALSE;
     if (!IlcExternalTrackParam::PropagateTo(x,b,false,true))  return kFALSE;
 //     cout<<"After propagate "<<endl;
