@@ -168,7 +168,7 @@ void IlcTARGETClusterFinder::InitGeometry(){
     return;
   }
   Int_t mmax=fDetTypeRec->GetTARGETgeom()->GetIndexMax();
-  if (mmax>100) {
+  if (mmax>300) {
     Fatal("IlcTARGETClusterFinder",Form("Too many TARGET subdetectors! Max val=%d",mmax)); 
   }
   Int_t m;
