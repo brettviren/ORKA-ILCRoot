@@ -943,7 +943,8 @@ void IlcTARGETvORKA::InitIlcTARGETgeom() {
 	geom->CreatMatrix(mod,lay,lad,det,idet[lay-1],trans,rot);
 	
 	if(GetMinorVersion()==1){  //square fiber version
-	  geom->SetTrans(mod,materix.GetTranslation());
+	  Double_t LayTransMat[3] = {materix.GetTranslation()[0], materix.GetTranslation()[1], 0.};
+	  geom->SetTrans(mod,LayTransMat);
 	}
 	else if (GetMinorVersion()==2){  //poligonal version
 	  
