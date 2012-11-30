@@ -56,6 +56,7 @@ private:
   Float_t fPrimThreshold ;  // To store primary if NPhotons > threshold
   Float_t fCollectEff;      //geometric collection efficiency
   Float_t fAttenuationLength; //Scintillator attenuation length
+  Float_t fSiPMPDE;           //SiPM Photon Detection Efficiency
   Bool_t  fDefaultInit;     //! Says if the task was created by defaut ctor (only parameters are initialized)
   TString fEventFolderName; // event folder name
   Bool_t  fInit ;           //! tells if initialization went OK, will revent exec if not

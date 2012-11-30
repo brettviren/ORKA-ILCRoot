@@ -89,7 +89,6 @@ private:
   Int_t *fADCValuesHG;              //! Array of high-gain ALTRO samples
   
 
-  Float_t fSiPMPDE;             //SiPM QE
   Float_t fSiPMPixels;         //Number of pixels in a SiPM
   Float_t fSiPMNoise;          //RMS of SiPM noise
   Float_t fElectronicGain;     //Electronic Gain

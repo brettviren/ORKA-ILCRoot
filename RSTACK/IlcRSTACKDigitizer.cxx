@@ -97,7 +97,6 @@ IlcRSTACKDigitizer::IlcRSTACKDigitizer() :
   fPulse(0),
   fADCValuesLG(0),
   fADCValuesHG(0),
-  fSiPMPDE(0.),
   fSiPMPixels(0.),
   fSiPMNoise(0.),
   fElectronicGain(0.),
@@ -131,7 +130,6 @@ IlcRSTACKDigitizer::IlcRSTACKDigitizer(TString ilcrunFileName,
   fPulse(0),
   fADCValuesLG(0),
   fADCValuesHG(0),
-  fSiPMPDE(0.),
   fSiPMPixels(0.),
   fSiPMNoise(0.),
   fElectronicGain(0.),
@@ -167,7 +165,6 @@ IlcRSTACKDigitizer::IlcRSTACKDigitizer(IlcDigitizationInput * rd) :
   fPulse(0),
   fADCValuesLG(0),
   fADCValuesHG(0),
-  fSiPMPDE(0.),
   fSiPMPixels(0.),
   fSiPMNoise(0.),
   fElectronicGain(0.),
@@ -346,8 +343,8 @@ void IlcRSTACKDigitizer::Digitize(Int_t event)
 	if( static_cast<TClonesArray *>(sdigArray->At(i))->GetEntriesFast() > index[i] ){
 	  curSDigit = static_cast<IlcRSTACKDigit*>(static_cast<TClonesArray *>(sdigArray->At(i))->At(index[i])) ; 	
 	  if(IlcRSTACKSimParam::GetInstance()->IsStreamDigits(i)){ //This is Digits Stream
-	    curSDigit->SetEnergy(Calibrate(curSDigit->GetEnergy(),curSDigit->GetId())) ;
-	    curSDigit->SetTime(CalibrateT(curSDigit->GetTime(),curSDigit->GetId())) ;
+	    //curSDigit->SetEnergy(Calibrate(curSDigit->GetEnergy(),curSDigit->GetId())) ;
+	    //curSDigit->SetTime(CalibrateT(curSDigit->GetTime(),curSDigit->GetId())) ;
 	  }
 	}
 	else
@@ -404,7 +401,7 @@ void IlcRSTACKDigitizer::Digitize(Int_t event)
     //apply QE, consider the limited number of SiPM pixels
     Float_t NPE[2];
     for(Int_t idx=0; idx<2; idx++){
-      NPE[idx] = fSiPMPDE*digit->GetNPE()[idx];
+      NPE[idx] = digit->GetNPE()[idx];
       NPE[idx] = TMath::Min(fSiPMPixels, NPE[idx]) ;
       NPE[idx] += gRandom->Gaus(0., TMath::Sqrt(SiPMNoise*SiPMNoise + ((1.-ENF)*NPE[idx])*((1.-ENF)*NPE[idx]))) ;
     }
@@ -431,18 +428,17 @@ void IlcRSTACKDigitizer::Digitize(Int_t event)
   //discretize energy if necessary
   IlcRSTACKSimParam::GetInstance()->SetEDigitizationOn();
   if(IlcRSTACKSimParam::GetInstance()->IsEDigitizationOn()){
-    Float_t adcW = fADCchannel;
+    //Float_t adcW = fADCchannel;
     Float_t ConversionFactor = fConversionFactor;
     for(Int_t i = 0 ; i < nTiles ; i++){                                                                                                       
       digit = static_cast<IlcRSTACKDigit*>( digits->At(i) ) ;
-      // digit->SetEnergy(ceil(digit->GetEnergy()/adcW)) ;
 
-//       Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
-//       digit->SetAmp(TMath::Ceil(Amp/adcW)) ;
+      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])/ConversionFactor;
+      digit->SetAmp(TMath::CeilNint(Amp)) ;
       
       Float_t NPE[2];
       for(Int_t idx=0; idx<2; idx++)
-	NPE[idx] = TMath::Min((ULong64_t)(1<<fADCbits), (ULong64_t)((digit->GetNPE()[idx] * ConversionFactor)/adcW + 0.5) );
+	NPE[idx] = TMath::Min((Double_t)(1<<fADCbits), TMath::Ceil((digit->GetNPE()[idx] / ConversionFactor)) );
 
       digit->SetNPE(NPE);
 
@@ -696,7 +692,6 @@ void IlcRSTACKDigitizer::InitParameters()
 {
   // Set initial parameters Digitizer
 
-  fSiPMPDE = IlcRSTACKSimParam::GetInstance()->GetSiPMPDE()  ;
   fSiPMPixels = IlcRSTACKSimParam::GetInstance()->GetSiPMPixels()  ;        
   fSiPMNoise = IlcRSTACKSimParam::GetInstance()->GetSiPMNoise()  ;         
   fConversionFactor = IlcRSTACKSimParam::GetInstance()->GetConversionFactor()  ;        

@@ -61,6 +61,7 @@ IlcRSTACKSDigitizer::IlcRSTACKSDigitizer() :
   fPrimThreshold(0.f),
   fCollectEff(0.f),
   fAttenuationLength(0.f),
+  fSiPMPDE(0.f),
   fDefaultInit(kTRUE),
   fEventFolderName(""),
   fInit(kFALSE),
@@ -78,6 +79,7 @@ IlcRSTACKSDigitizer::IlcRSTACKSDigitizer(const char * ilcrunFileName,
   fPrimThreshold(0.f),
   fCollectEff(0.f),
   fAttenuationLength(0.f),
+  fSiPMPDE(0.f),
   fDefaultInit(kFALSE),
   fEventFolderName(eventFolderName),
   fInit(kFALSE),
@@ -97,6 +99,7 @@ IlcRSTACKSDigitizer::IlcRSTACKSDigitizer(const IlcRSTACKSDigitizer& sd) :
   fPrimThreshold(sd.fPrimThreshold),
   fCollectEff(sd.fCollectEff),
   fAttenuationLength(sd.fAttenuationLength),
+  fSiPMPDE(sd.fSiPMPDE),
   fDefaultInit(kFALSE),
   fEventFolderName(sd.fEventFolderName),
   fInit(kFALSE),
@@ -142,6 +145,7 @@ void IlcRSTACKSDigitizer::InitParameters()
   fPrimThreshold = IlcRSTACKSimParam::GetInstance()->GetPrimaryThreshold() ; //Minimal number of photons to assign primary particle index to digit
   fCollectEff = IlcRSTACKSimParam::GetInstance()->GetCollectEff(); //geometric collection efficiency
   fAttenuationLength = IlcRSTACKSimParam::GetInstance()->GetAttenuationLength();
+  fSiPMPDE = IlcRSTACKSimParam::GetInstance()->GetSiPMPDE();
   fSDigitsInRun  = 0 ;
 }
 
@@ -223,8 +227,8 @@ void IlcRSTACKSDigitizer::Digitize(Option_t *option)
       NPhotons[1] = 0.5*NHitPhotons * TMath::Exp(-(RSTACKLength -  DistFromLowerZ) / fAttenuationLength);
 
       //Apply geometric collection efficiency
-      NPhotons[0] *= fCollectEff;
-      NPhotons[1] *= fCollectEff;
+      NPhotons[0] *= fCollectEff*fSiPMPDE;
+      NPhotons[1] *= fCollectEff*fSiPMPDE;
       // Assign primary track index number only if contribution is above the threshold 
       if( NHitPhotons > fPrimThreshold )
 	new((*sdigits)[nSdigits]) IlcRSTACKDigit(hit->GetPrimary(),hit->GetId(), hit->GetEnergy(), NPhotons, hit->GetTime()) ;
@@ -292,7 +296,7 @@ Bool_t IlcRSTACKSDigitizer::operator==( IlcRSTACKSDigitizer const &sd )const
   // Equal operator.
   // SDititizers are equal if their threshold, geometric collection efficiency, and attenuation length are equal
 
-  if(fPrimThreshold==sd.fPrimThreshold && fCollectEff==sd.fCollectEff && fAttenuationLength==sd.fAttenuationLength)
+  if(fPrimThreshold==sd.fPrimThreshold && fCollectEff==sd.fCollectEff && fAttenuationLength==sd.fAttenuationLength && fSiPMPDE==sd.fSiPMPDE )
     return kTRUE ;
   else
     return kFALSE ;
