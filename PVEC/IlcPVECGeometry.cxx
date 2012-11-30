@@ -198,7 +198,7 @@ Bool_t IlcPVECGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
   Int_t NXtalPhi[nLay];
   Int_t NXtalInModule=0;
   for(Int_t iLay=0; iLay<nLay; iLay++){
-    NXtalPhi[iLay] = fPVECNXtalPhi[iLay+1];
+    NXtalPhi[iLay] = fPVECNXtalPhi[iLay];
     NXtalInModule += NXtalPhi[iLay];
   }
 
@@ -248,7 +248,7 @@ Bool_t IlcPVECGeometry::RelToAbsNumbering(const Int_t * relid, Int_t &  absId) c
   Int_t NXtalPhi[nLay];
   Int_t NXtalInModule=0;
   for(Int_t iLay=0; iLay<nLay; iLay++){
-    NXtalPhi[iLay] = fPVECNXtalPhi[iLay+1];
+    NXtalPhi[iLay] = fPVECNXtalPhi[iLay];
     NXtalInModule += NXtalPhi[iLay];
   }
 
