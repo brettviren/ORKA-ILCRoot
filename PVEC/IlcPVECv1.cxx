@@ -235,7 +235,7 @@ void IlcPVECv1::StepManager(void)
       //*************************************************************
 
 
-      Float_t ScintLightFactor = 600.*1.e3; // 600 photons/MeV  //FIXME
+      Float_t ScintLightFactor = 54.*1.e6; // 54 photons/keV  //FIXME
       Float_t lightYield = gRandom->Poisson(ScintLightFactor * lostenergy) ;  //FIXME
       xyzte[4] = lightYield ;
 
