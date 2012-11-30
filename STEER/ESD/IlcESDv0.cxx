@@ -97,7 +97,7 @@ IlcESDv0::IlcESDv0() :
     fPosCov[i]= 0.;
   }
 
-  for (Int_t i=0;i<6;i++){fClusters[0][i]=0; fClusters[1][i]=0;}
+  for (Int_t i=0;i<38;i++){fClusters[0][i]=0; fClusters[1][i]=0;}
   fNormDCAPrim[0]=fNormDCAPrim[1]=0;
   for (Int_t i=0;i<3;i++){fAngle[i]=0;}
   for (Int_t i=0;i<4;i++){fCausality[i]=0;}
@@ -161,7 +161,7 @@ IlcESDv0::IlcESDv0(const IlcESDv0& v0) :
   for (Int_t i=0; i<2; i++) {
     fNormDCAPrim[i]=v0.fNormDCAPrim[i];
   }
-  for (Int_t i=0;i<6;i++){
+  for (Int_t i=0;i<38;i++){
       fClusters[0][i]=v0.fClusters[0][i]; 
       fClusters[1][i]=v0.fClusters[1][i];
   }
@@ -265,7 +265,7 @@ IlcESDv0::IlcESDv0(const IlcExternalTrackParam &t1, Int_t i1,
   fNmom[0]=px1; fNmom[1]=py1; fNmom[2]=pz1; 
   fPmom[0]=px2; fPmom[1]=py2; fPmom[2]=pz2;
 
-  for (Int_t i=0;i<6;i++){fClusters[0][i]=0; fClusters[1][i]=0;}
+  for (Int_t i=0;i<38;i++){fClusters[0][i]=0; fClusters[1][i]=0;}
   fNormDCAPrim[0]=fNormDCAPrim[1]=0;
   for (Int_t i=0;i<3;i++){fAngle[i]=0;}
   for (Int_t i=0;i<4;i++){fCausality[i]=0;}
@@ -311,7 +311,7 @@ IlcESDv0& IlcESDv0::operator=(const IlcESDv0 &v0)
   for (Int_t i=0; i<2; i++) {
     fNormDCAPrim[i]=v0.fNormDCAPrim[i];
   }
-  for (Int_t i=0;i<6;i++){
+  for (Int_t i=0;i<38;i++){
       fClusters[0][i]=v0.fClusters[0][i]; 
       fClusters[1][i]=v0.fClusters[1][i];
   }
@@ -770,8 +770,8 @@ void  IlcESDv0::SetClusters(const Int_t *clp, const Int_t *clm)
   //
   // Set its clusters indexes
   //
-  for (Int_t i=0;i<6;i++) fClusters[0][i] = clp[i]; 
-  for (Int_t i=0;i<6;i++) fClusters[1][i] = clm[i]; 
+  for (Int_t i=0;i<38;i++) fClusters[0][i] = clp[i]; 
+  for (Int_t i=0;i<38;i++) fClusters[1][i] = clm[i]; 
 }
 
 

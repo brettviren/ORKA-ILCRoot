@@ -184,7 +184,7 @@ protected:
 
 
   Int_t fPdgCode;             // reconstructed V0's type (PDG code)
-  Int_t fClusters[2][6];      //! its clusters CKBrev  
+  Int_t fClusters[2][38];      //! its clusters CKBrev  
   Int_t fNidx;                // index of the negative daughter
   Int_t fPidx;                // index of the positive daughter
 
