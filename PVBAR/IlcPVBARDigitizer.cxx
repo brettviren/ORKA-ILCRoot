@@ -319,7 +319,7 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
 // // // //     }
 // // // //   }
 
-  Int_t nEMC = geom->GetNTotalElements(); //FIXME
+  Int_t nEMC = geom->GetNTotalElements()*2; //FIXME
   
   Int_t absID ;
   
@@ -426,8 +426,8 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
   	  if( static_cast<TClonesArray *>(sdigArray->At(i))->GetEntriesFast() > index[i] ){
   	    curSDigit = static_cast<IlcPVBARDigit*>(static_cast<TClonesArray *>(sdigArray->At(i))->At(index[i])) ; 	
             if(IlcPVBARSimParam::GetInstance()->IsStreamDigits(i)){ //This is Digits Stream
-              curSDigit->SetEnergy(Calibrate(curSDigit->GetEnergy(),curSDigit->GetId())) ;
-              curSDigit->SetTime(CalibrateT(curSDigit->GetTime(),curSDigit->GetId())) ;
+              //curSDigit->SetEnergy(Calibrate(curSDigit->GetEnergy(),curSDigit->GetId())) ;
+              //curSDigit->SetTime(CalibrateT(curSDigit->GetTime(),curSDigit->GetId())) ;
             }
           }
 	  else
@@ -508,18 +508,18 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
   //distretize energy if necessary
   IlcPVBARSimParam::GetInstance()->SetEDigitizationOn();
   if(IlcPVBARSimParam::GetInstance()->IsEDigitizationOn()){
-    Float_t adcW=fADCchannel ;
+//     Float_t adcW=fADCchannel ;
     Float_t ConversionFactor = fConversionFactor;
     for(Int_t i = 0 ; i < nEMC ; i++){                                                                                                       
       digit = static_cast<IlcPVBARDigit*>( digits->At(i) ) ;
 //       digit->SetEnergy(adcW*ceil(digit->GetEnergy()/adcW)) ;
 
-//       Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
-//       digit->SetAmp(TMath::Ceil(Amp/adcW)) ;
+      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])/ConversionFactor;
+      digit->SetAmp(TMath::CeilNint(Amp)) ;
       
       Float_t NPE[4];
       for(Int_t idx=0; idx<4; idx++)
-	NPE[idx] = TMath::Min( (ULong64_t)(1<<fADCbits), (ULong64_t)((digit->GetNPE()[idx] * ConversionFactor)/adcW + 0.5) );
+	NPE[idx] = TMath::Min((Double_t)(1<<fADCbits), TMath::Ceil((digit->GetNPE()[idx] / ConversionFactor)) );
 
       digit->SetNPE(NPE);
 
