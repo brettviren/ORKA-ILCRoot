@@ -153,7 +153,7 @@ void IlcPVBARGeometry::Init(void)
 
   fNTotalElements=0;
   for(Int_t idx=0; idx<fPVBARNSubSect; idx++)
-    fNTotalElements += fPVBARNSectorsPhi[idx]*fNTilesPerSubSector;
+    fNTotalElements += fPVBARNSectorsPhi[idx]/* *fNTilesPerSubSector*/;
 
 }
 
@@ -280,9 +280,11 @@ Bool_t IlcPVBARGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
   
   Bool_t rv  = kTRUE ;
 
+  Int_t NTilesPerSubSector = 1;//GetNTilesPerSubSector();
+
   Int_t TotalSect=0;
   for(Int_t idx=0; idx<GetPVBARNSubSect(); idx++)
-    TotalSect += GetPVBARNSectorsPhi()[idx]*GetNTilesPerSubSector();
+    TotalSect += GetPVBARNSectorsPhi()[idx]*NTilesPerSubSector;
   
   relid[3] = 0;
   
@@ -292,15 +294,15 @@ Bool_t IlcPVBARGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
   }
 
   Int_t SubSect=1;
-  while(absId>GetPVBARNSectorsPhi()[SubSect-1]*GetNTilesPerSubSector()){
-    absId -= GetPVBARNSectorsPhi()[SubSect-1]*GetNTilesPerSubSector();
+  while(absId>GetPVBARNSectorsPhi()[SubSect-1]*NTilesPerSubSector){
+    absId -= GetPVBARNSectorsPhi()[SubSect-1]*NTilesPerSubSector;
     SubSect++;
   }
   relid[0] = SubSect;
 
   Int_t Sect=1;
-  while(absId>GetNTilesPerSubSector()){
-    absId -= GetNTilesPerSubSector();
+  while(absId>NTilesPerSubSector){
+    absId -= NTilesPerSubSector;
     Sect++;
   }
   relid[1] = Sect;
@@ -321,19 +323,20 @@ Bool_t IlcPVBARGeometry::RelToAbsNumbering(const Int_t * relid, Int_t &  absId) 
   //  relid[3] = tile type: 0 Cer; 1 Sci
 
   Bool_t rv = kTRUE ;
+  Int_t NTilesPerSubSector = 1;//GetNTilesPerSubSector();
 
   absId = 0;
   for(Int_t idx=0; idx<relid[0]-1; idx++)
-    absId += GetPVBARNSectorsPhi()[idx]*GetNTilesPerSubSector();
+    absId += GetPVBARNSectorsPhi()[idx]*NTilesPerSubSector;
 
-  for(Int_t idx=0; idx<relid[1]-1; idx++)
-    absId += GetNTilesPerSubSector();
+  for(Int_t idx=0; idx<relid[1]/*-1*/; idx++)
+    absId += NTilesPerSubSector;
 
-  absId += relid[2];
+//   absId += relid[2];
   
   if(relid[3])
     for(Int_t idx=0; idx<GetPVBARNSubSect(); idx++)
-      absId += GetPVBARNSectorsPhi()[idx]*GetNTilesPerSubSector();
+      absId += GetPVBARNSectorsPhi()[idx]*NTilesPerSubSector;
  
   return rv;
 
