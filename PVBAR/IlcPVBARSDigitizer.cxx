@@ -77,6 +77,7 @@ IlcPVBARSDigitizer::IlcPVBARSDigitizer() :
   fPrimThreshold(0.f),
   fCollectEff(0.f),
   fAttenuationLength(0.f),
+  fSiPMPDE(0.f),
   fDefaultInit(kTRUE),
   fEventFolderName(""),
   fInit(kFALSE),
@@ -95,6 +96,7 @@ IlcPVBARSDigitizer::IlcPVBARSDigitizer(const char * ilcrunFileName,
   fPrimThreshold(0.f),
   fCollectEff(0.f),
   fAttenuationLength(0.f),
+  fSiPMPDE(0.f),
   fDefaultInit(kFALSE),
   fEventFolderName(eventFolderName),
   fInit(kFALSE),
@@ -114,6 +116,7 @@ IlcPVBARSDigitizer::IlcPVBARSDigitizer(const IlcPVBARSDigitizer& sd) :
   fPrimThreshold(sd.fPrimThreshold),
   fCollectEff(sd.fCollectEff),
   fAttenuationLength(sd.fAttenuationLength),
+  fSiPMPDE(sd.fSiPMPDE),
   fDefaultInit(kFALSE),
   fEventFolderName(sd.fEventFolderName),
   fInit(kFALSE),
@@ -159,6 +162,7 @@ void IlcPVBARSDigitizer::InitParameters()
   fPrimThreshold = IlcPVBARSimParam::GetInstance()->GetPrimaryThreshold() ; //Minimal number of photons to assign primary particle index to digit
   fCollectEff = IlcPVBARSimParam::GetInstance()->GetCollectEff(); //geometric collection efficiency
   fAttenuationLength = IlcPVBARSimParam::GetInstance()->GetAttenuationLength();
+  fSiPMPDE = IlcPVBARSimParam::GetInstance()->GetSiPMPDE();
   fSDigitsInRun  = 0 ;
 }
 
@@ -248,7 +252,7 @@ void IlcPVBARSDigitizer::Digitize(Option_t *option)
 	Float_t DistFromLowerZ = hit->GetDistFromLowerZ();
 	Float_t PVBARLength = geom->GetPVBARLength();
 	Float_t NHitPhotons = gRandom->Poisson(hit->GetNPhotons());
-	Float_t NPhotons[4];
+	Float_t NPhotons[4] = {0.,0.,0.,0.};
 	//photons on that reach the left end of the scintillator tile
 	NPhotons[2] = 0.5*NHitPhotons * TMath::Exp(-DistFromLowerZ/fAttenuationLength);
 	//photons on that reach the right end of the scintillator tile
@@ -257,8 +261,8 @@ void IlcPVBARSDigitizer::Digitize(Option_t *option)
 	//Apply geometric collection efficiency
 	NPhotons[0] = 0.;
 	NPhotons[1] = 0.;
-	NPhotons[2] *= fCollectEff;
-	NPhotons[3] *= fCollectEff;
+	NPhotons[2] *= fCollectEff*fSiPMPDE;
+	NPhotons[3] *= fCollectEff*fSiPMPDE;
 	// Assign primary number only if contribution is significant
 	
 	if( hit->GetEnergy() > fPrimThreshold*0+1.e-6)
@@ -494,7 +498,7 @@ Bool_t IlcPVBARSDigitizer::operator==( IlcPVBARSDigitizer const &sd )const
   // Equal operator.
   // SDititizers are equal if their pedestal, slope and threshold are equal
 
-  if(fPrimThreshold==sd.fPrimThreshold && fCollectEff==sd.fCollectEff && fAttenuationLength==sd.fAttenuationLength)
+  if(fPrimThreshold==sd.fPrimThreshold && fCollectEff==sd.fCollectEff && fAttenuationLength==sd.fAttenuationLength && fSiPMPDE==sd.fSiPMPDE)
     return kTRUE ;
   else
     return kFALSE ;
