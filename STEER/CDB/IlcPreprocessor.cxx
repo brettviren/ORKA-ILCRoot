@@ -432,7 +432,7 @@ void IlcPreprocessor::AddRunType(const char* runType)
 }
     
 //______________________________________________________________________________________________
-Bool_t IlcPreprocessor::IlcPreprocessor::ProcessRunType()
+Bool_t IlcPreprocessor::ProcessRunType()
 {
 	// searches for the current run type in the list of run types that are processed by this
 	// preprocessor. The list is populated by AddRunType

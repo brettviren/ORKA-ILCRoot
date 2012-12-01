@@ -24,7 +24,13 @@
 #include "IlcMatrixSparse.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h> 
+#ifdef WIN32
+	#include <direct.h>
+	#define PATH_MAX _MAX_PATH
+	#include <CVG.h>
+#else
+	#include <unistd.h>
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

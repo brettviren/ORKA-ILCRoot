@@ -205,8 +205,17 @@
 #include "IlcLHCData.h"
 #include "ARVersion.h"
 #include <RVersion.h>
-#include <unistd.h>
-#include <sys/resource.h>
+#ifdef WIN32
+	#include <direct.h>
+	#define PATH_MAX _MAX_PATH
+	#include "CVG.h"
+//	#include "CVGtypes.h"
+	#include "resource.h"
+#else
+	#include <unistd.h>
+    #include <sys/resource.h>
+#endif
+
 ClassImp(IlcReconstruction)
 
 //_____________________________________________________________________________
@@ -1535,6 +1544,9 @@ void IlcReconstruction::Begin(TTree *)
   // Import ideal TGeo geometry and apply misalignment
   if (!gGeoManager) {
     TString geom(gSystem->DirName(fGIlcFileName));
+#ifdef WIN32
+	if (geom == "") geom += ".";
+#endif
     geom += "/geometry.root";
     IlcGeomManager::LoadGeometry(geom.Data());
     if (!gGeoManager) {
@@ -2122,7 +2134,11 @@ Bool_t IlcReconstruction::ProcessEvent(Int_t iEvent)
     const Double_t kRadius  = 2.8; //something less than the beam pipe radius
 
     TObjArray trkArray;
+#ifdef WIN32
+	UShort_t *selectedIdx = (UShort_t *)malloc(ntracks);
+#else
     UShort_t selectedIdx[ntracks];
+#endif
 
     for (Int_t itrack=0; itrack<ntracks; itrack++){
       const Double_t kMaxStep = 1;   //max step over the material
@@ -2248,11 +2264,18 @@ Bool_t IlcReconstruction::ProcessEvent(Int_t iEvent)
        IlcV0vertexer vtxer;
        // get cuts for V0vertexer from IlcGRPRecoParam
        if (grpRecoParam) {
-	 Int_t nCutsV0vertexer = grpRecoParam->GetVertexerV0NCuts();
-	 Double_t cutsV0vertexer[nCutsV0vertexer];
+		Int_t nCutsV0vertexer = grpRecoParam->GetVertexerV0NCuts();
+#ifdef WIN32
+		Double_t *cutsV0vertexer = (Double_t *)malloc(nCutsV0vertexer);
+#else
+		Double_t cutsV0vertexer[nCutsV0vertexer];
+#endif
 	 grpRecoParam->GetVertexerV0Cuts(cutsV0vertexer);
 	 vtxer.SetCuts(cutsV0vertexer);
-       }
+#ifdef WIN32
+		free(cutsV0vertexer);
+#endif 
+	   }
        vtxer.Tracks2V0vertices(fesd);
        IlcSysInfo::AddStamp(Form("V0Finder_%d",iEvent), 0,0,iEvent); 
 
@@ -2262,14 +2285,25 @@ Bool_t IlcReconstruction::ProcessEvent(Int_t iEvent)
 	  // get cuts for CascadeVertexer from IlcGRPRecoParam
 	  if (grpRecoParam) {
 	    Int_t nCutsCascadeVertexer = grpRecoParam->GetVertexerCascadeNCuts();
+#ifdef WIN32
+		Double_t *cutsCascadeVertexer = (Double_t *)malloc(nCutsCascadeVertexer);
+#else
 	    Double_t cutsCascadeVertexer[nCutsCascadeVertexer];
+#endif
 	    grpRecoParam->GetVertexerCascadeCuts(cutsCascadeVertexer);
 	    cvtxer.SetCuts(cutsCascadeVertexer);
+#ifdef WIN32
+		free(cutsCascadeVertexer);
+#endif 
 	  }
           cvtxer.V0sTracks2CascadeVertices(fesd);
 	  IlcSysInfo::AddStamp(Form("CascadeFinder_%d",iEvent), 0,0,iEvent); 
        }
     }
+#ifdef WIN32
+	//free(selectedIdx);
+	//delete [] selectedIdx;
+#endif
 
     // AdC+FN
 // // // //     if (fReconstructor[4])
@@ -4446,6 +4480,15 @@ void IlcReconstruction::SetStopOnResourcesExcess(Int_t vRSS,Int_t vVMEM)
   const int kKB2MB = 1024;
   const int kInfMem = 9999999;
   //
+//#ifdef WIN32
+//  struct rlimit
+//  {
+//    /* The current (soft) limit.  */
+//    unsigned long rlim_cur;
+//    /* The hard limit.  */
+//    unsigned long rlim_max;
+//  };
+//#endif
   struct rlimit r;
   int pgSize = getpagesize();
   //

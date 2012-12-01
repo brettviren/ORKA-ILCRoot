@@ -64,7 +64,11 @@ public:
   static const TString   GetLabLocalOCDB() { return fgkLabLocalOCDB ; } 
   static const TString   GetLabAliEnOCDB() { return fgkLabAliEnOCDB ; } 
   static DETECTORINDEX_t GetDetIndex(const char * name) ; 
+#ifdef WIN32
+  static const TString   GetDetName(DETECTORINDEX_t det);
+#else
   static const TString   GetDetName(DETECTORINDEX_t det) { return fgDetNames[det] ; }
+#endif
   static const char *    GetDetName(Int_t det) ;
   static const TString   GetGRPPath() { return fgGRPPath ; }  
   ULong_t *              GetQA() { return fQA ; }
@@ -92,7 +96,11 @@ public:
   static       UInt_t    GetOrigHistoKeptBit()        { return fgkOrigHistoKeptBit; }
   //
   static     TASKINDEX_t GetTaskIndex(const char * name) ; 
+#ifdef WIN32
+  static       TString   GetTaskName(UInt_t tsk); 
+#else
   static       TString   GetTaskName(UInt_t tsk) { return fgTaskNames[tsk] ; }
+#endif
   static const char *    GetModeName(MODE_t mode) { return (mode == kSIMMODE || mode == kRECMODE || mode == kQAMODE) ? (fgModeNames[mode]).Data() : "" ; }
   Bool_t                 IsEventSpecieSet(IlcRecoParam::EventSpecie_t es) const 
   {Int_t ibit=0; while(es!=1<<ibit) ++ibit; return fEventSpecies[ibit];}

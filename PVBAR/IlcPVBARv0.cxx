@@ -196,17 +196,28 @@ void IlcPVBARv0::CreateGeometry()
   Int_t NTilesPerSubSector = geom->GetNTilesPerSubSector();
   Double_t PVBARdR = (PVBARTileScintThickness+PVBARTileSF57Thickness)*NTilesPerSubSector;
   const Int_t PVBARNSubSect = geom->GetPVBARNSubSect();
+#ifdef WIN32
+  Int_t *nSect = (Int_t *)malloc(PVBARNSubSect);
+#else
   Int_t nSect[PVBARNSubSect];
+#endif
+
   for(Int_t idx=0; idx<PVBARNSubSect; idx++) nSect[idx] = geom->GetPVBARNSectorsPhi()[idx];
 
 
   TGeoTube *PVBARtube = new TGeoTube(PVBARRmin, PVBARRmax, PVBARLength/2.);
   TGeoVolume *VolPVBARtube = new TGeoVolume("PVBAR_TUBE", PVBARtube, pMedAir);
 
-
+#ifdef WIN32
+  TGeoPgon **PVBARSect = (TGeoPgon **)malloc(PVBARNSubSect);
+  TGeoVolume **VolPVBARSect = (TGeoVolume **)malloc(PVBARNSubSect);
+  TGeoVolume **VolPVBARSubSect = (TGeoVolume **)malloc(PVBARNSubSect);
+#else
   TGeoPgon *PVBARSect[PVBARNSubSect];
   TGeoVolume *VolPVBARSect[PVBARNSubSect];
   TGeoVolume *VolPVBARSubSect[PVBARNSubSect];
+#endif
+
 
   for (Int_t idx = 0; idx<PVBARNSubSect; idx++){
     PVBARSect[idx] = new TGeoPgon(0., 360., nSect[idx], 2);
@@ -255,6 +266,18 @@ void IlcPVBARv0::CreateGeometry()
   }
 
   ilc->AddNode(VolPVBARtube,1);
+
+
+#ifdef WIN32
+	if (!nSect) delete [] nSect;
+	if (!PVBARSect) delete [] PVBARSect;
+	if (!VolPVBARSect) delete [] VolPVBARSect;
+	//free (nSect);		//it crashes ilcroot
+	//free (PVBARSect);
+	//free (VolPVBARSect);
+	//free (VolPVBARSubSect);
+#endif
+
 }
 
 //_____________________________________________________________________________

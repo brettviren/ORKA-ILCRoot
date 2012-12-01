@@ -71,8 +71,13 @@ class IlcExternalTrackParam: public IlcVTrack {
 
   void Set(Double_t xyz[3],Double_t pxpypz[3],Double_t cv[21],Short_t sign);
 
+#ifdef WIN32
+  static void SetMostProbablePt(Double_t pt);
+  static Double_t GetMostProbablePt();
+#else
   static void SetMostProbablePt(Double_t pt) { fgMostProbablePt=pt; }
   static Double_t GetMostProbablePt() { return fgMostProbablePt; }
+#endif
 
   void Reset();
   void ResetCovariance(Double_t s2);
@@ -333,8 +338,17 @@ class IlcExternalTrackParam: public IlcVTrack {
   Double_t             fDir;   // fP[5]- sign of cos(phi)
   Double32_t           fC[15]; // The track parameter covariance matrix
 
-  static Double32_t    fgMostProbablePt; // "Most probable" pt
-                                         // (to be used if Bz=0)
+#ifndef __MAKECINT__
+	#ifdef WIN32
+      __declspec(dllexport) static Double32_t    fgMostProbablePt; // "Most probable" pt 
+	#else
+	static Double32_t    fgMostProbablePt; // "Most probable" pt
+	#endif
+#else
+	static Double32_t    fgMostProbablePt; // "Most probable" pt
+#endif  /*__MAKECINT__*/
+
+	// (to be used if Bz=0)
   static Bool_t        fgUseLogTermMS;   // use log term in Mult.Stattering evaluation
   ClassDef(IlcExternalTrackParam, 8)
 };

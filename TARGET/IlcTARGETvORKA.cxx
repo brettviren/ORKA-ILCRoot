@@ -70,6 +70,12 @@
 #include "IlcTrackReference.h"
 #include "IlcTARGETParam.h"
 
+#ifdef WIN32
+// patch to fix memory overwriting problem in TG4StepManager
+#include "TG4StepManager.h"
+#include "TG4GeometryServices.h"
+#endif
+
 
 #define GEANTGEOMETRY kTRUE
 
@@ -223,8 +229,15 @@ TList *   IlcTARGETvORKA::BuildGeometry2(void){
   Int_t NLadders = Param->GetNLadders();
   Int_t nSections = TMath::Max(NLadders,24);
 
-  TTUBE *ptarget_layer[nLayers];
-  TNode *nNode[nLayers];
+#ifdef WIN32
+		TTUBE **ptarget_layer = (TTUBE **)malloc(nLayers);
+		TNode **nNode = (TNode **)malloc(nLayers);
+#else
+	TTUBE *ptarget_layer[nLayers];
+	TNode *nNode[nLayers];
+#endif
+
+
   for(Int_t iLay=1; iLay<nLayers; iLay++){
     ptarget_layer[iLay] = new TTUBE(Form("starget_layer%02d",iLay), Form("starget_layer%02d",iLay), "void", (iLay-0.5)*LayerThick, (iLay+0.5)*LayerThick, TargetLength/2.);
     ptarget_layer[iLay]->SetNumberOfDivisions(nSections);
@@ -233,7 +246,10 @@ TList *   IlcTARGETvORKA::BuildGeometry2(void){
     nNode[iLay]->SetLineColor(5);
     Nodes->Add(nNode[iLay]);
   }
-  
+#ifdef WIN32
+		free(ptarget_layer);
+		free(nNode);
+#endif    
   return Nodes;
   
 }
@@ -299,6 +315,27 @@ void IlcTARGETvORKA::CreateGeometryV1() {
 
   ilc->AddNode(pTARGETV, 1, mat);
   
+#ifdef WIN32
+	//TGeoPgon **ptarget_layer		= (TGeoPgon **)malloc(nLayers);
+	//TGeoBBox **ptarget_layer2	= (TGeoBBox **)malloc(nLayers);
+	//TGeoCompositeShape **ptarget_layer_cs = (TGeoCompositeShape **)malloc(nLayers);
+	//TGeoVolume **ptarget_layerV	= (TGeoVolume **)malloc(nLayers);
+
+	//TGeoBBox **ptarget_ladder	= (TGeoBBox **)malloc(nLayers);
+	//TGeoVolume **ptarget_ladderV = (TGeoVolume **)malloc(nLayers);
+	//TGeoRotation **rot_layer		= (TGeoRotation **)malloc(nLayers*4);
+	//TGeoCombiTrans **mat_layer	= (TGeoCombiTrans **)malloc(nLayers*4);
+
+	TGeoPgon **ptarget_layer		= new TGeoPgon *[nLayers];
+	TGeoBBox **ptarget_layer2	= new TGeoBBox *[nLayers];
+	TGeoCompositeShape **ptarget_layer_cs = new TGeoCompositeShape *[nLayers];
+	TGeoVolume **ptarget_layerV	= new TGeoVolume *[nLayers];
+
+	TGeoBBox **ptarget_ladder	= new TGeoBBox *[nLayers];
+	TGeoVolume **ptarget_ladderV = new TGeoVolume *[nLayers];
+	TGeoRotation **rot_layer		= new TGeoRotation *[nLayers*4];
+	TGeoCombiTrans **mat_layer	= new TGeoCombiTrans *[nLayers*4];
+#else
   TGeoPgon *ptarget_layer[nLayers];
   TGeoBBox *ptarget_layer2[nLayers];
   TGeoCompositeShape *ptarget_layer_cs[nLayers];
@@ -308,6 +345,7 @@ void IlcTARGETvORKA::CreateGeometryV1() {
   TGeoVolume *ptarget_ladderV[nLayers];
   TGeoRotation *rot_layer[nLayers*4];
   TGeoCombiTrans *mat_layer[nLayers*4];
+#endif 
   
   for(Int_t iLay=0; iLay<nLayers; iLay++){    
     
@@ -394,7 +432,28 @@ void IlcTARGETvORKA::CreateGeometryV1() {
     }
   }
   
-  
+ #ifdef WIN32
+		//free(ptarget_layer);
+		//free(ptarget_layer2);
+		//free(ptarget_layer_cs);
+		//free(ptarget_layerV);
+
+		//free(ptarget_ladder);
+		//free(ptarget_ladderV);
+		//free(rot_layer);
+		//free(mat_layer);
+
+		delete[] ptarget_layer;
+		delete[] ptarget_layer2;
+		delete[] ptarget_layer_cs;
+		delete[] ptarget_layerV;
+
+		delete[] ptarget_ladder;
+		delete[] ptarget_ladderV;
+		delete[] rot_layer;
+		delete[] mat_layer;
+#endif 
+
 }
 
 //______________________________________________________________________
@@ -437,8 +496,13 @@ void IlcTARGETvORKA::CreateGeometryV2() {
 
     ilc->AddNode(pTARGETV, 1, mat);
     
-    TGeoPgon *ptarget_layer[nLayers];
+#ifdef WIN32
+	TGeoPgon **ptarget_layer		= (TGeoPgon **)malloc(nLayers);
+	TGeoVolume **ptarget_layerV	= (TGeoVolume **)malloc(nLayers);
+#else
+	TGeoPgon *ptarget_layer[nLayers];
     TGeoVolume *ptarget_layerV[nLayers];
+#endif 
     
     Int_t iLay=0;
     ptarget_layer[iLay] = new TGeoPgon(Form("target_layer%02d",iLay),phi1,phi2,nSections,2);
@@ -457,6 +521,10 @@ void IlcTARGETvORKA::CreateGeometryV2() {
       pTARGETV->AddNode(ptarget_layerV[iLay], iLay+1);
     }
 
+#ifdef WIN32
+		free(ptarget_layer);
+		free(ptarget_layerV);
+#endif 
 }
 
 
@@ -940,12 +1008,12 @@ void IlcTARGETvORKA::InitIlcTARGETgeom() {
 // 	for (i=0;i<shapePar.GetSize();i++)
 // 	  cout << Form("shapeParF[%d]=%f\n", i, shapeParF[i]);
 	
-	geom->CreatMatrix(mod,lay,lad,det,idet[lay-1],trans,rot);
-	
-	if(GetMinorVersion()==1){  //square fiber version
-	  Double_t LayTransMat[3] = {materix.GetTranslation()[0], materix.GetTranslation()[1], 0.};
-	  geom->SetTrans(mod,LayTransMat);
-	}
+        geom->CreatMatrix(mod,lay,lad,det,idet[lay-1],trans,rot);
+
+        if(GetMinorVersion()==1){  //square fiber version
+          Double_t LayTransMat[3] = {materix.GetTranslation()[0], materix.GetTranslation()[1], 0.};
+          geom->SetTrans(mod,LayTransMat);
+        }
 	else if (GetMinorVersion()==2){  //poligonal version
 	  
 	  Double_t Rlay = (shapePar[6]+shapePar[5])/2.;
@@ -1170,10 +1238,16 @@ void IlcTARGETvORKA::StepManager() {
     static Int_t stat0=0;
     Int_t layer, ladder;
 
-    TString VolumeName;
+
+#ifdef WIN32
+// patch to fix memory overwriting problem in TG4StepManager
+//	TString VolumeName=gMC->CurrentVolName();
+	TString  VolumeName = (TG4StepManager::Instance())->GetCurrentPhysicalVolume()->GetLogicalVolume()->GetName();
+    //cout<< "STEMANAGER FOR GEOMETRY GEANT4 - Target " << VolumeName <<endl;
+#else
+	TString VolumeName;
     VolumeName=gMC->CurrentVolName();
-
-
+#endif
 
     if (!(this->IsActive())) return;
 

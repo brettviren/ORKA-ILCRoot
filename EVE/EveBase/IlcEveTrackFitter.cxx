@@ -27,6 +27,13 @@
 #include <TEveVSDStructs.h>
 #include <TEveManager.h>
 
+#ifdef WIN32
+//#include "IlcEveMagField.h"
+#include <TGeoGlobalMagField.h>
+#include <IlcMagF.h>
+extern "C" Double_t fgDefMagField;
+#endif
+
 
 //==============================================================================
 //==============================================================================
@@ -213,7 +220,16 @@ void IlcEveTrackFitter::FitTrack()
   Double_t cov[15];
   fRieman->GetExternalParameters(r, param, cov);
   // curvature to pt
+#ifdef WIN32
+  //param[4] /= IlcEveMagField::GetField(x, y, z).x  *0.299792458e-2;
+  IlcMagF *field = (IlcMagF*)TGeoGlobalMagField::Instance()->GetField();
+  //Float_t solenoidField = field ? TMath::Abs(field->SolenoidField()) : 1.;
+  Double_t xyz[3]= {x, y, z};
+  Double_t Bz = field->GetBz(xyz);
+  param[4] /= field->GetBz(xyz);
+#else
   param[4] /= TEveTrackPropagator::fgDefMagField*TEveTrackPropagator::fgkB2C;
+#endif
   // sign in tang
   if (param[4] < 0) param[3] = -param[3];
   IlcExternalTrackParam trackParam(r, fAlpha, param, cov);
@@ -221,9 +237,15 @@ void IlcEveTrackFitter::FitTrack()
 
   // make track
   Double_t v0[3];
+#ifdef WIN32
+  trackParam.GetXYZAt(r, Bz, v0);
+  Double_t p0[3];
+  trackParam.GetPxPyPzAt(r, Bz, p0);
+#else
   trackParam.GetXYZAt(r, TEveTrackPropagator::fgDefMagField, v0);
   Double_t p0[3];
   trackParam.GetPxPyPzAt(r, TEveTrackPropagator::fgDefMagField, p0);
+#endif
   TEveRecTrack rc;
   rc.fV.Set(v0);
   rc.fP.Set(p0);

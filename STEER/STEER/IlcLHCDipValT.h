@@ -1,6 +1,10 @@
 #ifndef ILCLHCDIPVALT_H
 #define ILCLHCDIPVALT_H
 
+#ifdef WIN32
+#include <time.h>
+#endif
+
 #include <typeinfo>
 #include <TString.h>
 #include <TObjString.h>

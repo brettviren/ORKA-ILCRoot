@@ -39,6 +39,26 @@ Double_t IlcV0vertexer::fgCPAmin=0.9;  //min cosine of V0's pointing angle
 Double_t IlcV0vertexer::fgRmin=0.2;    //min radius of the fiducial volume
 Double_t IlcV0vertexer::fgRmax=200.;   //max radius of the fiducial volume
 
+#ifdef WIN32
+IlcV0vertexer::IlcV0vertexer() :
+  TObject(),
+  fChi2max(fgChi2max), 
+  fDNmin(fgDNmin),
+  fDPmin(fgDPmin),
+  fDCAmax(fgDCAmax),
+  fCPAmin(fgCPAmin), 
+  fRmin(fgRmin),
+  fRmax(fgRmax) 
+{
+}
+  void IlcV0vertexer::SetCuts(const Double_t cuts[7]) {
+  fChi2max=cuts[0]; 
+  fDNmin=cuts[1];   fDPmin=cuts[2];
+  fDCAmax=cuts[3];  fCPAmin=cuts[4];
+  fRmin=cuts[5];    fRmax=cuts[6]; 
+}
+#endif
+
 Int_t IlcV0vertexer::Tracks2V0vertices(IlcESDEvent *event) {
   //--------------------------------------------------------------------
   //This function reconstructs V0 vertices

@@ -85,7 +85,14 @@ class IlcLog: public TObject
 
   // the following public methods are used by the preprocessor macros 
   // and should not be called directly
+#ifdef WIN32
+  static Bool_t IsDebugEnabled(); 
+  static IlcLog* Instance(); 
+#else
   static Bool_t IsDebugEnabled() {return fgDebugEnabled;}
+  static IlcLog* Instance() {return fgInstance;}
+#endif
+
   static Int_t GetDebugLevel(const char* module, const char* className);
   static void  Message(UInt_t level, const char* message, 
                        const char* module, const char* className,
@@ -145,8 +152,22 @@ class IlcLog: public TObject
 
   enum {kDebugOffset = kDebug-1};
 
-  static IlcLog* fgInstance;                 //! pointer to current instance
-  static Bool_t  fgDebugEnabled;             // flag for debug en-/disabling
+#ifndef __MAKECINT__
+	#ifdef WIN32
+	  __declspec(dllexport) static  IlcLog* fgInstance;                 //! pointer to current instance
+
+	  __declspec(dllexport) static  Bool_t  fgDebugEnabled;             // flag for debug en-/disabling
+	#else
+	  static IlcLog* fgInstance;                 //! pointer to current instance
+
+	  static Bool_t  fgDebugEnabled;             // flag for debug en-/disabling
+	#endif
+#else
+	  static IlcLog* fgInstance;                 //! pointer to current instance
+
+	  static Bool_t  fgDebugEnabled;             // flag for debug en-/disabling
+#endif  /*__MAKECINT__*/
+
 
   UInt_t         fGlobalLogLevel;            // global logging level
   TObjArray      fModuleDebugLevels;         // debug levels for modules

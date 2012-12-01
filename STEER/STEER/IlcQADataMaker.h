@@ -249,6 +249,16 @@ class IlcQADataMaker: public TNamed {
   virtual void   ClonePerTrigClass(IlcQAv1::TASKINDEX_t task) = 0;
   //
   static Int_t   SetEventTrigClasses(const char* triggers);
+#ifdef WIN32
+  static const   TObjArray& GetEventTrigClasses();
+  static TNamed* GetTrigClass(Int_t i);
+  static const char* GetTrigClassName(Int_t i);
+  static TNamed* GetEventTrigClass(Int_t i);
+  static Int_t   GetNEventTrigClasses();
+  static void    ResetEventTrigClasses();
+  static Int_t   GetNTrigClasses();
+  static Bool_t  IsEventTriggerSet();
+#else
   static const   TObjArray& GetEventTrigClasses()                           {return fgEventTrigClasses;}
   static TNamed* GetTrigClass(Int_t i)                                      {return fgTrigClasses ? (TNamed*)fgTrigClasses->At(i) : 0;}
   static const char* GetTrigClassName(Int_t i)                              {return fgTrigClasses ? (i<0||i>=GetNTrigClasses() ? "TriggerBlind":GetTrigClass(i)->GetName()) : 0;}
@@ -257,6 +267,7 @@ class IlcQADataMaker: public TNamed {
   static void    ResetEventTrigClasses()                                    {fgEventTrigClasses.Clear(); fgEventTrigClasses.SetUniqueID(0);}
   static Int_t   GetNTrigClasses()                                          {return fgTrigClasses ? fgTrigClasses->GetEntriesFast() : 0;}
   static Bool_t  IsEventTriggerSet()                                        {return fgEventTrigClasses.GetUniqueID()>0;}
+#endif
   static void    SetCloningRequest(TObjArray* aliases, TObjArray* histos);
   //
   static TObjArray*  GetDataOfTrigClass(TObjArray *  arr,  Int_t cloneID, TObjArray *dest=0);

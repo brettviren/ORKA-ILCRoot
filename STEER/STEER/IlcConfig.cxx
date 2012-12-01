@@ -85,6 +85,12 @@ const TString IlcConfig::fgkPDGFolderName("Constants/DatabasePDG");//folder with
 const TString IlcConfig::fgkGeneratorFolderName("Configuration/Generators");//folder with generators
 const TString IlcConfig::fgkMCFolderName("Configuration/VirtualMC");
 
+//_____________________________________________________________________________
+#ifdef WIN32
+  const TString& IlcConfig::GetDefaultEventFolderName()
+    {return fgkDefaultEventFolderName;}
+#endif
+
 //____________________________________________________________________________
 IlcConfig* IlcConfig::Instance ()
 {

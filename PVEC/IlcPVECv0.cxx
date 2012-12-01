@@ -134,8 +134,14 @@ void IlcPVECv0::CreateGeometry()
   Double_t PVECRmax = geom->GetPVECRmax();
   Double_t PVECLength = geom->GetPVECLength();
   const Int_t nLay = geom->GetPVECNLayers();
+#ifdef WIN32
+  Double_t *LayerThickness		= (Double_t *)malloc(nLay);
+  Int_t *NXtalPhi		= (Int_t *)malloc(nLay);
+#else
   Double_t LayerThickness[nLay];
   Int_t NXtalPhi[nLay];
+#endif 
+
   for(Int_t iLay=0; iLay<nLay; iLay++){
     LayerThickness[iLay] = geom->GetPVECLayerThickness(iLay+1);
     NXtalPhi[iLay] = geom->GetPVECNXtalPhi(iLay+1);
@@ -149,8 +155,14 @@ void IlcPVECv0::CreateGeometry()
   TGeoTube *PVECtube = new TGeoTube(PVECparam[0], PVECparam[1], PVECparam[2]);
   TGeoVolume *VolPVECtube = new TGeoVolume("PVEC_TUBE", PVECtube, Air);
 
+#ifdef WIN32
+	TGeoTube **PVECLayer		= (TGeoTube **)malloc(nLay);
+	TGeoVolume **VolPVECLayer	= (TGeoVolume **)malloc(nLay);
+#else
   TGeoTube *PVECLayer[nLay];
   TGeoVolume *VolPVECLayer[nLay]; 
+#endif 
+
   
   PVECparam[1] = PVECparam[0];
   for(Int_t iLay=0; iLay<nLay; iLay++){
@@ -178,6 +190,16 @@ void IlcPVECv0::CreateGeometry()
   ilc->AddNode(VolPVECtube, 1,mat1);
   ilc->AddNode(VolPVECtube, 2,mat2);
 
+#ifdef WIN32
+		//free(LayerThickness);
+		//free(NXtalPhi);
+		//free(PVECLayer);
+		//free(VolPVECLayer);
+		//delete [] LayerThickness;
+		//delete [] NXtalPhi;
+		//delete [] PVECLayer;
+		//delete [] VolPVECLayer;
+#endif 
 
 
 }

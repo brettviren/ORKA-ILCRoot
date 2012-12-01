@@ -174,8 +174,12 @@ void IlcSysInfo::AddStamp(const char *sname, Int_t id0, Int_t id1, Int_t id2){
   TTimeStamp stamp;
   CpuInfo_t  cpuInfo;
   MemInfo_t  memInfo;
-  ProcInfo_t procInfo;  
+  ProcInfo_t procInfo;
+#ifdef WIN32
+  gSystem->GetCpuInfo(&cpuInfo, 100);		// it likes to crash in windows if time sample is too small
+#else
   gSystem->GetCpuInfo(&cpuInfo, 10);
+#endif
   gSystem->GetMemInfo(&memInfo);
   gSystem->GetProcInfo(&procInfo);
   //  procInfo.fMemVirtual/=1024;  //size in MBy

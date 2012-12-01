@@ -71,6 +71,11 @@ const char* IlcTriggerInput::fgkCTPDetectorName[IlcDAQ::kNDetectors] = {
   "DAQ_TEST",
   "HLT"
 };
+//_______________________________________________________________________
+#ifdef WIN32
+   const char* IlcTriggerInput::CTPDetectorName(Int_t iType) 
+    {return fgkCTPDetectorName[iType];};
+#endif
 
 //_____________________________________________________________________________
   IlcTriggerInput::IlcTriggerInput( TString name, TString det, UChar_t level, Int_t signature, Char_t number ):

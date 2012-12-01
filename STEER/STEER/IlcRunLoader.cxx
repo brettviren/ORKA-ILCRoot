@@ -82,6 +82,10 @@ const TString IlcRunLoader::fgkDefaultKineFileName("Kinematics.root");
 const TString IlcRunLoader::fgkDefaultTrackRefsFileName("TrackRefs.root");
 const TString IlcRunLoader::fgkGIlcName("gIlc");
 const TString IlcRunLoader::fgkDefaultTriggerFileName("Trigger.root");
+//_____________________________________________________________________________
+#ifdef WIN32
+   IlcRunLoader* IlcRunLoader::Instance(){return fgRunLoader;}
+#endif
 /**************************************************************************/
 
 IlcRunLoader::IlcRunLoader():

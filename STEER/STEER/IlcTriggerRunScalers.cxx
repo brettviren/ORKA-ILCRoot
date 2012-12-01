@@ -665,7 +665,11 @@ Bool_t IlcTriggerRunScalers::GetScalerRate(Double_t &rate, Double_t &error, cons
   Double_t time = GetDeltaTime(scalRec1, scalRec2 );
   if (time==0.) return kFALSE;
   rate = (Double_t)scaler/time;
+#ifdef WIN32
+  error = (Double_t)sqrt((double)scaler)/time;
+#else
   error = (Double_t)sqrt(scaler)/time;
+#endif
   return kTRUE;
 }
 //_____________________________________________________________________________
@@ -684,7 +688,11 @@ Bool_t IlcTriggerRunScalers::GetScalerRatePerBC(Double_t &rate, Double_t &error,
   Double_t time = GetDeltaTime(scalRec1, scalRec2 );
   if (time==0.) return kFALSE;
   rate = (Double_t)scaler/time/nBC;
+#ifdef WIN32
+  error = (Double_t)sqrt((double)scaler)/time/nBC;
+#else
   error = (Double_t)sqrt(scaler)/time/nBC;
+#endif
   return kTRUE;
 }
 //_____________________________________________________________________________
@@ -694,7 +702,11 @@ Bool_t IlcTriggerRunScalers::GetClassL2L0(Double_t &l2l0, Double_t &error, const
   ULong64_t l2 = GetDeltaScaler(scalRec1, scalRec2, classIndex, "l2a");
   if (l0!=0) {
     l2l0 = (Double_t)l2/l0;
-    error = (Double_t)sqrt(l2-l2*l2/l0)/l0;
+#ifdef WIN32
+  error = (Double_t)sqrt((double)(l2-l2*l2/l0))/l0;;
+#else
+  error = (Double_t)sqrt(l2-l2*l2/l0)/l0;
+#endif
     return kTRUE;
   }
   return kFALSE;

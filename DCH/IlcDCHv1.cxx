@@ -48,6 +48,12 @@
 #include "IlcDCHv1.h"
 #include "IlcDCHwireposition.h"
 
+#ifdef WIN32
+// patch to fix memory overwriting problem in TG4StepManager
+#include "TG4StepManager.h"
+#include "TG4GeometryServices.h"
+#endif
+
 ClassImp(IlcDCHv1)
  
 //_____________________________________________________________________________
@@ -80,10 +86,19 @@ IlcDCHv1::IlcDCHv1():IlcDCH()
   WSDataBlk = 0x0;
   fHitWiresData =  0x0;
   fHitWires = 0x0;
+#ifdef WIN32test
+  tmpIdSL->Reset();
+  tmpIdRing->Reset();
+  tmpIdAbsRing->Reset();
+  tmpIsSense->Reset();
+  tmpNHits = 0;
+#else
   tmpIdSL = 0x0;
   tmpIdRing = 0x0;
   tmpIdAbsRing = 0x0;
   tmpIsSense = 0x0;
+  tmpNHits = 0;
+#endif
 }
 
 //_____________________________________________________________________________
@@ -118,10 +133,19 @@ IlcDCHv1::IlcDCHv1(const char *name, const char *title)
   WSDataBlk = 0x0;
   fHitWiresData =  0x0;
   fHitWires = 0x0;
+#ifdef WIN32test
+  tmpIdSL->Reset();
+  tmpIdRing->Reset();
+  tmpIdAbsRing->Reset();
+  tmpIsSense->Reset();
+  tmpNHits = 0;
+#else
   tmpIdSL = 0x0;
   tmpIdRing = 0x0;
   tmpIdAbsRing = 0x0;
   tmpIsSense = 0x0;
+  tmpNHits = 0;
+#endif
 
 }
 
@@ -1015,8 +1039,23 @@ void IlcDCHv1::StepManagerFixedStep()
 	}
 
   // Inside a sensitive volume?
+#ifdef WIN32
+  //  TG4GeometryServices* v1=TG4GeometryServices::Instance();
+  //const G4String v2=(TG4StepManager::Instance())->GetCurrentPhysicalVolume()->GetLogicalVolume()->GetName();
+  //const G4String v0=v1->UserVolumeName(v2);
+  //TString v=v1->UserVolumeName(v2);
+  //const TString v3=v1->UserVolumeName(v2);
+  //const char* v4=v1->UserVolumeName(v2);
+  TString  cIdCurrent = (TG4StepManager::Instance())->GetCurrentPhysicalVolume()->GetLogicalVolume()->GetName();
+    //cout<< "STEMANAGER FOR GEOMETRY GEANT4 - DCH " <<cIdCurrent<<endl;
+    //cout<< "TG4StepManager::CurrentVolName() 1: DCH " << (TG4StepManager::Instance())->GetCurrentPhysicalVolume()->GetLogicalVolume()->GetName() <<endl;
+    //cout<< "TG4StepManager::CurrentVolName() 2: DCH " << v2 <<endl;
+    //cout<< "TG4StepManager::CurrentVolName() 3: DCH " << v4 <<endl;
+    //cout<< "TG4StepManager::CurrentVolName() 4: DCH " << v0 <<endl;
+#else
   TString  cIdCurrent = gMC->CurrentVolName();
   //  cout<< gMC->CurrentVolName()<<endl;
+#endif
 
   currenttrk=gIlc->GetMCApp()->GetCurrentTrackNumber();
 

@@ -2225,7 +2225,13 @@ Int_t IlcESDtrackCuts::GetReferenceMultiplicity(const IlcESDEvent* esd, MultEstT
   const Int_t maxid = highestID+1; // used to define bool array for check multiple associations of tracklets to one track. array starts at 0.
   
   // bit mask for esd tracks, to check if multiple tracklets are associated to it
+#ifdef WIN32
+  Bool_t *globalBits		= (Bool_t *)malloc(maxid);
+  Bool_t *pureITSBits		= (Bool_t *)malloc(maxid);
+#else
   Bool_t globalBits[maxid], pureITSBits[maxid];
+#endif 
+
   for(Int_t i=0; i<maxid; i++){ // set all bools to false
       globalBits[i]=kFALSE;
       pureITSBits[i]=kFALSE;
@@ -2339,6 +2345,11 @@ Int_t IlcESDtrackCuts::GetReferenceMultiplicity(const IlcESDEvent* esd, MultEstT
     multiplicityEstimate = tracksITSTPC + tracksITSTPCSA_complementary + trackletsITSTPC_complementary;
   else
     multiplicityEstimate = tracksITSSA + trackletsITSSA_complementary;
+
+#ifdef WIN32
+  free(globalBits);
+  free(pureITSBits);
+#endif
 
   return multiplicityEstimate;
 }

@@ -579,7 +579,11 @@ UInt_t IlcGRPPreprocessor::Process(TMap* valueMap)
 		for(Int_t i = 0; i<IlcDAQ::kNDetectors-2; i++){
 			if ((detectorMask >> i) & 0x1) {
 				TString det = IlcDAQ::OfflineModuleName(i);
+#ifdef WIN32
+				TString detCTPName = IlcTriggerInput::CTPDetectorName(i);
+#else
 				TString detCTPName = IlcTriggerInput::fgkCTPDetectorName[i];
+#endif
 				if (detCTPName == "CTP") {
 					detCTPName="TRG"; // converting according to what is found in DAQ logbook_detectors					
 					Printf("Processing CTP (CTP Detector name %s) --> SKIPPING, CTP does not have any LTU!!!!!!",detCTPName.Data());
@@ -1167,7 +1171,11 @@ UInt_t IlcGRPPreprocessor::ProcessLHCData(IlcGRPObject *grpobj)
 					}
 
 					IlcInfo(Form("Found %d FALSE values for the Data Quality Flag",nFalse));
+#ifdef WIN32
+					Double_t *falses = (Double_t *)malloc(nFalse*2);
+#else
 					Double_t falses[nFalse*2];  // dimensioning this to the maximum possible, as if each false value was followed by a true one --> the false periods correspond to the number of falses
+#endif
 
 					Int_t iDataQuality = indexDataQuality;
 					if (nFalse > 0){
@@ -1223,6 +1231,9 @@ UInt_t IlcGRPPreprocessor::ProcessLHCData(IlcGRPObject *grpobj)
 						grpobj->SetNFalseDataQualityFlag(iFalse);
 						grpobj->SetFalseDataQualityFlagPeriods(falses);
 					}
+#ifdef WIN32
+	free(falses);
+#endif
 				}
 			}
 			delete dataQualityArray;

@@ -54,8 +54,8 @@ public:
   void SetDebug(Int_t debug){ fDebug = debug;}
   void FindKinks(TObjArray * array, IlcESDEvent * esd);
   void FindV0s(TObjArray * array, IlcESD * esd);
-  void UpdateKinkQuilctyM(IlcDCHseed * seed);
-  void UpdateKinkQuilctyD(IlcDCHseed * seed);
+  void UpdateKinkQualityM(IlcDCHseed * seed);
+  void UpdateKinkQualityD(IlcDCHseed * seed);
   Int_t CheckKinkPoint(IlcDCHseed*seed, IlcDCHseed &mother, IlcDCHseed &daughter, IlcESDkink &kink);
   Int_t RefitKink(IlcDCHseed &mother, IlcDCHseed &daughter, IlcESDkink &kink);
   Int_t ReadSeeds(const TFile *in);

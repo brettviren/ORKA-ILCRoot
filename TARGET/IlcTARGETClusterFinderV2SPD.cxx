@@ -35,7 +35,12 @@
 
 ClassImp(IlcTARGETClusterFinderV2SPD)
 
+#ifdef WIN32
+//extern "C" IlcRun *gIlc;
+#else
 extern IlcRun *gIlc;
+#endif
+
 IlcTARGETClusterFinderV2::IlcBin * IlcTARGETClusterFinderV2SPD::fBins=0;
 int IlcTARGETClusterFinderV2SPD::fMaxNbins=0;
 

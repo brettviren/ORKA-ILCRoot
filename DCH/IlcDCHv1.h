@@ -127,10 +127,10 @@ class IlcDCHHitWireStat : public TObject {
       IsSense = new Short_t[0];
     }
     ~IlcDCHHitWireStat()	{
-      if (IdSL) delete IdSL;
-      if (IdRing) delete IdRing;
-      if (IdAbsRing) delete IdAbsRing;
-      if (IsSense) delete IsSense;     
+      if (IdSL) delete[] IdSL;
+      if (IdRing) delete[] IdRing;
+      if (IdAbsRing) delete[] IdAbsRing;
+      if (IsSense) delete[] IsSense;     
     }
 
   public:

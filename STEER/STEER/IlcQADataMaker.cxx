@@ -963,4 +963,32 @@ Int_t IlcQADataMaker::GetEvCountTotal(IlcRecoParam::EventSpecie_t isp, IlcQAv1::
   int ncl = GetNTrigClasses();
   return fEvCountTotal[IlcRecoParam::AConvert(isp)][task*(1+ncl) + (trCl<0||trCl>=ncl ? ncl:trCl)];
 }
+#ifdef WIN32
+//____________________________________________________________________________
+  const TObjArray&  IlcQADataMaker::GetEventTrigClasses()
+  {
+	  return fgEventTrigClasses;
+  }
+//____________________________________________________________________________
+   TNamed* IlcQADataMaker::GetTrigClass(Int_t i)
+   {return fgTrigClasses ? (TNamed*)fgTrigClasses->At(i) : 0;}
+//____________________________________________________________________________
+   const char* IlcQADataMaker::GetTrigClassName(Int_t i)
+   {return fgTrigClasses ? (i<0||i>=GetNTrigClasses() ? "TriggerBlind":GetTrigClass(i)->GetName()) : 0;}
+//____________________________________________________________________________
+   TNamed* IlcQADataMaker::GetEventTrigClass(Int_t i)
+   {return (TNamed*)fgEventTrigClasses.At(i);}
+//____________________________________________________________________________
+   Int_t   IlcQADataMaker::GetNEventTrigClasses()
+   {return fgEventTrigClasses.GetEntriesFast();}
+//____________________________________________________________________________
+   void    IlcQADataMaker::ResetEventTrigClasses()
+   {fgEventTrigClasses.Clear(); fgEventTrigClasses.SetUniqueID(0);}
+//____________________________________________________________________________
+   Int_t   IlcQADataMaker::GetNTrigClasses()
+   {return fgTrigClasses ? fgTrigClasses->GetEntriesFast() : 0;}
+//____________________________________________________________________________
+   Bool_t  IlcQADataMaker::IsEventTriggerSet()
+   {return fgEventTrigClasses.GetUniqueID()>0;}
 
+#endif

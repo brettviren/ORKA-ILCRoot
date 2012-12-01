@@ -54,7 +54,7 @@ extern "C" void g95_runtime_start();
 
 #if defined WIN32 
   extern "C" int __fastflag=0; 
-  extern "C" int _pctype=0; 
+  //extern "C" int _pctype=0; 
   extern "C" int __mb_cur_max=0; 
 #endif 
 

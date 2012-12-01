@@ -41,18 +41,24 @@ class IlcPID : public TObject {
     kAlpha = 13,
     kUnknown = 14
   };
+ #ifdef WIN32
+  static Float_t       ParticleMass(Int_t iType);
+  static Int_t         ParticleCode(Int_t iType);
+#else
   static Float_t       ParticleMass(Int_t iType) {
      if(!fgkParticleMass[0]) Init(); 
      return fgkParticleMass[iType];
   }
+  static Int_t         ParticleCode(Int_t iType) 
+    {return fgkParticleCode[iType];};
+#endif
+
   static const char*   ParticleName(Int_t iType) 
     {return fgkParticleName[iType];};
   static const char*   ParticleShortName(Int_t iType) 
     {return fgkParticleShortName[iType];};
   static const char*   ParticleLatexName(Int_t iType) 
     {return fgkParticleLatexName[iType];};
-  static Int_t         ParticleCode(Int_t iType) 
-    {return fgkParticleCode[iType];};
 
   IlcPID();
   IlcPID(const Double_t* probDensity, Bool_t charged = kTRUE);
@@ -86,11 +92,21 @@ class IlcPID : public TObject {
   Double_t             fProbDensity[kSPECIESN];    // probability densities
   static Double_t      fgPrior[kSPECIESN];         // a priori probabilities
 
+#ifndef __MAKECINT__
+	#ifdef WIN32
+		__declspec(dllexport)       static /*const*/ Float_t fgkParticleMass[kSPECIESN+kSPECIESLN+1]; // particle masses
+		__declspec(dllexport)       static const Int_t   fgkParticleCode[kSPECIESN+kSPECIESLN+1]; // particle codes
+	#else
+		static /*const*/ Float_t fgkParticleMass[kSPECIESN+kSPECIESLN+1]; // particle masses
+		  static const Int_t   fgkParticleCode[kSPECIESN+kSPECIESLN+1]; // particle codes
+	#endif
+#else
   static /*const*/ Float_t fgkParticleMass[kSPECIESN+kSPECIESLN+1]; // particle masses
+#endif  /*__MAKECINT__*/
+
   static const char*   fgkParticleName[kSPECIESN+kSPECIESLN+1]; // particle names
   static const char*   fgkParticleShortName[kSPECIESN+kSPECIESLN+1]; // particle names
   static const char*   fgkParticleLatexName[kSPECIESN+kSPECIESLN+1]; // particle names
-  static const Int_t   fgkParticleCode[kSPECIESN+kSPECIESLN+1]; // particle codes
 
   ClassDef(IlcPID, 2)    // particle id probability densities
 };

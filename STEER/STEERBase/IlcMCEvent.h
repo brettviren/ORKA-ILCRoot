@@ -125,7 +125,11 @@ public:
     virtual void      SetSecondaryOffset(Int_t ioff)  {fSecondaryOffset = ioff;}    
     virtual Bool_t    IsPhysicalPrimary(Int_t i) const;
     virtual Int_t     BgLabelToIndex(Int_t label);
+#ifdef WIN32
+	static Int_t BgLabelOffset(); 
+#else
     static  Int_t     BgLabelOffset() {return fgkBgLabelOffset;}
+#endif
     virtual Bool_t    IsFromBGEvent(Int_t index);
     
     // External particle array
@@ -169,8 +173,18 @@ private:
     Int_t             fPrimaryOffset;    // Offset for primaries
     Int_t             fSecondaryOffset;  // Offset for secondaries
     Bool_t            fExternal;         // True if external particle array
+
+#ifndef __MAKECINT__
+	#ifdef WIN32
+		__declspec(dllexport) static  Int_t  fgkBgLabelOffset;             // flag for debug en-/disabling
+	#else
+		static   Int_t        fgkBgLabelOffset;  // Standard branch name    
+	#endif
+#else
     static   Int_t        fgkBgLabelOffset;  // Standard branch name    
-    mutable  IlcVVertex*  fVertex;           // MC Vertex
+#endif  /*__MAKECINT__*/
+    
+	mutable  IlcVVertex*  fVertex;           // MC Vertex
     Int_t             fNBG;              //! Background particles in current event
     
     ClassDef(IlcMCEvent, 2)              // IlcVEvent realisation for MC data

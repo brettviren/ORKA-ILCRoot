@@ -24,6 +24,12 @@
 //   Origin: Pietro Antonioli, INFN-BO Pietro.Antonioli@cern.ch  //
 //                                                               //
 //-----------------------------------------------------------------
+#ifdef WIN32
+#define CVG_NOVECTORS
+#ifndef CVG_NOVECTORS
+	#include <vector>
+#endif
+#endif
 
 #include <TH1.h>
 
@@ -112,6 +118,25 @@ void IlcPIDCombined::SetPriorDistribution(IlcPID::EParticleType type,TH1F *prior
 
 //-------------------------------------------------------------------------------------------------	
 UInt_t IlcPIDCombined::ComputeProbabilities(const IlcVTrack *track, const IlcPIDResponse *response, Double_t* bayesProbabilities) const {
+#ifdef WIN32
+	#ifdef CVG_NOVECTORS
+	Double_t *pITS = (Double_t *)malloc(fSelectedSpecies);
+	Double_t *pTPC = (Double_t *)malloc(fSelectedSpecies);
+	Double_t *pTRD = (Double_t *)malloc(fSelectedSpecies);
+	Double_t *pTOF = (Double_t *)malloc(fSelectedSpecies);
+	Double_t *pHMPID = (Double_t *)malloc(fSelectedSpecies);
+	Double_t *pEMCAL = (Double_t *)malloc(fSelectedSpecies);
+	Double_t *pPHOS = (Double_t *)malloc(fSelectedSpecies);
+	#else
+	std::vector<Double_t>  pITS[fSelectedSpecies];
+	std::vector<Double_t>  pTPC[fSelectedSpecies];
+	std::vector<Double_t>  pTRD[fSelectedSpecies];
+	std::vector<Double_t>  pTOF[fSelectedSpecies];
+	std::vector<Double_t>  pHMPID[fSelectedSpecies];
+	std::vector<Double_t>  pEMCAL[fSelectedSpecies];
+	std::vector<Double_t>  pPHOS[fSelectedSpecies];
+	#endif
+#else
 	Double_t pITS[fSelectedSpecies];
 	Double_t pTPC[fSelectedSpecies];
 	Double_t pTRD[fSelectedSpecies];
@@ -119,6 +144,7 @@ UInt_t IlcPIDCombined::ComputeProbabilities(const IlcVTrack *track, const IlcPID
 	Double_t pHMPID[fSelectedSpecies];
 	Double_t pEMCAL[fSelectedSpecies];
 	Double_t pPHOS[fSelectedSpecies];
+#endif
 	for (Int_t i=0;i<fSelectedSpecies;i++) {
 	 pITS[i]=1.;
 	 pTPC[i]=1.;
@@ -130,7 +156,15 @@ UInt_t IlcPIDCombined::ComputeProbabilities(const IlcVTrack *track, const IlcPID
 	}
 	UInt_t usedMask=0;
 	IlcPIDResponse::EDetPidStatus status=IlcPIDResponse::kDetNoSignal;
+#ifdef WIN32
+	#ifdef CVG_NOVECTORS
+	Double_t *p = (Double_t *)malloc(fSelectedSpecies);
+	#else
+	std::vector<Double_t>  p[fSelectedSpecies];
+	#endif
+#else
 	Double_t p[fSelectedSpecies];
+#endif
 	memset(p,0,sizeof(Double_t)*fSelectedSpecies);
 
 	// getting probability distributions for selected detectors only
@@ -176,7 +210,15 @@ UInt_t IlcPIDCombined::ComputeProbabilities(const IlcVTrack *track, const IlcPID
 	for (Int_t i =0; i<fSelectedSpecies; i++){
 	  p[i] = pITS[i]*pTPC[i]*pTRD[i]*pTOF[i]*pHMPID[i]*pEMCAL[i]*pPHOS[i];
 	}
+#ifdef WIN32
+	#ifdef CVG_NOVECTORS
+	Double_t *priors = (Double_t *)malloc(fSelectedSpecies);
+	#else
+	std::vector<Double_t>  priors[fSelectedSpecies];
+	#endif
+#else
 	Double_t priors[fSelectedSpecies];
+#endif
 	memset(priors,0,fSelectedSpecies*sizeof(Double_t));
 	if (fEnablePriors){
 	  GetPriors(track,priors,response->GetCurrentCentrality());
@@ -200,6 +242,21 @@ UInt_t IlcPIDCombined::ComputeProbabilities(const IlcVTrack *track, const IlcPID
 	}
 	else { for (Int_t i=0;i<fSelectedSpecies;i++) priors[i]=1.;}
 	ComputeBayesProbabilities(bayesProbabilities,p,priors);
+
+#ifdef WIN32
+	#ifdef CVG_NOVECTORS
+	free (pITS);
+	free (pTPC);
+	free (pTRD);
+	free (pTOF);
+	free (pHMPID);
+	free (pEMCAL);
+	free (pPHOS);
+	free (p);
+	free (priors);
+	#endif
+#endif
+
 	return usedMask;
 }
 

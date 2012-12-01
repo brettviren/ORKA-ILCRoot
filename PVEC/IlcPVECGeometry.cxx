@@ -195,7 +195,13 @@ Bool_t IlcPVECGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
   Bool_t rv  = kTRUE ;
 
   const Int_t nLay = fPVECNLayers;
+
+#ifdef WIN32
+  Int_t *NXtalPhi		= (Int_t *)malloc(nLay);
+#else
   Int_t NXtalPhi[nLay];
+#endif 
+
   Int_t NXtalInModule=0;
   for(Int_t iLay=0; iLay<nLay; iLay++){
     NXtalPhi[iLay] = fPVECNXtalPhi[iLay];
@@ -204,6 +210,9 @@ Bool_t IlcPVECGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
 
   if(absId>2*NXtalInModule){
       rv = kFALSE;
+#ifdef WIN32
+      free(NXtalPhi);
+#endif 
       return rv;
   }
   
@@ -226,6 +235,10 @@ Bool_t IlcPVECGeometry::AbsToRelNumbering(Int_t absId, Int_t * relid) const
   }
  
   relid[2] = absId;
+#ifdef WIN32
+      //free(NXtalPhi);		// it crashes Ilcroot. bad because it is called at every hit
+      //delete [] NXtalPhi;
+#endif 
 
  return rv ;
 
@@ -245,7 +258,11 @@ Bool_t IlcPVECGeometry::RelToAbsNumbering(const Int_t * relid, Int_t &  absId) c
   absId = 0;
   
   const Int_t nLay = fPVECNLayers;
+#ifdef WIN32
+  Int_t *NXtalPhi		= (Int_t *)malloc(nLay);
+#else
   Int_t NXtalPhi[nLay];
+#endif 
   Int_t NXtalInModule=0;
   for(Int_t iLay=0; iLay<nLay; iLay++){
     NXtalPhi[iLay] = fPVECNXtalPhi[iLay];
@@ -261,6 +278,10 @@ Bool_t IlcPVECGeometry::RelToAbsNumbering(const Int_t * relid, Int_t &  absId) c
 
   absId += relid[2];
 //   IlcInfo(Form("relid[2]: %d AbsId:%d ", relid[2], absId));
+#ifdef WIN32
+  //free(NXtalPhi);
+  //delete [] NXtalPhi;
+#endif 
   
   return rv;  
 }

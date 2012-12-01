@@ -32,7 +32,11 @@
 #include "IlcTrackPointArray.h"
 #include "TVectorD.h"
 
+#ifdef WIN32
+R__EXTERN TGeoManager *gGeoManager;
+#else
 extern TGeoManager *gGeoManager;
+#endif
 
 ClassImp(IlcTrackerBase)
 

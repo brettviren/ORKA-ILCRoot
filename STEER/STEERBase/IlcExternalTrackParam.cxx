@@ -44,10 +44,21 @@
 #include "IlcVVertex.h"
 #include "IlcLog.h"
 
+#ifdef WIN32
+#include <CVG.h>
+#endif
+
 ClassImp(IlcExternalTrackParam)
 
 Double32_t IlcExternalTrackParam::fgMostProbablePt=kMostProbablePt;
 Bool_t IlcExternalTrackParam::fgUseLogTermMS = kFALSE;; 
+
+#ifdef WIN32
+  void IlcExternalTrackParam::SetMostProbablePt(Double_t pt)
+	{ fgMostProbablePt=pt; }
+  Double_t IlcExternalTrackParam::GetMostProbablePt()
+	{ return fgMostProbablePt; }
+#endif
 //_____________________________________________________________________________
 IlcExternalTrackParam::IlcExternalTrackParam() :
   IlcVTrack(),

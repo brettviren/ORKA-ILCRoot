@@ -29,7 +29,11 @@ class IlcTARGETVertexerIons : public IlcTARGETVertexer {
   IlcTARGETVertexerIons(TString fn);
   virtual ~IlcTARGETVertexerIons(); // destructor
   virtual IlcESDVertex* FindVertexForCurrentEvent(Int_t event);
+#ifdef WIN32
+  virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*);
+#else
   virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*){ Fatal("FindVertexForCurrentEvent","FindVertexForCurrentEvent(TTree*) not yet implemented\n");}
+#endif
   virtual void FindVertices();
   virtual void PhiFunc(Double_t &x,Double_t &y,Double_t &phi);
   virtual void PrintStatus() const;

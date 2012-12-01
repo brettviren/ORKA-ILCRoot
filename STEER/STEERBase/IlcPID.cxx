@@ -147,6 +147,16 @@ const Int_t IlcPID::fgkParticleCode[IlcPID::kSPECIESN+IlcPID::kSPECIESLN+1] = {
 
 Double_t IlcPID::fgPrior[kSPECIESN] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+//_______________________________________________________________________
+#ifdef WIN32
+   Float_t       IlcPID::ParticleMass(Int_t iType) {
+     if(!fgkParticleMass[0]) Init(); 
+     return fgkParticleMass[iType];
+  }
+   Int_t         IlcPID::ParticleCode(Int_t iType) 
+    {return fgkParticleCode[iType];};
+#endif
+
 
 //_______________________________________________________________________
 IlcPID::IlcPID() :

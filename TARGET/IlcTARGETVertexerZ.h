@@ -29,7 +29,11 @@ class IlcTARGETVertexerZ : public IlcTARGETVertexer {
   // Number of contributors = -2  --> No SPD recpoints
   virtual IlcESDVertex* FindVertexForCurrentEvent(Int_t evnumb);
   virtual void FindVertices();
+#ifdef WIN32
+  virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*);
+#else
   virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*){ Fatal("FindVertexForCurrentEvent","FindVertexForCurrentEvent(TTree*) not yet implemented\n");}
+#endif
   virtual void PrintStatus() const;
   void SetDiffPhiMax(Float_t pm = 0.01){fDiffPhiMax = pm;}
   void ConfigIterations(Int_t noiter=3,Float_t *ptr=0);

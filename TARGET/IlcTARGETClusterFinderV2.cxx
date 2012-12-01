@@ -31,7 +31,11 @@
 
 ClassImp(IlcTARGETClusterFinderV2)
 
+#ifdef WIN32
+//extern "C" IlcRun *gIlc;
+#else
 extern IlcRun *gIlc;
+#endif
 
 IlcTARGETClusterFinderV2::IlcTARGETClusterFinderV2(IlcTARGETDetTypeRec* dettyp):IlcTARGETClusterFinder(dettyp){
 

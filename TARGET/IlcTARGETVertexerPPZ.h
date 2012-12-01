@@ -23,7 +23,13 @@ class IlcTARGETVertexerPPZ : public IlcTARGETVertexer {
   IlcTARGETVertexerPPZ(TString fn, Float_t x0=0., Float_t y0=0.);  // standard constructor 
   virtual ~IlcTARGETVertexerPPZ(); // destructor
   virtual IlcESDVertex* FindVertexForCurrentEvent(Int_t event);
+
+#ifdef WIN32
+  virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*);
+#else
   virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*){ Fatal("FindVertexForCurrentEvent","FindVertexForCurrentEvent(TTree*) not yet implemented\n");}
+#endif
+
   virtual void FindVertices();
   virtual Float_t GetZFound() const {return fZFound;}
   virtual Float_t GetZsig() const {return fZsig;}

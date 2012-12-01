@@ -56,8 +56,13 @@ public:
   TFolder*              GetConstFolder(){return fConstFolder;}
 
   static const TString& GetModulesFolderName(){return fgkModuleFolderName;}
+
+#ifdef WIN32
+  static const TString& GetDefaultEventFolderName();
+#else
   static const TString& GetDefaultEventFolderName()
     {return fgkDefaultEventFolderName;}
+#endif
     
   const TString&        GetDataFolderName() const;//returns name of data folder
 
@@ -69,7 +74,17 @@ private:
   
   static const TString  fgkTopFolderName; //name of top IlcRoot folder
  
+#ifndef __MAKECINT__
+	#ifdef WIN32
+	  __declspec(dllexport) static const TString  fgkDefaultEventFolderName; //name of event folder
+	#else
   static const TString  fgkDefaultEventFolderName; //name of event folder
+	#endif
+#else
+  static const TString  fgkDefaultEventFolderName; //name of event folder
+#endif  /*__MAKECINT__*/
+
+
   static const TString  fgkConstantsFolderName;    //name of constants folder
   
   static const TString  fgkDataFolderName;         //name of data folde

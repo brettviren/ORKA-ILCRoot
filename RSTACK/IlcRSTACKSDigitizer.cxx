@@ -230,7 +230,7 @@ void IlcRSTACKSDigitizer::Digitize(Option_t *option)
       NPhotons[0] *= fCollectEff*fSiPMPDE;
       NPhotons[1] *= fCollectEff*fSiPMPDE;
       // Assign primary track index number only if contribution is above the threshold 
-      if( NHitPhotons > fPrimThreshold )
+      if( (NPhotons[0] > fPrimThreshold) || (NPhotons[1] > fPrimThreshold) )
 	new((*sdigits)[nSdigits]) IlcRSTACKDigit(hit->GetPrimary(),hit->GetId(), hit->GetEnergy(), NPhotons, hit->GetTime()) ;
       else
 	new((*sdigits)[nSdigits]) IlcRSTACKDigit(-1               ,hit->GetId(), hit->GetEnergy(), NPhotons, hit->GetTime()) ;

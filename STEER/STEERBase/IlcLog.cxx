@@ -34,7 +34,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
+#ifdef WIN32
+#include <CVG.h>
+#else
 #include <strings.h>
+#endif
 #include <Riostream.h>
 #include <TError.h>
 #include <TNamed.h>
@@ -51,6 +55,13 @@ ClassImp(IlcLog)
 IlcLog* IlcLog::fgInstance = NULL;
 
 Bool_t IlcLog::fgDebugEnabled = kTRUE;
+//_____________________________________________________________________________
+#ifdef WIN32
+  //static Bool_t IsDebugEnabled() {return IlcLog::fgDebugEnabled;}
+  //static IlcLog* Instance() {return IlcLog::fgInstance;}
+  Bool_t IlcLog::IsDebugEnabled() {return fgDebugEnabled;}
+  IlcLog* IlcLog::Instance() {return fgInstance;}
+#endif
 
 /**
  * get root logger singleton instance
@@ -1136,7 +1147,10 @@ void  IlcLog::PrintString(Int_t type, FILE* stream, const char* format, ...)
     va_list bap;
     R__VA_COPY(bap, ap);
 #else
-#warning definition of R__VA_COPY has disappeared
+	#ifdef WIN32
+	#else
+      #warning definition of R__VA_COPY has disappeared
+	#endif
 #endif //R__VA_COPY
 
     Int_t iResult=0;

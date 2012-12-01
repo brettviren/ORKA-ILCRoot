@@ -63,6 +63,9 @@ class IlcTRDPIDParams : public TNamed{
 	ClassDef(IlcTRDPIDThresholds, 1);
     };
 
+#ifdef WIN32
+ private:
+#endif
     IlcTRDPIDParams &operator=(const IlcTRDPIDParams &);
     static const Double_t kVerySmall;
     TSortedList *fEntries; //

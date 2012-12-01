@@ -35,6 +35,25 @@ public:
   static void GetDefaultCuts(Double_t cuts[8]);
 
 private:
+#ifndef __MAKECINT__
+	#ifdef WIN32
+      __declspec(dllexport) static	  Double_t fgChi2max;   // maximal allowed chi2 
+	  __declspec(dllexport) static	  Double_t fgDV0min;    // min. allowed V0 impact parameter
+	  __declspec(dllexport) static	  Double_t fgMassWin;   // window around the Lambda mass
+	  __declspec(dllexport) static	  Double_t fgDBachMin;  // min. allowed bachelor impact parameter
+	  __declspec(dllexport) static	  Double_t fgDCAmax;    // maximal allowed DCA between the V0 and the track 
+	  __declspec(dllexport) static	  Double_t fgCPAmin;    // minimal allowed cosine of the cascade pointing angle
+	  __declspec(dllexport) static	  Double_t fgRmin, fgRmax;// max & min radii of the fiducial volume
+	#else
+      static	  Double_t fgChi2max;   // maximal allowed chi2 
+	  static	  Double_t fgDV0min;    // min. allowed V0 impact parameter
+	  static	  Double_t fgMassWin;   // window around the Lambda mass
+	  static	  Double_t fgDBachMin;  // min. allowed bachelor impact parameter
+	  static	  Double_t fgDCAmax;    // maximal allowed DCA between the V0 and the track 
+	  static	  Double_t fgCPAmin;    // minimal allowed cosine of the cascade pointing angle
+	  static	  Double_t fgRmin, fgRmax;// max & min radii of the fiducial volume
+	#endif
+#else
   static
   Double_t fgChi2max;   // maximal allowed chi2 
   static
@@ -49,7 +68,8 @@ private:
   Double_t fgCPAmin;    // minimal allowed cosine of the cascade pointing angle
   static
   Double_t fgRmin, fgRmax;// max & min radii of the fiducial volume
-  
+#endif  /*__MAKECINT__*/
+
   Double_t fChi2max;    // maximal allowed chi2 
   Double_t fDV0min;     // min. allowed V0 impact parameter
   Double_t fMassWin;    // window around the Lambda mass
@@ -61,6 +81,8 @@ private:
   ClassDef(IlcCascadeVertexer,3)  // cascade verterxer 
 };
 
+#ifdef WIN32
+#else
 inline IlcCascadeVertexer::IlcCascadeVertexer() :
   TObject(),
   fChi2max(fgChi2max), 
@@ -73,6 +95,7 @@ inline IlcCascadeVertexer::IlcCascadeVertexer() :
   fRmax(fgRmax)
 {
 }
+#endif
 
 inline void IlcCascadeVertexer::SetCuts(const Double_t cuts[8]) {
   fChi2max=cuts[0]; 

@@ -108,8 +108,17 @@ void IlcTARGETParam::Init(Int_t detVersion){
     fSigmaZ.Set(fNlayers);
     fSigmaDe.Set(fNlayers);
     fThrDe.Set(fNlayers);
+
+#ifdef WIN32
+	//Int_t *ladders	= (Int_t *)malloc(fNlayers);
+	//Int_t *dets		= (Int_t *)malloc(fNlayers);
+	Int_t *ladders = new Int_t[fNlayers];
+	Int_t *dets = new Int_t[fNlayers];
+#else
     Int_t ladders[fNlayers];
     Int_t dets[fNlayers];
+#endif 
+
     for (Int_t i=0;i<fNlayers;i++) ladders[i]=fNLadders;
     for (Int_t i=0;i<fNlayers;i++) dets[i]=1;
     fNlad.Set(fNlayers,ladders);//[] Array of the number of ladders/layer(layer)
@@ -130,6 +139,12 @@ void IlcTARGETParam::Init(Int_t detVersion){
     fCouplCol=0.0;
     fCouplRow=0.0;
     fSingleHitPixelEfficiency=0.995;
+#ifdef WIN32
+	//free(ladders);
+	//free(dets);
+    delete [] ladders;
+    delete [] dets;
+#endif 
   }
   else if(detVersion == 2){  //poligonal version
     fLayerThick = 0.5;
@@ -143,8 +158,14 @@ void IlcTARGETParam::Init(Int_t detVersion){
     fSigmaZ.Set(fNlayers);
     fSigmaDe.Set(fNlayers);
     fThrDe.Set(fNlayers);
+#ifdef WIN32
+	Int_t *ladders	= (Int_t *)malloc(fNlayers);
+	Int_t *dets		= (Int_t *)malloc(fNlayers);
+#else
     Int_t ladders[fNlayers];
     Int_t dets[fNlayers];
+#endif 
+
     ladders[0]=1;
     for (Int_t i=1;i<fNlayers;i++) ladders[i]=fNLadders;
     for (Int_t i=0;i<fNlayers;i++) dets[i]=1;
@@ -166,6 +187,13 @@ void IlcTARGETParam::Init(Int_t detVersion){
     fCouplCol=0.0;
     fCouplRow=0.0;
     fSingleHitPixelEfficiency=0.995;
+
+#ifdef WIN32
+	//free(ladders);
+	//free(dets);
+    delete [] ladders;
+    delete [] dets;
+#endif 
     
   }
   else IlcFatal(Form("TARGET version %d doesn't exist", detVersion));

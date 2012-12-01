@@ -47,7 +47,11 @@ public:
 		kRSTACK1=28, kRSTACK2=29,
 		kLastLayer=30};
 
+#ifdef WIN32
+  static TGeoManager* GetGeometry();
+#else
   static TGeoManager* GetGeometry() { return fgGeometry; }
+#endif
 
   static Int_t       LayerSize(Int_t layerId);
   static const char* LayerName(Int_t layerId);

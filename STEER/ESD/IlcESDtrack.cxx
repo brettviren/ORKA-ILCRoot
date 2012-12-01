@@ -2589,10 +2589,21 @@ Double_t b[3], Double_t maxd, IlcExternalTrackParam *cParam) {
 
 
   //--- Could now these lines be removed ? ---
+#ifdef WIN32
+  if (!fCp) delete fCp;
+  fCp=new IlcExternalTrackParam(*this);  
+
+  if (!fCp->Update(p,c)) {
+	  if (!fCp) delete fCp; 
+	  fCp=0; 
+	  return kFALSE;
+  }
+#else
   delete fCp;
   fCp=new IlcExternalTrackParam(*this);  
 
   if (!fCp->Update(p,c)) {delete fCp; fCp=0; return kFALSE;}
+#endif
   //----------------------------------------
 
   fVertexID = vtx->GetID();

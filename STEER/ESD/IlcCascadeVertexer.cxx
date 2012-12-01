@@ -50,6 +50,20 @@ Double_t
 Double_t 
   IlcCascadeVertexer::fgRmax=100.;     //max radius of the fiducial volume
   
+#ifdef WIN32
+IlcCascadeVertexer::IlcCascadeVertexer() :
+  TObject(),
+  fChi2max(fgChi2max), 
+  fDV0min(fgDV0min),
+  fMassWin(fgMassWin),
+  fDBachMin(fgDBachMin),
+  fDCAmax(fgDCAmax),
+  fCPAmin(fgCPAmin), 
+  fRmin(fgRmin),
+  fRmax(fgRmax)
+{
+}
+#endif
 
 Int_t IlcCascadeVertexer::V0sTracks2CascadeVertices(IlcESDEvent *event) {
   //--------------------------------------------------------------------

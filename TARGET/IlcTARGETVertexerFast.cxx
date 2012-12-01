@@ -33,6 +33,14 @@
 /////////////////////////////////////////////////////////////////////////
 ClassImp(IlcTARGETVertexerFast)
 
+ //______________________________________________________________________
+#ifdef WIN32 
+IlcESDVertex* IlcTARGETVertexerFast::FindVertexForCurrentEvent(TTree*)
+{ 
+	Fatal("FindVertexForCurrentEvent","FindVertexForCurrentEvent(TTree*) not yet implemented\n");
+	return 0;
+}
+#endif
 
 
 //______________________________________________________________________

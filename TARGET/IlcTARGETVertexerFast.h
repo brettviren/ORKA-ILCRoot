@@ -21,7 +21,13 @@ class IlcTARGETVertexerFast : public IlcTARGETVertexer {
   IlcTARGETVertexerFast(Double_t *smear);
   virtual ~IlcTARGETVertexerFast(); 
   virtual IlcESDVertex* FindVertexForCurrentEvent(Int_t evnumb);
+
+#ifdef WIN32
+  virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*);
+#else
   virtual IlcESDVertex* FindVertexForCurrentEvent(TTree*){ Fatal("FindVertexForCurrentEvent","FindVertexForCurrentEvent(TTree*) not yet implemented\n");}
+#endif
+
   virtual void FindVertices();
   virtual void PrintStatus() const;
 

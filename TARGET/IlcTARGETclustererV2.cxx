@@ -27,7 +27,11 @@
 
 ClassImp(IlcTARGETclustererV2)
 
+#ifdef WIN32
+//extern "C" IlcRun *gIlc;
+#else
 extern IlcRun *gIlc;
+#endif
 
 IlcTARGETclustererV2::IlcTARGETclustererV2(const IlcTARGETgeom *geom) {
   //------------------------------------------------------------

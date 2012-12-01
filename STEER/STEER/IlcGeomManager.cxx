@@ -2019,4 +2019,11 @@ void IlcGeomManager::ResetPNEntriesLUT()
   }
   //
 }
-  
+#ifdef WIN32
+//_____________________________________________________________________________
+TGeoManager* IlcGeomManager::GetGeometry()
+{ 
+	return fgGeometry; 
+}
+#endif
+ 

@@ -54,7 +54,9 @@
 #include <TH1.h>
 #include <TROOT.h>
 #include <TStopwatch.h>
-
+#ifdef WIN32
+#include <TTimeStamp.h>
+#endif
 #include "IlcAnalysisManager.h"
 #include "IlcAnalysisDataContainer.h"
 #include "IlcAnalysisDataSlot.h"

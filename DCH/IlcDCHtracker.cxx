@@ -51,6 +51,11 @@
 #include "TTreeStream.h"
 #include "IlcAlignObj.h"
 #include "IlcTrackPointArray.h"
+
+#ifdef WIN32
+#include <CVG.h>
+#endif
+
 #include "IlcDCHParam.h"
 #include "IlcDCHwireposition.h"
 
@@ -1447,7 +1452,7 @@ void IlcDCHtracker::RemoveUsed2(TObjArray * arr, Float_t factor1,  Float_t facto
   UnsignClusters();
   //
   Int_t nseed = arr->GetEntriesFast();  
-  Float_t * quilcty = new Float_t[nseed];
+  Float_t * quality = new Float_t[nseed];
   Int_t   * indexes = new Int_t[nseed];
   Int_t good =0;
   //
@@ -1458,30 +1463,30 @@ void IlcDCHtracker::RemoveUsed2(TObjArray * arr, Float_t factor1,  Float_t facto
   for (Int_t i=0; i<nseed; i++) {
     IlcDCHseed *pt=(IlcDCHseed*)arr->UncheckedAt(i);    
     if (!pt){
-      quilcty[i]=-1;
+      quality[i]=-1;
       continue;
     }
     pt->UpdatePoints();    //select first last max dens points
     Float_t * points = pt->GetPoints();
-    if (points[3]<0.8) quilcty[i] =-1;
+    if (points[3]<0.8) quality[i] =-1;
     //
-    quilcty[i] = (points[2]-points[0]+1)*points[3]+
+    quality[i] = (points[2]-points[0]+1)*points[3]+
       pt->GetNumberOfClusters()*(1+0.3*TMath::Prob(pt->GetChi2(),(kUseZCoordinate?2:1)*pt->GetNumberOfClusters()-5));
       //-pt->GetChi2()/((kUseZCoordinate?2:1)*pt->GetNumberOfClusters()-5);
     if(IlcDebugLevelClass()>4){
       CookLabel(pt,0.1);
-      cout<<i<<" "<<quilcty[i]<<" "<<pt->GetNumberOfClusters()<<" densed from "<<points[2]<<" to "<<points[0]
+      cout<<i<<" "<<quality[i]<<" "<<pt->GetNumberOfClusters()<<" densed from "<<points[2]<<" to "<<points[0]
 	  <<" maxdens="<<points[3]<<" index="<<points[1]<<" lbl="<<pt->GetLabel()<<" fake="<<pt->GetFakeRatio()
 	  <<" chi2="<<pt->GetChi2()<<" prob="<<TMath::Prob(pt->GetChi2(),(kUseZCoordinate?2:1)*pt->GetNumberOfClusters()-5)<<endl;
     }
   }
-  TMath::Sort(nseed,quilcty,indexes);
+  TMath::Sort(nseed,quality,indexes);
   //
   //
   for (Int_t itrack=0; itrack<nseed; itrack++) {
     Int_t trackindex = indexes[itrack];
     IlcDCHseed *pt=(IlcDCHseed*)arr->UncheckedAt(trackindex);    
-    if (quilcty[trackindex]<0){
+    if (quality[trackindex]<0){
       if (pt) {
 	delete arr->RemoveAt(trackindex);
       }
@@ -1536,7 +1541,7 @@ void IlcDCHtracker::RemoveUsed2(TObjArray * arr, Float_t factor1,  Float_t facto
     Info("RemoveUsed2","\n*****\nNumber of good tracks after shared removal\t%d\n",fNtracks);
   }
 
-  delete []quilcty;
+  delete []quality;
   delete []indexes;
 }
 
@@ -1802,7 +1807,7 @@ Int_t IlcDCHtracker::RefitInward(IlcESDEvent *event)
     IlcDCHseed * seed = (IlcDCHseed*) fSeeds->UncheckedAt(i);
     if (!seed) continue;
     if (seed->GetKinkIndex(0)>0) {
-      UpdateKinkQuilctyD(seed);  // update quilcty informations for kinks
+      UpdateKinkQualityD(seed);  // update quality informations for kinks
     }else{
       seed->PropagateTo(fParam->GetInnerRadius());
     };
@@ -1864,7 +1869,7 @@ Int_t IlcDCHtracker::PropagateBack(IlcESDEvent *event)
   for (Int_t i=0;i<nseed;i++){
     IlcDCHseed * seed = (IlcDCHseed*) fSeeds->UncheckedAt(i);
     if (!seed) continue;
-    if (seed->GetKinkIndex(0)<0)  UpdateKinkQuilctyM(seed);  // update quilcty informations for kinks
+    if (seed->GetKinkIndex(0)<0)  UpdateKinkQualityM(seed);  // update quality informations for kinks
     seed->UpdatePoints();
     IlcESDtrack *esd=event->GetTrack(i);
     seed->CookdEdx(0.02,0.6);
@@ -4066,17 +4071,17 @@ void  IlcDCHtracker::FindKinks(TObjArray * array, IlcESDEvent *esd)
     }
   }
   //
-  // sort the kinks according quilcty - and refit them towards vertex
+  // sort the kinks according quality - and refit them towards vertex
   //
   Int_t       nkinks    = kinks->GetEntriesFast();
-  Float_t    *quilcty   = new Float_t[nkinks];
+  Float_t    *quality   = new Float_t[nkinks];
   Int_t      *indexes   = new Int_t[nkinks];
   IlcDCHseed *mothers   = new IlcDCHseed[nkinks];
   IlcDCHseed *daughters = new IlcDCHseed[nkinks];
   //
   //
   for (Int_t i=0;i<nkinks;i++){
-    quilcty[i] =100000;
+    quality[i] =100000;
     IlcKink *kink = (IlcKink*)kinks->At(i);
     //
     // refit kinks towards vertex
@@ -4132,9 +4137,9 @@ void  IlcDCHtracker::FindKinks(TObjArray * array, IlcESDEvent *esd)
       delete seed1;            
     }
     //
-    if (kink) quilcty[i] = 160*((0.1+kink->GetDistance())*(2.-kink->GetTPCDensityFactor()))/(sumn+40.);  //the longest -clossest will win
+    if (kink) quality[i] = 160*((0.1+kink->GetDistance())*(2.-kink->GetTPCDensityFactor()))/(sumn+40.);  //the longest -clossest will win
   }
-  TMath::Sort(nkinks,quilcty,indexes,kFALSE);
+  TMath::Sort(nkinks,quality,indexes,kFALSE);
   //
   //remove double find kinks
   //
@@ -4216,7 +4221,7 @@ void  IlcDCHtracker::FindKinks(TObjArray * array, IlcESDEvent *esd)
     kink->SetMultiple(usage[index0],0);
     kink->SetMultiple(usage[index1],1);
     if (kink->GetMultiple()[0]+kink->GetMultiple()[1]>2) continue;
-    if (kink->GetMultiple()[0]+kink->GetMultiple()[1]>0 && quilcty[indexes[i]]>0.2) continue;
+    if (kink->GetMultiple()[0]+kink->GetMultiple()[1]>0 && quality[indexes[i]]>0.2) continue;
     if (kink->GetMultiple()[0]+kink->GetMultiple()[1]>0 && kink->GetDistance()>0.2) continue;
     if (circular[index0]||(circular[index1]&&kink->GetDistance()>0.1)) continue;
 
@@ -4342,7 +4347,7 @@ void  IlcDCHtracker::FindKinks(TObjArray * array, IlcESDEvent *esd)
   delete [] dca;
   delete []circular;
   delete []shared;
-  delete []quilcty;
+  delete []quality;
   delete []indexes;
   //
   delete kink;
@@ -4604,25 +4609,25 @@ void  IlcDCHtracker::FindV0s(TObjArray * array, IlcESD *esd)
       }
     }
   }    
-  Float_t *quilcty = new Float_t[ncandidates];
+  Float_t *quality = new Float_t[ncandidates];
   Int_t *indexes = new Int_t[ncandidates];
   Int_t naccepted =0;
   for (Int_t i=0;i<ncandidates;i++){
-    quilcty[i]     = 0; 
+    quality[i]     = 0; 
     IlcESDv0 *v0 = (IlcESDv0*)dchv0s->At(i);
-    quilcty[i]     = 1./(1.00001-v0->GetPointAngle());   //base point angle
-    // quilcty[i]    /= (0.5+v0->GetDist2());  
-    // quilcty[i]    *= v0->GetChi2After();               //density factor
+    quality[i]     = 1./(1.00001-v0->GetPointAngle());   //base point angle
+    // quality[i]    /= (0.5+v0->GetDist2());  
+    // quality[i]    *= v0->GetChi2After();               //density factor
     Double_t minpulldca = TMath::Min(2.+pulldca[v0->GetIndex(0)],(2.+pulldca[v0->GetIndex(1)]) );     //pull
     Int_t index0 = v0->GetIndex(0);
     Int_t index1 = v0->GetIndex(1);
     IlcDCHseed * track0 = (IlcDCHseed*)array->At(index0);
     IlcDCHseed * track1 = (IlcDCHseed*)array->At(index1);
-    if (track0->DCHrPID(0)>0.3&&track1->DCHrPID(0)>0.3&&v0->GetAnglep()[2]<0.15) quilcty[i]+=1000000;              // gamma conversion candidate
-    if (track0->DCHrPID(4)>0.9||(track1->DCHrPID(4)>0.9&&minpulldca>4)) quilcty[i]*=10;    // lambda candidate candidate
+    if (track0->DCHrPID(0)>0.3&&track1->DCHrPID(0)>0.3&&v0->GetAnglep()[2]<0.15) quality[i]+=1000000;              // gamma conversion candidate
+    if (track0->DCHrPID(4)>0.9||(track1->DCHrPID(4)>0.9&&minpulldca>4)) quality[i]*=10;    // lambda candidate candidate
   }
 
-  TMath::Sort(ncandidates,quilcty,indexes,kTRUE);
+  TMath::Sort(ncandidates,quality,indexes,kTRUE);
   //
   //
   for (Int_t i=0;i<ncandidates;i++){
@@ -4678,7 +4683,7 @@ void  IlcDCHtracker::FindV0s(TObjArray * array, IlcESD *esd)
 	"order0="<<order0<<
 	"order1="<<order1<<
 	"accept="<<accept<<
-	"quilcty="<<quilcty[i]<<
+	"quality="<<quality[i]<<
 	"pulldca0="<<pulldca[index0]<<
 	"pulldca1="<<pulldca[index1]<<
 	"index="<<i<<
@@ -4689,7 +4694,7 @@ void  IlcDCHtracker::FindV0s(TObjArray * array, IlcESD *esd)
 
   //
   //
-  delete []quilcty;
+  delete []quality;
   delete []indexes;
 //
   delete [] isPrim;
@@ -4754,7 +4759,7 @@ Int_t IlcDCHtracker::RefitKink(IlcDCHseed &mother, IlcDCHseed &daughter, IlcESDk
     kinks[ilayer].Update();
   }
   //
-  // choose kink with best "quilcty"
+  // choose kink with best "quality"
   Int_t index =-1;
   Double_t mindist = 10000;
   for (Int_t ilayer=0;ilayer<kNdiv;ilayer++){
@@ -4794,9 +4799,9 @@ Int_t IlcDCHtracker::RefitKink(IlcDCHseed &mother, IlcDCHseed &daughter, IlcESDk
 }
 
 
-void IlcDCHtracker::UpdateKinkQuilctyM(IlcDCHseed * seed){
+void IlcDCHtracker::UpdateKinkQualityM(IlcDCHseed * seed){
   //
-  // update Kink quilcty information for mother after back propagation
+  // update Kink quality information for mother after back propagation
   //
   int nlayers=fSector.GetNLayers();
   if (seed->GetKinkIndex(0)>=0) return; 
@@ -4825,9 +4830,9 @@ void IlcDCHtracker::UpdateKinkQuilctyM(IlcDCHseed * seed){
     
 }
 
-void IlcDCHtracker::UpdateKinkQuilctyD(IlcDCHseed * seed){
+void IlcDCHtracker::UpdateKinkQualityD(IlcDCHseed * seed){
   //
-  // update Kink quilcty information for daughter after refit
+  // update Kink quality information for daughter after refit
   //
   int nlayers=fSector.GetNLayers();
   if (seed->GetKinkIndex(0)<=0) return; 
@@ -4915,9 +4920,9 @@ Int_t  IlcDCHtracker::CheckKinkPoint(IlcDCHseed*seed,IlcDCHseed &mother, IlcDCHs
   for (Int_t ilayer=1;ilayer<nchecks-1;ilayer++){
     if (TMath::Abs(kinks[ilayer].GetR())>fParam->GetOuterRadius()-fRecPar->GetDistFromEdge()) continue;
     if (TMath::Abs(kinks[ilayer].GetR())<fParam->GetInnerRadius()+fRecPar->GetDistFromEdge()) continue;
-    Float_t quilcty = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuality()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//dddddddddddddd
-    if ( quilcty > maxchange){
-      maxchange = quilcty;
+    Float_t quality = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuality()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//dddddddddddddd
+    if ( quality > maxchange){
+      maxchange = quality;
       index = ilayer;
       //
     }
@@ -4971,9 +4976,9 @@ Int_t  IlcDCHtracker::CheckKinkPoint(IlcDCHseed*seed,IlcDCHseed &mother, IlcDCHs
   for (Int_t ilayer=0;ilayer<nchecks;ilayer++){
     if (TMath::Abs(kinks[ilayer].GetR())>fParam->GetOuterRadius()-fRecPar->GetDistFromEdge()) continue;
     if (TMath::Abs(kinks[ilayer].GetR())<fParam->GetInnerRadius()+fRecPar->GetDistFromEdge()) continue;
-    Float_t quilcty = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuality()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//ddddddddddddd
-    if ( quilcty > maxchange){
-      maxchange = quilcty;
+    Float_t quality = TMath::Abs(kinks[ilayer].GetAngle(2))/(fRecPar->GetScaleForQuality()+TMath::Abs(kinks[ilayer].GetR()-param0[ilayer].GetR()));//ddddddddddddd
+    if ( quality > maxchange){
+      maxchange = quality;
       index = ilayer;
       //
     }

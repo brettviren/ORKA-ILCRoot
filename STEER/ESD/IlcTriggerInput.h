@@ -74,9 +74,22 @@ public:
 	        Bool_t    IsActive() const { return fIsActive; }
 
            virtual void   Print( const Option_t* opt ="" ) const;
+#ifdef WIN32
+		static const char*   CTPDetectorName(Int_t iType);
+#endif
+#ifndef __MAKECINT__
+	#ifdef WIN32
+		__declspec(dllexport) static Bool_t  fgkIsTriggerDetector[IlcDAQ::kNDetectors]; // List of trigger detectors
+		__declspec(dllexport) static  const char*    fgkCTPDetectorName[IlcDAQ::kNDetectors];
+	#else
+		static Bool_t  fgkIsTriggerDetector[IlcDAQ::kNDetectors]; // List of trigger detectors
+		static  const char*    fgkCTPDetectorName[IlcDAQ::kNDetectors];
+	#endif
+#else
+		static Bool_t  fgkIsTriggerDetector[IlcDAQ::kNDetectors]; // List of trigger detectors
+		static  const char*    fgkCTPDetectorName[IlcDAQ::kNDetectors];
+#endif  /*__MAKECINT__*/
 
-	   static Bool_t  fgkIsTriggerDetector[IlcDAQ::kNDetectors]; // List of trigger detectors
-   static  const char*    fgkCTPDetectorName[IlcDAQ::kNDetectors];
 protected:
              ULong64_t    fMask;                //  Trigger ID mask (1 bit)
              ULong64_t    fValue;               //  Trigger Signal (0 = false, > 1 = true = fMask )

@@ -165,7 +165,11 @@ Bool_t IlcTRDTKDInterpolator::Eval(const Double_t *point, Double_t &result, Doub
 	printf("] \n");
     }
 
-    Float_t pointF[fNDim]; // local Float_t conversion for "point"
+#ifdef WIN32
+	Float_t *pointF = (Float_t *)malloc(fNDim);
+#else
+	Float_t pointF[fNDim]; // local Float_t conversion for "point"
+#endif
     for(int idim=0; idim<fNDim; idim++) pointF[idim] = (Float_t)point[idim];
     Int_t nodeIndex = GetNodeIndex(pointF);
     if(nodeIndex<0){
@@ -181,7 +185,12 @@ Bool_t IlcTRDTKDInterpolator::Eval(const Double_t *point, Double_t &result, Doub
 	node->Print("a");
     }
 
-    return node->CookPDF(point, result, error,fPDFMode);
+
+#ifdef WIN32
+	free(pointF);
+#endif
+	
+	return node->CookPDF(point, result, error,fPDFMode);
 }
 
 //__________________________________________________________________
@@ -288,7 +297,11 @@ void IlcTRDTKDInterpolator::BuildInterpolation()
 
     // Calculate Interpolation
 
+#ifdef WIN32
+	Double_t *buffer = (Double_t *)malloc(fLambda);
+#else
     Double_t buffer[fLambda];
+#endif
 
     Float_t **refPoints = new Float_t*[fNDim];
     for(int id=0; id<fNDim; id++){
@@ -299,8 +312,13 @@ void IlcTRDTKDInterpolator::BuildInterpolation()
     KDhelper->Build();
     KDhelper->MakeBoundariesExact();
 
+#ifdef WIN32
+	Float_t *dist = (Float_t *)malloc(fNPointsI);
+	Int_t *ind = (Int_t *)malloc(fNPointsI);
+#else
     Float_t dist[fNPointsI];
     Int_t ind[fNPointsI];
+#endif
 
     TLinearFitter fitter(fLambda, Form("hyp%d", fLambda-1));
 
@@ -335,8 +353,12 @@ void IlcTRDTKDInterpolator::BuildInterpolation()
 	    // Ensure Boundary Condition
 	    for(Int_t kdim=0;kdim<fNDim;kdim++){
 		if(node->fBounds[2*kdim]==0){
-		    Float_t zdata[fNDim];
-                    memcpy(&zdata[0],node->fData,fNDim*sizeof(Float_t));
+#ifdef WIN32
+			Float_t *zdata = (Float_t *)malloc(fNDim);
+#else
+    		Float_t zdata[fNDim];
+#endif
+            memcpy(&zdata[0],node->fData,fNDim*sizeof(Float_t));
 		    zdata[kdim]=0;
 		    ipar=0;
 		    for(int idim=0; idim<fNDim; idim++){
@@ -344,6 +366,9 @@ void IlcTRDTKDInterpolator::BuildInterpolation()
 			for(int jdim=idim; jdim<fNDim; jdim++) buffer[ipar++] = zdata[idim]*zdata[jdim];
 		    }
 		    fitter.AddPoint(buffer,0,1);
+#ifdef WIN32
+	free(zdata);
+#endif
 		}
 	    }
 	}
@@ -366,6 +391,11 @@ void IlcTRDTKDInterpolator::BuildInterpolation()
 	delete refPoints[id];
     }
     delete[] refPoints;
+
+#ifdef WIN32
+	free(dist);
+	free(ind);
+#endif
 }
 
 //_________________________________________________________________
@@ -373,7 +403,11 @@ void IlcTRDTKDInterpolator::BuildBoundaryNodes(){
 
     Int_t nnew=0;
 
+#ifdef WIN32
+	Float_t *treebounds = (Float_t *)malloc(2*fNDim);
+#else
     Float_t treebounds[2*fNDim];
+#endif
     for(Int_t idim=0;idim<fNDim;idim++){
 	GetRange(idim,&treebounds[2*idim]);
     }
@@ -412,6 +446,11 @@ void IlcTRDTKDInterpolator::BuildBoundaryNodes(){
 	}
     }
     IlcInfo(Form("%d Boundary Nodes Added \n",nnew));
+
+#ifdef WIN32
+	free(treebounds);
+#endif
+
 }
 
 //_________________________________________________________________
@@ -571,7 +610,11 @@ Bool_t IlcTRDTKDInterpolator::IlcTRDTKDNodeInfo::CookPDF(const Double_t *point, 
 	return kFALSE;
     }
 
+#ifdef WIN32
+	Double_t *fdfdp = (Double_t *)malloc(fNDim);
+#else
     Double_t fdfdp[fNDim];
+#endif
     Int_t ipar = 0;
     fdfdp[ipar++] = 1.;
     for(int idim=0; idim<fNDim; idim++){
@@ -613,6 +656,11 @@ Bool_t IlcTRDTKDInterpolator::IlcTRDTKDNodeInfo::CookPDF(const Double_t *point, 
     }
 
     IlcDebug(1,Form("Cook PDF Result: %e Error: %e",result,error));
+
+#ifdef WIN32
+	free(fdfdp);
+#endif
+
 
     return kTRUE;
 }

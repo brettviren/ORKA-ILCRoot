@@ -19,6 +19,7 @@
 
 #include <TObject.h>
 #include <TObjArray.h>
+#include <TMath.h>
 
 #include <TGeoMaterial.h>
 #include <TGeoMatrix.h>

@@ -173,7 +173,11 @@ class IlcRunLoader: public TNamed
   /*****   Public S T A T I C Stuff   *******/
   /******************************************/
     static IlcRunLoader* GetRunLoader(const char* eventfoldername);
+#ifdef WIN32
+    static IlcRunLoader* Instance();
+#else
     static IlcRunLoader* Instance(){return fgRunLoader;}
+#endif
     static IlcLoader*    GetDetectorLoader(const char* detname, const char* eventfoldername);
     static TTree*        GetTreeH(const char* detname, Bool_t maketree, const char* eventfoldername);
     static TTree*        GetTreeS(const char* detname, Bool_t maketree, const char* eventfoldername);
@@ -234,7 +238,17 @@ protected:
     void  Clean(const TString& name);
     Int_t SetEvent();
    
+   
+#ifndef __MAKECINT__
+	#ifdef WIN32
+	  __declspec(dllexport)     static IlcRunLoader* fgRunLoader; //pointer to the IlcRunLoader instance
+	#else
+    static IlcRunLoader* fgRunLoader; //pointer to the IlcRunLoader instance
+	#endif
+#else
     static IlcRunLoader*   fgRunLoader; //pointer to the IlcRunLoader instance
+#endif  /*__MAKECINT__*/
+
 
     static const TString   fgkRunLoaderName;          //default name of the run loader
     static const TString   fgkHeaderContainerName;    //default name of the kinematics container (TREE) name - TreeE

@@ -2022,16 +2022,27 @@ void IlcVertexerTracks::AnalyzePileUp(IlcESDEvent* esdEv)
   int nFND = (fMVVertices && fMVVertices->GetEntriesFast()) ? fMVVertices->GetEntriesFast() : 0;
   if (nFND<1) { if (!fCurrentVertex) TooFewTracks(); return;} // no multiple vertices
   //
+#ifdef WIN32
+	int *indCont = (int *)malloc(nFND);
+	int *nIndx = (int *)malloc(nFND);
+#else
   int indCont[nFND];
   int nIndx[nFND];
+#endif
   for (int iv=0;iv<nFND;iv++) {
     IlcESDVertex* fnd = (IlcESDVertex*)fMVVertices->At(iv);
     indCont[iv] = iv;
     nIndx[iv]   = fnd->GetNIndices();
   }
   TMath::Sort(nFND, nIndx, indCont, kTRUE); // sort in decreasing order of Nindices
+#ifdef WIN32
+	double *dists = (double *)malloc(nFND);
+	int *distOrd = (int *)malloc(nFND);
+	int *indx = (int *)malloc(nFND);
+#else
   double dists[nFND];
   int    distOrd[nFND],indx[nFND];
+#endif
   for (int iv=0;iv<nFND;iv++) {
     IlcESDVertex* fndI = (IlcESDVertex*)fMVVertices->At(indCont[iv]);
     if (fndI->GetStatus()<1) continue; // discarded
@@ -2092,6 +2103,13 @@ void IlcVertexerTracks::AnalyzePileUp(IlcESDEvent* esdEv)
   //
   fMVVertices->Delete();
   //
+#ifdef WIN32
+	free(indCont);
+	free(nIndx);
+	free(dists);
+	free(distOrd);
+	free(indx);
+#endif
 }
 
 //______________________________________________________

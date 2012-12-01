@@ -43,7 +43,9 @@
 
 
 Int_t IlcMCEvent::fgkBgLabelOffset(10000000);
-
+#ifdef WIN32
+  Int_t IlcMCEvent::BgLabelOffset() {return fgkBgLabelOffset;}
+#endif
 
 IlcMCEvent::IlcMCEvent():
     IlcVEvent(),

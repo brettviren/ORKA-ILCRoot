@@ -35,6 +35,15 @@
 ClassImp(IlcTARGETVertexerPPZ)
 
 
+ //______________________________________________________________________
+#ifdef WIN32 
+IlcESDVertex* IlcTARGETVertexerPPZ::FindVertexForCurrentEvent(TTree*)
+{ 
+	Fatal("FindVertexForCurrentEvent","FindVertexForCurrentEvent(TTree*) not yet implemented\n");
+	return 0;
+}
+#endif
+
 
 //______________________________________________________________________
 IlcTARGETVertexerPPZ::IlcTARGETVertexerPPZ():IlcTARGETVertexer() {

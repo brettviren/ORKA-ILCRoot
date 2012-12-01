@@ -28,29 +28,51 @@ public:
   static void GetDefaultCuts(Double_t cuts[7]);
 
 private:
-  static
-  Double_t fgChi2max;      // maximal allowed chi2 
-  static
-  Double_t fgDNmin;        // min allowed impact parameter for the 1st daughter
-  static
-  Double_t fgDPmin;        // min allowed impact parameter for the 2nd daughter
-  static
-  Double_t fgDCAmax;       // maximal allowed DCA between the daughter tracks 
-  static
-  Double_t fgCPAmin;       // minimal allowed cosine of V0's pointing angle
-  static
-  Double_t fgRmin, fgRmax; // max & min radii of the fiducial volume
-  
-  Double_t fChi2max;      // maximal allowed chi2 
-  Double_t fDNmin;        // min allowed impact parameter for the 1st daughter
-  Double_t fDPmin;        // min allowed impact parameter for the 2nd daughter
-  Double_t fDCAmax;       // maximal allowed DCA between the daughter tracks 
-  Double_t fCPAmin;       // minimal allowed cosine of V0's pointing angle
-  Double_t fRmin, fRmax;  // max & min radii of the fiducial volume
-  
+#ifndef __MAKECINT__
+	#ifdef WIN32
+	  __declspec(dllexport) static	  Double_t fgChi2max;      // maximal allowed chi2 
+	  __declspec(dllexport) static	  Double_t fgDNmin;        // min allowed impact parameter for the 1st daughter
+	  __declspec(dllexport) static	  Double_t fgDPmin;        // min allowed impact parameter for the 2nd daughter
+	  __declspec(dllexport) static	  Double_t fgDCAmax;       // maximal allowed DCA between the daughter tracks 
+	  __declspec(dllexport) static	  Double_t fgCPAmin;       // minimal allowed cosine of V0's pointing angle
+	  __declspec(dllexport) static	  Double_t fgRmin, fgRmax; // max & min radii of the fiducial volume
+	#else
+	  static	  Double_t fgChi2max;      // maximal allowed chi2 
+	  static	  Double_t fgDNmin;        // min allowed impact parameter for the 1st daughter
+	  static	  Double_t fgDPmin;        // min allowed impact parameter for the 2nd daughter
+	  static	  Double_t fgDCAmax;       // maximal allowed DCA between the daughter tracks 
+	  static	  Double_t fgCPAmin;       // minimal allowed cosine of V0's pointing angle
+	  static	  Double_t fgRmin, fgRmax; // max & min radii of the fiducial volume
+	#endif
+#else
+	static
+	  Double_t fgChi2max;      // maximal allowed chi2 
+	  static
+	  Double_t fgDNmin;        // min allowed impact parameter for the 1st daughter
+	  static
+	  Double_t fgDPmin;        // min allowed impact parameter for the 2nd daughter
+	  static
+	  Double_t fgDCAmax;       // maximal allowed DCA between the daughter tracks 
+	  static
+	  Double_t fgCPAmin;       // minimal allowed cosine of V0's pointing angle
+	  static
+	  Double_t fgRmin, fgRmax; // max & min radii of the fiducial volume
+ #endif  /*__MAKECINT__*/
+	  
+	  Double_t fChi2max;      // maximal allowed chi2 
+	  Double_t fDNmin;        // min allowed impact parameter for the 1st daughter
+	  Double_t fDPmin;        // min allowed impact parameter for the 2nd daughter
+	  Double_t fDCAmax;       // maximal allowed DCA between the daughter tracks 
+	  Double_t fCPAmin;       // minimal allowed cosine of V0's pointing angle
+	  Double_t fRmin, fRmax;  // max & min radii of the fiducial volume
+
   ClassDef(IlcV0vertexer,3)  // V0 verterxer 
 };
 
+#ifdef WIN32
+//IlcV0vertexer();
+void SetCuts(const Double_t cuts[7]);
+#else
 inline IlcV0vertexer::IlcV0vertexer() :
   TObject(),
   fChi2max(fgChi2max), 
@@ -69,6 +91,7 @@ inline void IlcV0vertexer::SetCuts(const Double_t cuts[7]) {
   fDCAmax=cuts[3];  fCPAmin=cuts[4];
   fRmin=cuts[5];    fRmax=cuts[6]; 
 }
+#endif
 
 inline void IlcV0vertexer::SetDefaultCuts(const Double_t cuts[7]) {
   fgChi2max=cuts[0]; 

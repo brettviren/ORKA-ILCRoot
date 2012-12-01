@@ -21,7 +21,10 @@
 // access class to a DataBase in an AliEn storage  			                       //
 //                                                                                             //
 /////////////////////////////////////////////////////////////////////////////////////////////////
-
+#ifdef WIN32
+#define sleep(x) _sleep(x)
+//#include <WinBase.h>
+#endif
 #include <cstdlib>
 #include <TGrid.h>
 #include <TGridResult.h>

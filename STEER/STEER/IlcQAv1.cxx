@@ -941,3 +941,13 @@ void IlcQAv1::UnSetStatusBit(DETECTORINDEX_t det, ILCTASK_t tsk, IlcRecoParam::E
 	status = status & 0 << offset ;
 	SetStatus(det, es, status) ;
 }
+#ifdef WIN32
+//____________________________________________________________________________
+  TString   IlcQAv1::GetTaskName(UInt_t tsk) { 
+	  return fgTaskNames[tsk] ; 
+  }
+  const TString   IlcQAv1::GetDetName(DETECTORINDEX_t det)
+  { 
+	  return fgDetNames[det] ; 
+  }
+#endif
