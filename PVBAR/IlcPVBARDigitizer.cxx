@@ -482,7 +482,8 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
     //consider the limited number of SiPM pixels
     Float_t NPE[4];
     for(Int_t idx=0; idx<4; idx++){
-      NPE[idx] = TMath::Min(fSiPMPixels, digit->GetNPE()[idx]) ;
+      NPE[idx] = digit->GetNPE()[idx];
+      NPE[idx] = TMath::Min(fSiPMPixels*2., NPE[idx]) ;
       NPE[idx] += gRandom->Gaus(0., TMath::Sqrt(SiPMNoise*SiPMNoise + ((1.-ENF)*NPE[idx])*((1.-ENF)*NPE[idx]))) ;
     }
 
@@ -514,12 +515,14 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
       digit = static_cast<IlcPVBARDigit*>( digits->At(i) ) ;
 //       digit->SetEnergy(adcW*ceil(digit->GetEnergy()/adcW)) ;
 
-      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])/ConversionFactor;
+      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
       digit->SetAmp(TMath::CeilNint(Amp)) ;
       
       Float_t NPE[4];
-      for(Int_t idx=0; idx<4; idx++)
-	NPE[idx] = TMath::Min((Double_t)(1<<fADCbits), TMath::Ceil((digit->GetNPE()[idx] / ConversionFactor)) );
+      for(Int_t idx=0; idx<4; idx++){
+	NPE[idx] = digit->GetNPE()[idx];
+	NPE[idx] = TMath::Min( (Double_t)(1<<fADCbits), TMath::Ceil((NPE[idx] * ConversionFactor)) );
+      }
 
       digit->SetNPE(NPE);
 
@@ -610,7 +613,7 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
   //remove digits below thresholds
   for(Int_t i = 0 ; i < nEMC ; i++){
     digit = static_cast<IlcPVBARDigit*>( digits->At(i) ) ;
-    if(digit->GetNPE()[0] < fDigitsThreshold && digit->GetNPE()[1] < fDigitsThreshold){
+    if(/*digit->GetNPE()[0] < fDigitsThreshold && digit->GetNPE()[1] < fDigitsThreshold &&*/ digit->GetNPE()[2] < fDigitsThreshold && digit->GetNPE()[3] < fDigitsThreshold){
       digits->RemoveAt(i) ;
       continue ;
     }

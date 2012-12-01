@@ -67,13 +67,13 @@ fDigitizeE(0),fCellNonLinearityOn(0)
   fSiPMPixels        = 6400.;   // Number of pixels in 1 SiPM
   fCollectEff        = 0.9 ;    // geometric collection efficiency
   fSiPMNoise         = 0.1 ;    // [photo-electron] SiPM dark current noise (shot noise)
-  fElectronicGain    = 1. ;     // [photo-electron] SiPM Gain
+  fElectronicGain    = 10. ;    // SiPM Gain
   fENF               = 1.016 ;  // Excess Noise Factor
-  fDigitsThreshold   = 1. ;     // [ADC counts] Threshold
-  fPrimaryThreshold  = 10. ;    // [photon] minum number of photons to assign primary particle index to sdigit
+  fDigitsThreshold   = 1.1 ;    // [ADC counts] Threshold
+  fPrimaryThreshold  = 10. ;    // [pe] minum number of pe to assign primary particle index to sdigit
   fADCchannel        = 5.e-5 ;  // [GeV/count] : 10bit ADC -> Max Val = 51.2 MeV
   fADCbits           = 10 ;     // ADC bits
-  fConversionFactor  =  fLightYieldMean*fCollectEff*fSiPMPDE*fADCchannel; //[p.e./ADC count] factor to convert number of p.e. in ADC counts
+  fConversionFactor  = fElectronicGain/(fLightYieldMean*fCollectEff*fSiPMPDE*fADCchannel); //[ADC count/p.e.] factor to convert number of p.e. in ADC counts
   fTOFa              = 0.5e-9 ; // [s] constant term
   fTOFb              = 1.e-9 ;  // [s/sqrt(GeV)]] stochastic term
   fCellNonLinearityA = 0.18 ;   // Amp of non-linearity of cell responce

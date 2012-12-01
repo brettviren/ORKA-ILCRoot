@@ -265,7 +265,7 @@ void IlcPVBARSDigitizer::Digitize(Option_t *option)
 	NPhotons[3] *= fCollectEff*fSiPMPDE;
 	// Assign primary number only if contribution is significant
 	
-	if( hit->GetEnergy() > fPrimThreshold*0+1.e-6)
+	if( (NPhotons[2] > fPrimThreshold) || (NPhotons[3] > fPrimThreshold) )
 	  new((*sdigits)[nSdigits]) IlcPVBARDigit(hit->GetPrimary(),hit->GetId(),
 						  hit->GetEnergy(), NPhotons ,hit->GetTime()) ;
 	else
@@ -414,7 +414,7 @@ void IlcPVBARSDigitizer::Digitize(Option_t *option)
 // // // // 	NPhotons[3] *= fCollectEff;
 
         // Assign primary number only if contribution is significant
-	if( hit->GetEnergy() > fPrimThreshold*0+1.e-6)
+	if( (NPhotons[2] > fPrimThreshold) || (NPhotons[3] > fPrimThreshold) )
 	  new((*sdigits)[nSdigits]) IlcPVBARDigit(hit->GetPrimary(),hit->GetId(),
 						  hit->GetEnergy(), NPhotons ,hit->GetTime()) ;
 	else

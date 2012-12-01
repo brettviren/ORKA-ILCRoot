@@ -402,7 +402,7 @@ void IlcRSTACKDigitizer::Digitize(Int_t event)
     Float_t NPE[2];
     for(Int_t idx=0; idx<2; idx++){
       NPE[idx] = digit->GetNPE()[idx];
-      NPE[idx] = TMath::Min(fSiPMPixels, NPE[idx]) ;
+      NPE[idx] = TMath::Min(fSiPMPixels*2., NPE[idx]) ;
       NPE[idx] += gRandom->Gaus(0., TMath::Sqrt(SiPMNoise*SiPMNoise + ((1.-ENF)*NPE[idx])*((1.-ENF)*NPE[idx]))) ;
     }
 
@@ -433,13 +433,14 @@ void IlcRSTACKDigitizer::Digitize(Int_t event)
     for(Int_t i = 0 ; i < nTiles ; i++){                                                                                                       
       digit = static_cast<IlcRSTACKDigit*>( digits->At(i) ) ;
 
-      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])/ConversionFactor;
+      Float_t Amp = (digit->GetNPE()[0] + digit->GetNPE()[1])*ConversionFactor;
       digit->SetAmp(TMath::CeilNint(Amp)) ;
       
       Float_t NPE[2];
-      for(Int_t idx=0; idx<2; idx++)
-	NPE[idx] = TMath::Min((Double_t)(1<<fADCbits), TMath::Ceil((digit->GetNPE()[idx] / ConversionFactor)) );
-
+      for(Int_t idx=0; idx<2; idx++){
+	NPE[idx] = digit->GetNPE()[idx];
+	NPE[idx] = TMath::Min( (Double_t)(1<<fADCbits), TMath::Ceil((NPE[idx] * ConversionFactor)) );
+      }
       digit->SetNPE(NPE);
 
     }
