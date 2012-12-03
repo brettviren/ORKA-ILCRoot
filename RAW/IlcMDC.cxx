@@ -54,7 +54,11 @@
 #include <TPluginManager.h>
 #include <TBufferFile.h>
 
+#ifdef WIN32
+#include <CVG.h>
+#else
 #include <sys/uio.h>
+#endif
 #ifdef USE_EB
 #include "libDateEb.h"
 #endif

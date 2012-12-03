@@ -483,7 +483,11 @@ void IlcPVBARDigitizer::Digitize(Int_t event)
     Float_t NPE[4];
     for(Int_t idx=0; idx<4; idx++){
       NPE[idx] = digit->GetNPE()[idx];
+#ifdef WIN32
+      NPE[idx] = TMath::Min((Float_t)fSiPMPixels*(Float_t)2., (Float_t)NPE[idx]) ;
+#else
       NPE[idx] = TMath::Min(fSiPMPixels*2., NPE[idx]) ;
+#endif
       NPE[idx] += gRandom->Gaus(0., TMath::Sqrt(SiPMNoise*SiPMNoise + ((1.-ENF)*NPE[idx])*((1.-ENF)*NPE[idx]))) ;
     }
 

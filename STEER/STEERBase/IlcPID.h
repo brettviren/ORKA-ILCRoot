@@ -44,6 +44,9 @@ class IlcPID : public TObject {
  #ifdef WIN32
   static Float_t       ParticleMass(Int_t iType);
   static Int_t         ParticleCode(Int_t iType);
+  static const char*   ParticleName(Int_t iType);
+  static const char*   ParticleShortName(Int_t iType);
+  static const char*   ParticleLatexName(Int_t iType);
 #else
   static Float_t       ParticleMass(Int_t iType) {
      if(!fgkParticleMass[0]) Init(); 
@@ -51,14 +54,14 @@ class IlcPID : public TObject {
   }
   static Int_t         ParticleCode(Int_t iType) 
     {return fgkParticleCode[iType];};
-#endif
-
   static const char*   ParticleName(Int_t iType) 
     {return fgkParticleName[iType];};
   static const char*   ParticleShortName(Int_t iType) 
     {return fgkParticleShortName[iType];};
   static const char*   ParticleLatexName(Int_t iType) 
     {return fgkParticleLatexName[iType];};
+#endif
+
 
   IlcPID();
   IlcPID(const Double_t* probDensity, Bool_t charged = kTRUE);

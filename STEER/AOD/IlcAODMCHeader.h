@@ -85,7 +85,11 @@ public:
     return 0;
   }
 
+#ifdef WIN32
+  static const char* StdBranchName();
+#else
   static const char* StdBranchName(){return fgkStdBranchName.Data();}
+#endif
 
 private:
 

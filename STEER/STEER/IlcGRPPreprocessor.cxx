@@ -1570,10 +1570,13 @@ UInt_t IlcGRPPreprocessor::ProcessDaqFxs()
 {
 	//======DAQ FXS======//
 	
+#ifdef WIN32
+#else
 	IlcRawEventHeaderV3_9::Class()->IgnoreTObjectStreamer(); // to avoid trying reading TObject store in IlcRawEventHeaderV3_9 - temporary fix 
 	IlcRawEventHeaderV3_11::Class()->IgnoreTObjectStreamer(); // to avoid trying reading TObject store in IlcRawEventHeaderV3_11 - temporary fix 
 	IlcRawEventHeaderV3_12::Class()->IgnoreTObjectStreamer(); // to avoid trying reading TObject store in IlcRawEventHeaderV3_12 - temporary fix 
 	IlcRawEventHeaderV3_13::Class()->IgnoreTObjectStreamer(); // to avoid trying reading TObject store in IlcRawEventHeaderV3_13 - temporary fix 
+#endif
 	Log("Processing DAQ FXS");
 	TList* list = GetFileSources(kDAQ);  	
 	if (!list) {

@@ -17,6 +17,6 @@
 #include "IlcDCHrecoParam.h"
 #include "IlcComplexCluster.h"
 #include "IlcDCHpolyTrack.h"
-#include "IlcDCHRecoParam2.h"
+//#include "IlcDCHRecoParam2.h"
 #include "IlcDCHReconstructor.h"
 #include "IlcDCHtracker.h"

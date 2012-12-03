@@ -4885,9 +4885,15 @@ void  IlcTARGETtrackerMI::FindV02(IlcESDEvent *event)
       Float_t    sigmap0   = 0.0001+0.001/(0.1+pvertex->GetRr()); 
       Float_t    sigmap    = 0.5*sigmap0*(0.6+0.4*p12);           // "resolution: of point angle - as a function of radius and momenta
 
+#ifdef WIN32
+	  Float_t causilctyA  = (1.0-pvertex->GetCausalityP()[0])*(1.0-pvertex->GetCausalityP()[1]);
+      Float_t causilctyB  = TMath::Sqrt(TMath::Min(pvertex->GetCausalityP()[2],Double_t(0.7))*
+					TMath::Min(pvertex->GetCausalityP()[3],Double_t(0.7)));
+#else
       Float_t causilctyA  = (1.0-pvertex->GetCausalityP()[0])*(1.0-pvertex->GetCausalityP()[1]);
       Float_t causilctyB  = TMath::Sqrt(TMath::Min(pvertex->GetCausalityP()[2],Float_t(0.7))*
 					TMath::Min(pvertex->GetCausalityP()[3],Double_t(0.7)));
+#endif
       //
       Float_t likelihood0 = (TMath::Exp(-pvertex->GetDistNorm())+0.1) *(pvertex->GetDist2()<0.5)*(pvertex->GetDistNorm()<5);
 

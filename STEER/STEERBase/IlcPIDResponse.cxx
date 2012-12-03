@@ -737,7 +737,11 @@ void IlcPIDResponse::SetTPCParametrisation()
       else {
         //find particle id
         for (Int_t ispec=0; ispec<IlcPID::kSPECIES; ++ispec){
+#ifdef WIN32
+          TString particle=(TString) IlcPID::ParticleName(ispec);
+#else
           TString particle=IlcPID::ParticleName(ispec);
+#endif
           particle.ToUpper();
           if ( particle == particleName ){
             fTPCResponse.SetResponseFunction((IlcPID::EParticleType)ispec,responseFunction);

@@ -104,7 +104,12 @@ class IlcAODMCParticle: public IlcVParticle {
      else fFlag &= ~kPhysicalPrim; 
     } 
     Bool_t IsPhysicalPrimary() const {return ((fFlag&kPhysicalPrim)==kPhysicalPrim);} 
+
+#ifdef WIN32
+    static const char* StdBranchName();
+#else
     static const char* StdBranchName(){return fgkStdBranchName.Data();}
+#endif
 
  private:
 

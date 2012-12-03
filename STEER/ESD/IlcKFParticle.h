@@ -355,10 +355,14 @@ class IlcKFParticle :public IlcKFParticleBase
 //---------------------------------------------------------------------
 
 
+#ifdef WIN32
+#else
 inline void IlcKFParticle::SetField( Double_t Bz )
 { 
   fgBz = Bz;
 }
+#endif
+
 
 inline IlcKFParticle::IlcKFParticle( const IlcKFParticle &d1, 
 				     const IlcKFParticle &d2, 
@@ -902,10 +906,13 @@ inline void IlcKFParticle::SubtractFromVertex( IlcKFParticle &v ) const
   IlcKFParticleBase::SubtractFromVertex( v );
 }
 
+#ifdef WIN32
+#else
 inline Double_t IlcKFParticle::GetFieldIlc()
 { 
   return fgBz; 
 }
+#endif
 
 inline void IlcKFParticle::GetFieldValue( const Double_t * /*xyz*/, Double_t B[] ) const 
 {    

@@ -1,0 +1,6 @@
+#ifndef ILCROOT_ARVersion
+#define ILCROOT_ARVersion
+#define ILCROOT_SVN_REVISION 100
+#define ILCROOT_SVN_BRANCH "WINDOWS"
+#define ILCROOT_VERSION 100
+#endif

@@ -164,3 +164,11 @@ void IlcAODMCParticle::Print(const Option_t */*opt*/) const {
 	 fMother,fDaughter[0],fDaughter[1],GetStatus(),
 	 IsPhysicalPrimary());
 }
+
+// -------------------------------------------------------------------------------------------
+#ifdef WIN32
+	const char* IlcAODMCParticle::StdBranchName()
+	{
+		return fgkStdBranchName.Data();
+	}
+#endif

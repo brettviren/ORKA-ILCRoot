@@ -37,7 +37,10 @@ class IlcTRDPIDParams : public TNamed{
     Bool_t GetThresholdParameters(Int_t ntracklets, Double_t efficiency, Double_t *params) const;
     void SetThresholdParameters(Int_t ntracklets, Double_t effMin, Double_t effMax, Double_t *params);
 
-  private:
+#ifdef WIN32
+#else
+private:
+#endif
     class IlcTRDPIDThresholds : public TObject{
     public:
 	IlcTRDPIDThresholds();

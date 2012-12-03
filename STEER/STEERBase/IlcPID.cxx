@@ -147,16 +147,6 @@ const Int_t IlcPID::fgkParticleCode[IlcPID::kSPECIESN+IlcPID::kSPECIESLN+1] = {
 
 Double_t IlcPID::fgPrior[kSPECIESN] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-//_______________________________________________________________________
-#ifdef WIN32
-   Float_t       IlcPID::ParticleMass(Int_t iType) {
-     if(!fgkParticleMass[0]) Init(); 
-     return fgkParticleMass[iType];
-  }
-   Int_t         IlcPID::ParticleCode(Int_t iType) 
-    {return fgkParticleCode[iType];};
-#endif
-
 
 //_______________________________________________________________________
 IlcPID::IlcPID() :
@@ -414,3 +404,21 @@ IlcPID operator * (const IlcPID& pid1, const IlcPID& pid2)
   result *= pid2;
   return result;
 }
+//_______________________________________________________________________
+#ifdef WIN32
+   Float_t       IlcPID::ParticleMass(Int_t iType) {
+     if(!fgkParticleMass[0]) Init(); 
+     return fgkParticleMass[iType];
+  }
+   Int_t IlcPID::ParticleCode(Int_t iType) 
+    {return fgkParticleCode[iType];};
+  const char*   IlcPID::ParticleName(Int_t iType) 
+    {return fgkParticleName[iType];};
+  const char*   IlcPID::ParticleShortName(Int_t iType) 
+    {return fgkParticleShortName[iType];};
+  const char*   IlcPID::ParticleLatexName(Int_t iType) 
+    {return fgkParticleLatexName[iType];};
+#endif
+
+
+//_______________________________________________________________________

@@ -417,3 +417,16 @@ Double_t IlcKFParticle::GetPseudoProperDecayTime( const IlcKFParticle &pV, const
   }
   return ( dx*Px() + dy*Py() )*mipt2;
 }
+//-----------------------------------------------------------------------------------
+#ifdef WIN32
+Double_t IlcKFParticle::GetFieldIlc()
+{ 
+  return fgBz; 
+}
+
+void IlcKFParticle::SetField( Double_t Bz )
+{ 
+  fgBz = Bz;
+}
+
+#endif

@@ -199,3 +199,11 @@ void   IlcAODMCHeader::AddGeneratorName(const char* c){
     fGenerator += c;
   }
 }
+//------------------------------------------------------------
+#ifdef WIN32
+
+  const char* IlcAODMCHeader::StdBranchName()
+  {
+	  return fgkStdBranchName.Data();
+  }
+#endif

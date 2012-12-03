@@ -10,7 +10,7 @@ rem
 rem --- Specific setup for this example ---
 set G4_VMCINCLUDE=%G4VMC_INCLUDE%
 set G4VMC=%G4VMCINSTALL%
-set ILC_ROOT=D:\ILCroot4orka\
+set ILC_ROOT=D:\ILCroot\
 
 rem ---
 
